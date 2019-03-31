@@ -21,6 +21,7 @@ import com.sy.common.JpushClientUtil;
 import com.sy.mapper.EquipmentDataMapper;
 import com.sy.mapper.JfhealthMapper;
 import com.sy.mapper.JfhealthNewMapper;
+import com.sy.mapper.RealhealthMapper;
 import com.sy.mapper.UserEqMapper;
 import com.sy.pojo.EquipmentData;
 import com.sy.pojo.Jfhealth;
@@ -28,6 +29,7 @@ import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Jfhealthdao;
 import com.sy.pojo.Positionig;
 import com.sy.pojo.Push;
+import com.sy.pojo.Realhealth;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.service.JfhealthdaoService;
@@ -45,6 +47,7 @@ public class HealthtoolServiceImpl {
 	private static UserService userservice = new UserServiceImpl();
 	private static UserEqMapper userEqMapper;
 	private static JfhealthMapper jfhealthmapper;
+	private static RealhealthMapper realhealthMapper;
 	// @Autowired
 	// private static JfhealthdaoMapper jfhealthdaoMapper;
 	private static JfhealthdaoService jfhealthdaoservice = new JfhealthdaoServiceImpl();
@@ -111,7 +114,9 @@ public class HealthtoolServiceImpl {
 		if (jfhealthmapper == null) {
 			jfhealthmapper = (JfhealthMapper) webApplicationContext.getBean("jfhealthMapper");
 		}
-
+		if (realhealthMapper == null) {
+			realhealthMapper = (RealhealthMapper) webApplicationContext.getBean("realhealthMapper");
+		}
 		if (jfhealthNewMapper == null) {
 			jfhealthNewMapper = (JfhealthNewMapper) webApplicationContext.getBean("jfhealthNewMapper");
 		}
@@ -248,8 +253,18 @@ public class HealthtoolServiceImpl {
 
 				// t14表示硬件5分钟自动上传一次
 				if (type.equals("T14")) {
-
 					if (jfdao != null) {
+						Realhealth record = new Realhealth();
+	                    record.setAmedicalreport(amedical);
+	                    record.setBloodoxygen(Integer.valueOf(bloodxy));
+	                    record.setHeartrate(Integer.valueOf(Integer.parseInt(heartr)));
+	                    record.setSbpAve(Integer.valueOf(Integer.parseInt(bloodxygen[0])));
+	                    record.setDbpAve(Integer.valueOf(Integer.parseInt(bloodxygen[1])));
+	                    record.setHRV(Integer.valueOf(Integer.parseInt(hrv)));
+	                    record.setMicrocirculation(Integer.valueOf(Integer.parseInt(microcir)));
+	                    record.setCreatetime(new Date());
+	                    record.setPhone(account);
+	                    record.setImei(imei);
 						// 高压值校准值
 						Integer highpressure = jfdao.getSbpAve()==null?120:jfdao.getSbpAve();
 						// 低压校准值
@@ -355,6 +370,7 @@ public class HealthtoolServiceImpl {
 
 						// 插入健康数据表
 						jfhealthmapper.insertSelective(health);
+						realhealthMapper.insertRealhealth(record);
 
 						// 插入最新数据表,供app接口查询
 
