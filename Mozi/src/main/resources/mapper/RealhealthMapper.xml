@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.RealhealthMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.Realhealth" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="HRV" property="HRV" jdbcType="INTEGER" />
+    <result column="sbp_ave" property="sbpAve" jdbcType="INTEGER" />
+    <result column="dbp_ave" property="dbpAve" jdbcType="INTEGER" />
+    <result column="Heartrate" property="heartrate" jdbcType="INTEGER" />
+    <result column="Bloodoxygen" property="bloodoxygen" jdbcType="INTEGER" />
+    <result column="microcirculation" property="microcirculation" jdbcType="INTEGER" />
+    <result column="respirationrate" property="respirationrate" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+     <result column="Amedicalreport" property="amedicalreport" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+   <sql id="Base_Column_List" >
+    id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate, 
+    phone, imei, createtime
+  </sql>
+  <sql id="Blob_Column_List" >
+    Amedicalreport
+  </sql>
+  <!-- 有效真实数据该表只为内部看，未修改的天津真实数据 -->
+  <insert id="insertRealhealth" parameterType="com.sy.pojo.Realhealth" >
+    insert into realhealth
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="HRV != null" >
+        HRV,
+      </if>
+      <if test="sbpAve != null" >
+        sbp_ave,
+      </if>
+      <if test="dbpAve != null" >
+        dbp_ave,
+      </if>
+      <if test="heartrate != null" >
+        Heartrate,
+      </if>
+      <if test="bloodoxygen != null" >
+        Bloodoxygen,
+      </if>
+      <if test="microcirculation != null" >
+        microcirculation,
+      </if>
+      <if test="respirationrate != null" >
+        respirationrate,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="imei != null" >
+        imei,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="amedicalreport != null" >
+        Amedicalreport,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="HRV != null" >
+        #{HRV,jdbcType=INTEGER},
+      </if>
+      <if test="sbpAve != null" >
+        #{sbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="dbpAve != null" >
+        #{dbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="heartrate != null" >
+        #{heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="bloodoxygen != null" >
+        #{bloodoxygen,jdbcType=INTEGER},
+      </if>
+      <if test="microcirculation != null" >
+        #{microcirculation,jdbcType=INTEGER},
+      </if>
+      <if test="respirationrate != null" >
+        #{respirationrate,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amedicalreport != null" >
+        #{amedicalreport,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+</mapper>
