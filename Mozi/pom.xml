@@ -1,0 +1,683 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.taobao.rigel</groupId>
+	<artifactId>Mozi</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Mozi Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<!-- 不打包jar -->
+		<dependency.provided>compile</dependency.provided>
+		<!-- spring 相关 -->
+		<org.springframework-version>4.3.8.RELEASE</org.springframework-version>
+		<!-- junit 测试 -->
+		<junit.version>3.8.1</junit.version>
+		<!-- 日志 -->
+		<org.slf4j.version>1.7.6</org.slf4j.version>
+		<!-- <log4j.version>1.2.17</log4j.version> -->
+		<commons-collections.version>3.2.1</commons-collections.version>
+		<!-- 切面 -->
+		<org.aspectj.version>1.8.10</org.aspectj.version>
+		<!-- servlet -->
+		<javax.servlet.version>3.1.0</javax.servlet.version>
+		<!-- 数据校验 使用的是 Hibernate 的数据校验 -->
+		<javax.validation.version>1.1.0.Final</javax.validation.version>
+		<org.hibernate-validator.version>5.0.1.Final</org.hibernate-validator.version>
+		<!-- MyBatis 相关 -->
+		<org.mybatis.version>3.4.1</org.mybatis.version>
+		<org.mybatis-spring.version>1.3.0</org.mybatis-spring.version>
+		<com.github.miemiedev-paginator.version>1.2.15</com.github.miemiedev-paginator.version>
+		<!-- MySQL 数据库驱动 -->
+		<mysql.version>5.1.38</mysql.version>
+		<!-- java 动态代理 -->
+		<cglib.version>3.1</cglib.version>
+		<!-- 连接池 c3p0 -->
+		<com.mchange.c3p0.version>0.9.5.2</com.mchange.c3p0.version>
+		<!-- json -->
+		<com.alibaba.fastjson.version>1.1.38</com.alibaba.fastjson.version>
+		<!-- Spring 升级4+ 依赖的JSON包 start -->
+		<com.fasterxml.jackson.core.version>2.7.1</com.fasterxml.jackson.core.version>
+		<org.codehaus.jackson.version>1.9.13</org.codehaus.jackson.version>
+		<!-- Spring 升级4+ 依赖的JSON包 end -->
+		<!-- 文件上传 -->
+		<commons-fileupload.version>1.3.1</commons-fileupload.version>
+		<commons-codec.version>1.9</commons-codec.version>
+		<!-- gson -->
+		<com.google.code.gson.version>2.3.1</com.google.code.gson.version>
+		<!-- dom4j xml 文件 解析 -->
+		<dom4j.version>1.6.1</dom4j.version>
+		<jaxen.version>1.1.4</jaxen.version>
+		<!-- POI -->
+		<org.apache.poi.version>3.9</org.apache.poi.version>
+		<!-- 任务调度 -->
+		<org.quartz-scheduler.version>2.2.1</org.quartz-scheduler.version>
+		<!-- Http -->
+		<org.apache.httpcomponents.core.version>4.4.4</org.apache.httpcomponents.core.version>
+		<org.apache.httpcomponents.client.version>4.5.2</org.apache.httpcomponents.client.version>
+		<!-- redis -->
+		<org.springframework.data.redis.version>1.6.0.RELEASE</org.springframework.data.redis.version>
+		<redis.clients.jedis.version>2.7.3</redis.clients.jedis.version>
+		<!-- 阿里云 IOT -->
+		<com.aliyun.java-sdk-iot.version>3.0.0</com.aliyun.java-sdk-iot.version>
+		<com.aliyun.java-sdk-core.version>3.2.3</com.aliyun.java-sdk-core.version>
+		<!-- 阿里云 MNS -->
+		<com.aliyun.mns.version>1.1.5</com.aliyun.mns.version>
+	</properties>
+
+	<dependencies>
+		
+		<!-- https://mvnrepository.com/artifact/com.github.wxpay/wxpay-sdk -->
+		<dependency>
+		    <groupId>com.github.wxpay</groupId>
+		    <artifactId>wxpay-sdk</artifactId>
+		    <version>0.0.2</version>
+		    <scope>${dependency.provided}</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.jdom</groupId>
+		    <artifactId>jdom2</artifactId>
+		    <version>2.0.5</version>
+		    <scope>${dependency.provided}</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>3.4.27.ALL</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- springframework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework-version}</version>
+			<exclusions>
+				<!-- Exclude Commons Logging in favor of SLF4j -->
+				<!-- <exclusion> <groupId>commons-logging</groupId> <artifactId>commons-logging</artifactId> 
+					</exclusion> -->
+			</exclusions>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		
+		 <dependency>
+        	<groupId>org.mybatis.generator</groupId>
+    	 	<artifactId>mybatis-generator-core</artifactId>
+       		<version>1.3.5</version>
+       			<scope>${dependency.provided}</scope>
+      </dependency>
+
+		<!-- 极光推送——啊健 -->
+		<dependency>
+    		<groupId>cn.jpush.api</groupId>
+    		<artifactId>jpush-client</artifactId>
+    		<version>3.3.9</version>
+    			<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
+			
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${org.slf4j.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${org.slf4j.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<!-- <dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>${commons-collections.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${org.aspectj.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${org.springframework-version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${javax.servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- jsr 数据校验 -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${javax.validation.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${org.hibernate-validator.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${org.mybatis.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${org.mybatis-spring.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.miemiedev</groupId>
+			<artifactId>mybatis-paginator</artifactId>
+			<version>${com.github.miemiedev-paginator.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<!-- MySql -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- cglib -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>${cglib.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- 连接池 start -->
+		<!-- pool -->
+		<!-- <dependency> <groupId>proxool</groupId> <artifactId>proxool</artifactId> 
+			<version>0.9.1</version> </dependency> <dependency> <groupId>com.cloudhopper.proxool</groupId> 
+			<artifactId>proxool-cglib</artifactId> <version>0.9.1</version> </dependency> -->
+
+		<!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>${com.mchange.c3p0.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+
+		<!-- 连接池 end -->
+		<!-- json -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${com.alibaba.fastjson.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- Spring 升级4+ 依赖的JSON包 -->
+
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>${org.codehaus.jackson.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${org.codehaus.jackson.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${com.fasterxml.jackson.core.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<!-- /Spring 升级4+ 依赖的JSON包 -->
+
+		<!-- 文件上传 -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${com.google.code.gson.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- dom4j -->
+		<!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>${dom4j.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${org.apache.poi.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${org.apache.poi.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+			<version>${jaxen.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- end POI -->
+
+		<!-- quartz -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${org.quartz-scheduler.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<!-- http -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>${org.apache.httpcomponents.core.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${org.apache.httpcomponents.client.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- end http -->
+		<!-- Redis start -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-redis</artifactId>
+			<version>${org.springframework.data.redis.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${redis.clients.jedis.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- Redids end -->
+
+		<!-- iot start -->
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-iot</artifactId>
+			<version>${com.aliyun.java-sdk-iot.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>${com.aliyun.java-sdk-core.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- httpClient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.3</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- http -->
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<!-- iot end -->
+		<!-- MNS start -->
+		<dependency>
+			<groupId>com.aliyun.mns</groupId>
+			<artifactId>aliyun-sdk-mns</artifactId>
+			<version>${com.aliyun.mns.version}</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- MNS end -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.7.0</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.7</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3.2</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<scope>provided</scope>
+			<version>2.6</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.4</version>
+		    	<scope>${dependency.provided}</scope>
+ 		</dependency>
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+			<version>1.3.1</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.0</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.2</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.4.0</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging-api</artifactId>
+			<version>1.1</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.6</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.json-lib/json-lib -->
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+				<scope>${dependency.provided}</scope>
+			<classifier>jdk15</classifier><!--指定jdk版本 -->
+		</dependency>
+
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<version>${org.quartz-scheduler.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-core</artifactId>
+			<version>3.7.1</version>
+			<scope>${dependency.provided}</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+			<version>1.1.0</version>
+				<scope>${dependency.provided}</scope>
+		</dependency>
+		
+		<!-- //日志框架 -->
+			<dependency>	
+				<groupId>ch.qos.logback</groupId>	
+				<artifactId>logback-classic</artifactId>
+				<version>1.2.3</version>
+					<scope>${dependency.provided}</scope>
+			</dependency>
+			<dependency>	
+				<groupId>ch.qos.logback</groupId>	
+				<artifactId>logback-core</artifactId>	
+				<version>1.2.3</version>
+					<scope>${dependency.provided}</scope>
+			</dependency>
+	</dependencies>
+	<build>
+		<finalName>Mozi</finalName>
+		<plugins>
+			<!-- 打包 web.xml -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<webResources>
+						<resource>
+							<directory>WebContent</directory>
+						 	<!-- <excludes>
+                                  <exclude>**/lib/*.jar</exclude>
+                             </excludes> -->
+						</resource>
+					</webResources>
+					<source>1.8</source>
+					<target>1.8</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			
+			
+			<!-- 打包 xml 文件 -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>copy-xmls</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/java</directory>
+									<includes>
+										<include>**/*.xml</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>jdk-1.8</id>
+			<!-- 另外一种激活方式 -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<jdk>1.8</jdk>
+			</activation>
+			<properties>
+				<maven.compiler.source>1.8</maven.compiler.source>
+				<maven.compiler.target>1.8</maven.compiler.target>
+				<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+		        <!-- 文件拷贝时的编码 -->  
+		        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+		        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>  
+		        <!-- 编译时的编码 -->  
+		        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>  
+    		</properties>  
+		</profile>
+	</profiles>
+</project>

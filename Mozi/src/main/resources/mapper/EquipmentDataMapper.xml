@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.EquipmentDataMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.EquipmentData" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="heartrate" property="heartrate" jdbcType="INTEGER" />
+    <result column="highpressure" property="highpressure" jdbcType="INTEGER" />
+    <result column="bottompressure" property="bottompressure" jdbcType="INTEGER" />
+    <result column="bloodpressure" property="bloodpressure" jdbcType="INTEGER" />
+    <result column="mocrocirculation" property="mocrocirculation" jdbcType="INTEGER" />
+    <result column="breathe" property="breathe" jdbcType="INTEGER" />
+    <result column="sleeping" property="sleeping" jdbcType="DOUBLE" />
+    <result column="step_when" property="stepWhen" jdbcType="INTEGER" />
+    <result column="carrieroad" property="carrieroad" jdbcType="INTEGER" />
+    <result column="sedentary" property="sedentary" jdbcType="VARCHAR" />
+    <result column="movementstate" property="movementstate" jdbcType="INTEGER" />
+    <result column="bodytemp" property="bodytemp" jdbcType="INTEGER" />
+    <result column="humidity" property="humidity" jdbcType="INTEGER" />
+    <result column="crash" property="crash" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="qxygen" property="qxygen" jdbcType="INTEGER" />
+    <result column="sleeping_s" property="sleepingS" jdbcType="INTEGER" />
+    <result column="run_s" property="runS" jdbcType="INTEGER" />
+    <result column="step_time" property="stepTime" jdbcType="INTEGER" />
+    <result column="step_each" property="stepEach" jdbcType="INTEGER" />
+    <result column="hrv" property="hrv" jdbcType="INTEGER" />
+    <result column="mood" property="mood" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_id, heartrate, highpressure, bottompressure, bloodpressure, mocrocirculation, 
+    breathe, sleeping, step_when, carrieroad, sedentary, movementstate, bodytemp, humidity, 
+    crash, createtime, qxygen, sleeping_s, run_s, step_time, step_each, hrv, mood
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.EquipmentDataExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from equipment_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipment_data
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from equipment_data
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sy.pojo.EquipmentDataExample" >
+    delete from equipment_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sy.pojo.EquipmentData" >
+    insert into equipment_data (id, user_id, heartrate, 
+      highpressure, bottompressure, bloodpressure, 
+      mocrocirculation, breathe, sleeping, 
+      step_when, carrieroad, sedentary, 
+      movementstate, bodytemp, humidity, 
+      crash, createtime, qxygen, 
+      sleeping_s, run_s, step_time, 
+      step_each, hrv, mood
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{heartrate,jdbcType=INTEGER}, 
+      #{highpressure,jdbcType=INTEGER}, #{bottompressure,jdbcType=INTEGER}, #{bloodpressure,jdbcType=INTEGER}, 
+      #{mocrocirculation,jdbcType=INTEGER}, #{breathe,jdbcType=INTEGER}, #{sleeping,jdbcType=DOUBLE}, 
+      #{stepWhen,jdbcType=INTEGER}, #{carrieroad,jdbcType=INTEGER}, #{sedentary,jdbcType=VARCHAR}, 
+      #{movementstate,jdbcType=INTEGER}, #{bodytemp,jdbcType=INTEGER}, #{humidity,jdbcType=INTEGER}, 
+      #{crash,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{qxygen,jdbcType=INTEGER}, 
+      #{sleepingS,jdbcType=INTEGER}, #{runS,jdbcType=INTEGER}, #{stepTime,jdbcType=INTEGER}, 
+      #{stepEach,jdbcType=INTEGER}, #{hrv,jdbcType=INTEGER}, #{mood,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sy.pojo.EquipmentData" >
+    insert into equipment_data
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="heartrate != null" >
+        heartrate,
+      </if>
+      <if test="highpressure != null" >
+        highpressure,
+      </if>
+      <if test="bottompressure != null" >
+        bottompressure,
+      </if>
+      <if test="bloodpressure != null" >
+        bloodpressure,
+      </if>
+      <if test="mocrocirculation != null" >
+        mocrocirculation,
+      </if>
+      <if test="breathe != null" >
+        breathe,
+      </if>
+      <if test="sleeping != null" >
+        sleeping,
+      </if>
+      <if test="stepWhen != null" >
+        step_when,
+      </if>
+      <if test="carrieroad != null" >
+        carrieroad,
+      </if>
+      <if test="sedentary != null" >
+        sedentary,
+      </if>
+      <if test="movementstate != null" >
+        movementstate,
+      </if>
+      <if test="bodytemp != null" >
+        bodytemp,
+      </if>
+      <if test="humidity != null" >
+        humidity,
+      </if>
+      <if test="crash != null" >
+        crash,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="qxygen != null" >
+        qxygen,
+      </if>
+      <if test="sleepingS != null" >
+        sleeping_s,
+      </if>
+      <if test="runS != null" >
+        run_s,
+      </if>
+      <if test="stepTime != null" >
+        step_time,
+      </if>
+      <if test="stepEach != null" >
+        step_each,
+      </if>
+      <if test="hrv != null" >
+        hrv,
+      </if>
+      <if test="mood != null" >
+        mood,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="heartrate != null" >
+        #{heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="highpressure != null" >
+        #{highpressure,jdbcType=INTEGER},
+      </if>
+      <if test="bottompressure != null" >
+        #{bottompressure,jdbcType=INTEGER},
+      </if>
+      <if test="bloodpressure != null" >
+        #{bloodpressure,jdbcType=INTEGER},
+      </if>
+      <if test="mocrocirculation != null" >
+        #{mocrocirculation,jdbcType=INTEGER},
+      </if>
+      <if test="breathe != null" >
+        #{breathe,jdbcType=INTEGER},
+      </if>
+      <if test="sleeping != null" >
+        #{sleeping,jdbcType=DOUBLE},
+      </if>
+      <if test="stepWhen != null" >
+        #{stepWhen,jdbcType=INTEGER},
+      </if>
+      <if test="carrieroad != null" >
+        #{carrieroad,jdbcType=INTEGER},
+      </if>
+      <if test="sedentary != null" >
+        #{sedentary,jdbcType=VARCHAR},
+      </if>
+      <if test="movementstate != null" >
+        #{movementstate,jdbcType=INTEGER},
+      </if>
+      <if test="bodytemp != null" >
+        #{bodytemp,jdbcType=INTEGER},
+      </if>
+      <if test="humidity != null" >
+        #{humidity,jdbcType=INTEGER},
+      </if>
+      <if test="crash != null" >
+        #{crash,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qxygen != null" >
+        #{qxygen,jdbcType=INTEGER},
+      </if>
+      <if test="sleepingS != null" >
+        #{sleepingS,jdbcType=INTEGER},
+      </if>
+      <if test="runS != null" >
+        #{runS,jdbcType=INTEGER},
+      </if>
+      <if test="stepTime != null" >
+        #{stepTime,jdbcType=INTEGER},
+      </if>
+      <if test="stepEach != null" >
+        #{stepEach,jdbcType=INTEGER},
+      </if>
+      <if test="hrv != null" >
+        #{hrv,jdbcType=INTEGER},
+      </if>
+      <if test="mood != null" >
+        #{mood,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sy.pojo.EquipmentDataExample" resultType="java.lang.Integer" >
+    select count(*) from equipment_data
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update equipment_data
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.heartrate != null" >
+        heartrate = #{record.heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="record.highpressure != null" >
+        highpressure = #{record.highpressure,jdbcType=INTEGER},
+      </if>
+      <if test="record.bottompressure != null" >
+        bottompressure = #{record.bottompressure,jdbcType=INTEGER},
+      </if>
+      <if test="record.bloodpressure != null" >
+        bloodpressure = #{record.bloodpressure,jdbcType=INTEGER},
+      </if>
+      <if test="record.mocrocirculation != null" >
+        mocrocirculation = #{record.mocrocirculation,jdbcType=INTEGER},
+      </if>
+      <if test="record.breathe != null" >
+        breathe = #{record.breathe,jdbcType=INTEGER},
+      </if>
+      <if test="record.sleeping != null" >
+        sleeping = #{record.sleeping,jdbcType=DOUBLE},
+      </if>
+      <if test="record.stepWhen != null" >
+        step_when = #{record.stepWhen,jdbcType=INTEGER},
+      </if>
+      <if test="record.carrieroad != null" >
+        carrieroad = #{record.carrieroad,jdbcType=INTEGER},
+      </if>
+      <if test="record.sedentary != null" >
+        sedentary = #{record.sedentary,jdbcType=VARCHAR},
+      </if>
+      <if test="record.movementstate != null" >
+        movementstate = #{record.movementstate,jdbcType=INTEGER},
+      </if>
+      <if test="record.bodytemp != null" >
+        bodytemp = #{record.bodytemp,jdbcType=INTEGER},
+      </if>
+      <if test="record.humidity != null" >
+        humidity = #{record.humidity,jdbcType=INTEGER},
+      </if>
+      <if test="record.crash != null" >
+        crash = #{record.crash,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.qxygen != null" >
+        qxygen = #{record.qxygen,jdbcType=INTEGER},
+      </if>
+      <if test="record.sleepingS != null" >
+        sleeping_s = #{record.sleepingS,jdbcType=INTEGER},
+      </if>
+      <if test="record.runS != null" >
+        run_s = #{record.runS,jdbcType=INTEGER},
+      </if>
+      <if test="record.stepTime != null" >
+        step_time = #{record.stepTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.stepEach != null" >
+        step_each = #{record.stepEach,jdbcType=INTEGER},
+      </if>
+      <if test="record.hrv != null" >
+        hrv = #{record.hrv,jdbcType=INTEGER},
+      </if>
+      <if test="record.mood != null" >
+        mood = #{record.mood,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update equipment_data
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      heartrate = #{record.heartrate,jdbcType=INTEGER},
+      highpressure = #{record.highpressure,jdbcType=INTEGER},
+      bottompressure = #{record.bottompressure,jdbcType=INTEGER},
+      bloodpressure = #{record.bloodpressure,jdbcType=INTEGER},
+      mocrocirculation = #{record.mocrocirculation,jdbcType=INTEGER},
+      breathe = #{record.breathe,jdbcType=INTEGER},
+      sleeping = #{record.sleeping,jdbcType=DOUBLE},
+      step_when = #{record.stepWhen,jdbcType=INTEGER},
+      carrieroad = #{record.carrieroad,jdbcType=INTEGER},
+      sedentary = #{record.sedentary,jdbcType=VARCHAR},
+      movementstate = #{record.movementstate,jdbcType=INTEGER},
+      bodytemp = #{record.bodytemp,jdbcType=INTEGER},
+      humidity = #{record.humidity,jdbcType=INTEGER},
+      crash = #{record.crash,jdbcType=INTEGER},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      qxygen = #{record.qxygen,jdbcType=INTEGER},
+      sleeping_s = #{record.sleepingS,jdbcType=INTEGER},
+      run_s = #{record.runS,jdbcType=INTEGER},
+      step_time = #{record.stepTime,jdbcType=INTEGER},
+      step_each = #{record.stepEach,jdbcType=INTEGER},
+      hrv = #{record.hrv,jdbcType=INTEGER},
+      mood = #{record.mood,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.EquipmentData" >
+    update equipment_data
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="heartrate != null" >
+        heartrate = #{heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="highpressure != null" >
+        highpressure = #{highpressure,jdbcType=INTEGER},
+      </if>
+      <if test="bottompressure != null" >
+        bottompressure = #{bottompressure,jdbcType=INTEGER},
+      </if>
+      <if test="bloodpressure != null" >
+        bloodpressure = #{bloodpressure,jdbcType=INTEGER},
+      </if>
+      <if test="mocrocirculation != null" >
+        mocrocirculation = #{mocrocirculation,jdbcType=INTEGER},
+      </if>
+      <if test="breathe != null" >
+        breathe = #{breathe,jdbcType=INTEGER},
+      </if>
+      <if test="sleeping != null" >
+        sleeping = #{sleeping,jdbcType=DOUBLE},
+      </if>
+      <if test="stepWhen != null" >
+        step_when = #{stepWhen,jdbcType=INTEGER},
+      </if>
+      <if test="carrieroad != null" >
+        carrieroad = #{carrieroad,jdbcType=INTEGER},
+      </if>
+      <if test="sedentary != null" >
+        sedentary = #{sedentary,jdbcType=VARCHAR},
+      </if>
+      <if test="movementstate != null" >
+        movementstate = #{movementstate,jdbcType=INTEGER},
+      </if>
+      <if test="bodytemp != null" >
+        bodytemp = #{bodytemp,jdbcType=INTEGER},
+      </if>
+      <if test="humidity != null" >
+        humidity = #{humidity,jdbcType=INTEGER},
+      </if>
+      <if test="crash != null" >
+        crash = #{crash,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qxygen != null" >
+        qxygen = #{qxygen,jdbcType=INTEGER},
+      </if>
+      <if test="sleepingS != null" >
+        sleeping_s = #{sleepingS,jdbcType=INTEGER},
+      </if>
+      <if test="runS != null" >
+        run_s = #{runS,jdbcType=INTEGER},
+      </if>
+      <if test="stepTime != null" >
+        step_time = #{stepTime,jdbcType=INTEGER},
+      </if>
+      <if test="stepEach != null" >
+        step_each = #{stepEach,jdbcType=INTEGER},
+      </if>
+      <if test="hrv != null" >
+        hrv = #{hrv,jdbcType=INTEGER},
+      </if>
+      <if test="mood != null" >
+        mood = #{mood,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sy.pojo.EquipmentData" >
+    update equipment_data
+    set user_id = #{userId,jdbcType=INTEGER},
+      heartrate = #{heartrate,jdbcType=INTEGER},
+      highpressure = #{highpressure,jdbcType=INTEGER},
+      bottompressure = #{bottompressure,jdbcType=INTEGER},
+      bloodpressure = #{bloodpressure,jdbcType=INTEGER},
+      mocrocirculation = #{mocrocirculation,jdbcType=INTEGER},
+      breathe = #{breathe,jdbcType=INTEGER},
+      sleeping = #{sleeping,jdbcType=DOUBLE},
+      step_when = #{stepWhen,jdbcType=INTEGER},
+      carrieroad = #{carrieroad,jdbcType=INTEGER},
+      sedentary = #{sedentary,jdbcType=VARCHAR},
+      movementstate = #{movementstate,jdbcType=INTEGER},
+      bodytemp = #{bodytemp,jdbcType=INTEGER},
+      humidity = #{humidity,jdbcType=INTEGER},
+      crash = #{crash,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      qxygen = #{qxygen,jdbcType=INTEGER},
+      sleeping_s = #{sleepingS,jdbcType=INTEGER},
+      run_s = #{runS,jdbcType=INTEGER},
+      step_time = #{stepTime,jdbcType=INTEGER},
+      step_each = #{stepEach,jdbcType=INTEGER},
+      hrv = #{hrv,jdbcType=INTEGER},
+      mood = #{mood,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <select id="getcount" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select count(*) from  equipment_data 
+      <if test="_parameter != null and _parameter != '' ">
+   			 where  CONCAT(crash,bloodpressure)  LIKE concat(concat('%',#{_parameter}),'%')
+  	  </if> 
+  </select>
+  <!-- 获取想要的页面数据 -->
+  <select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
+   SELECT * FROM  equipment_data 
+   		<if test="keyWord != null and keyWord != '' ">
+   			 where  CONCAT(crash,bloodpressure)  LIKE concat(concat('%',#{keyWord}),'%')
+  		</if> 
+   limit #{pageNo},#{pageSize} 
+  </select>
+  <select id="selectdata" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+SELECT id,user_id,heartrate,highpressure,bottompressure,bloodpressure,mocrocirculation,CASE WHEN breathe IS null THEN '0' ELSE breathe END as breathe,sleeping,movementstate
+,carrieroad,sedentary,bodytemp,humidity,crash,createtime,qxygen,sleeping_s,run_s,step_each,hrv,mood,CASE WHEN step_when IS null THEN '0' ELSE step_when END as step_when,  ABS(NOW() - createtime)  AS diffTime
+FROM equipment_data  where user_id =#{userId}
+ORDER BY diffTime ASC
+LIMIT 0, 1 
+  </select>
+  <delete id="deletedata" parameterType="java.lang.Integer" >
+     delete from equipment_data  where user_id =#{userId}
+  </delete>
+  <select id="selectdateequipmentDate" parameterType="java.util.Map" resultMap="BaseResultMap">
+  <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
+      select * from  equipment_data  where year(createtime)= #{timedata}    and  user_id =#{userId};
+  </if>
+  <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
+	  select * from equipment_data  where month(createtime)= #{timedata} and  user_id =#{userId} and year(createtime)= #{year} ;
+	</if>
+	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
+	  select * from equipment_data  where  day(createtime)= #{timedata} and  user_id =#{userId} and year(createtime)= #{year}  and  month(createtime)= #{month};
+	</if>
+	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
+	  select * from equipment_data  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  user_id =#{userId};
+	</if>
+	
+  
+  </select>
+  
+  <select id="selecttheycount" parameterType="java.util.Map" resultMap="BaseResultMap">
+  select * from equipment_data where  createtime  LIKE #{countdate}   and user_id=#{userid}
+  </select>
+  <!-- 啊健写的获取卡里路提供给硬件 -->
+  <select id="queryEquipmentDataInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM equipment_data  WHERE user_id=#{userId} ORDER BY createtime DESC  LIMIT 0,1
+  </select>
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.GroupPhoneMapper">
+
+	<update id="batchUpdate" parameterType="java.util.List">
+		update group_phone
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="extraPkgVoice =case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when phone=#{groupPhpne.phone} then #{groupPhpne.extraPkgVoice}
+				</foreach>
+			</trim>
+			<trim prefix="restVoice = case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when phone=#{groupPhpne.phone} then #{groupPhpne.restVoice}
+				</foreach>
+			</trim>
+			<trim prefix="totalVoice =case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when phone=#{groupPhpne.phone} then #{groupPhpne.totalVoice}
+				</foreach>
+			</trim>
+			<trim prefix="usedVoice =case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when phone=#{groupPhpne.phone} then #{groupPhpne.usedVoice}
+				</foreach>
+			</trim>
+		</trim>
+		<where>
+			<foreach collection="list" separator="or" item="groupPhpne">
+				phone = #{groupPhpne.phone}
+			</foreach>
+		</where>
+	</update>
+	<update id="batchUpdateSuspended" parameterType="java.util.List">
+		update group_phone
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="suspended =case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when phone=#{groupPhpne.phone} then #{groupPhpne.suspended}
+				</foreach>
+			</trim>
+			<trim prefix="balance = case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when phone=#{groupPhpne.phone} then #{groupPhpne.balance}
+				</foreach>
+			</trim>
+		</trim>
+		<where>
+			<foreach collection="list" separator="or" item="groupPhpne">
+				phone = #{groupPhpne.phone}
+			</foreach>
+		</where>
+	</update>
+	<update id="updateList" parameterType="java.util.List">
+		update group_phone
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="suspended =case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when id=#{groupPhpne.id} then #{groupPhpne.suspended}
+				</foreach>
+			</trim>
+			<trim prefix="lastCalculateVoice =case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when id=#{groupPhpne.id} then #{groupPhpne.lastCalculateVoice}
+				</foreach>
+			</trim>
+			<trim prefix="usedMoney =case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when id=#{groupPhpne.id} then #{groupPhpne.usedMoney}
+				</foreach>
+			</trim>
+			<trim prefix="balance = case" suffix="end,">
+				<foreach collection="list" item="groupPhpne">
+					when id=#{groupPhpne.id} then #{groupPhpne.balance}
+				</foreach>
+			</trim>
+		</trim>
+		<where>
+			<foreach collection="list" separator="or" item="groupPhpne">
+				id = #{groupPhpne.id}
+			</foreach>
+		</where>
+	</update>
+
+</mapper>

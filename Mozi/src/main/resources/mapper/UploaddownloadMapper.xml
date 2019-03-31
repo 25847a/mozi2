@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.UploaddownloadMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.Uploaddownload" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="currentversion" property="currentversion" jdbcType="VARCHAR" />
+    <result column="ziversion" property="ziversion" jdbcType="VARCHAR" />
+    <result column="zhuversion" property="zhuversion" jdbcType="VARCHAR" />
+    <result column="compilation" property="compilation" jdbcType="VARCHAR" />
+    <result column="versiontype" property="versiontype" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, url, imei, currentversion, ziversion, zhuversion, compilation, versiontype, 
+    createtime, updatetime, description
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.UploaddownloadExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from uploaddownload
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from uploaddownload
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from uploaddownload
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sy.pojo.UploaddownloadExample" >
+    delete from uploaddownload
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sy.pojo.Uploaddownload" >
+    insert into uploaddownload (id, name, url, 
+      imei, currentversion, ziversion, 
+      zhuversion, compilation, versiontype, 
+      createtime, updatetime, description,model
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{imei,jdbcType=VARCHAR}, #{currentversion,jdbcType=VARCHAR}, #{ziversion,jdbcType=VARCHAR}, 
+      #{zhuversion,jdbcType=VARCHAR}, #{compilation,jdbcType=VARCHAR}, #{versiontype,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR},
+      #{model,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sy.pojo.Uploaddownload" >
+    insert into uploaddownload
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="imei != null" >
+        imei,
+      </if>
+      <if test="currentversion != null" >
+        currentversion,
+      </if>
+      <if test="ziversion != null" >
+        ziversion,
+      </if>
+      <if test="zhuversion != null" >
+        zhuversion,
+      </if>
+      <if test="compilation != null" >
+        compilation,
+      </if>
+      <if test="versiontype != null" >
+        versiontype,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="currentversion != null" >
+        #{currentversion,jdbcType=VARCHAR},
+      </if>
+      <if test="ziversion != null" >
+        #{ziversion,jdbcType=VARCHAR},
+      </if>
+      <if test="zhuversion != null" >
+        #{zhuversion,jdbcType=VARCHAR},
+      </if>
+      <if test="compilation != null" >
+        #{compilation,jdbcType=VARCHAR},
+      </if>
+      <if test="versiontype != null" >
+        #{versiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sy.pojo.UploaddownloadExample" resultType="java.lang.Integer" >
+    select count(*) from uploaddownload
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update uploaddownload
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.url != null" >
+        url = #{record.url,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imei != null" >
+        imei = #{record.imei,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentversion != null" >
+        currentversion = #{record.currentversion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ziversion != null" >
+        ziversion = #{record.ziversion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zhuversion != null" >
+        zhuversion = #{record.zhuversion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.compilation != null" >
+        compilation = #{record.compilation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.versiontype != null" >
+        versiontype = #{record.versiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update uploaddownload
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      url = #{record.url,jdbcType=VARCHAR},
+      imei = #{record.imei,jdbcType=VARCHAR},
+      currentversion = #{record.currentversion,jdbcType=VARCHAR},
+      ziversion = #{record.ziversion,jdbcType=VARCHAR},
+      zhuversion = #{record.zhuversion,jdbcType=VARCHAR},
+      compilation = #{record.compilation,jdbcType=VARCHAR},
+      versiontype = #{record.versiontype,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      description = #{record.description,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Uploaddownload" >
+    update uploaddownload
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="currentversion != null" >
+        currentversion = #{currentversion,jdbcType=VARCHAR},
+      </if>
+      <if test="ziversion != null" >
+        ziversion = #{ziversion,jdbcType=VARCHAR},
+      </if>
+      <if test="zhuversion != null" >
+        zhuversion = #{zhuversion,jdbcType=VARCHAR},
+      </if>
+      <if test="compilation != null" >
+        compilation = #{compilation,jdbcType=VARCHAR},
+      </if>
+      <if test="versiontype != null" >
+        versiontype = #{versiontype,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sy.pojo.Uploaddownload" >
+    update uploaddownload
+    set name = #{name,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      currentversion = #{currentversion,jdbcType=VARCHAR},
+      ziversion = #{ziversion,jdbcType=VARCHAR},
+      zhuversion = #{zhuversion,jdbcType=VARCHAR},
+      compilation = #{compilation,jdbcType=VARCHAR},
+      versiontype = #{versiontype,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  	<select id="selectUploaddownload" 
+		resultMap="BaseResultMap">
+		SELECT *, ABS(NOW() - createtime) AS diffTime
+		FROM uploaddownload where imei =#{imei}
+		ORDER BY diffTime ASC
+		LIMIT 0, 1
+	</select>
+  	<select id="selectModelAndImeiVo" parameterType="com.sy.pojo.Uploaddownload"
+		resultMap="BaseResultMap">
+		SELECT *, ABS(NOW() - createtime) AS diffTime
+		FROM uploaddownload where model =#{model} and imei =#{imei}
+		ORDER BY diffTime ASC
+		LIMIT 0, 1
+	</select>
+  	<select id="selectModelVo" 
+		resultMap="BaseResultMap">
+		SELECT *, ABS(NOW() - createtime) AS diffTime
+		FROM uploaddownload where model =#{model} 
+		ORDER BY diffTime ASC
+		LIMIT 0, 1
+	</select>
+	<select id="getcount" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select count(*) from  uploaddownload 
+      <if test="_parameter != null and _parameter != '' ">
+   			 where  CONCAT(imei,name)  LIKE concat(concat('%',#{_parameter}),'%')
+  	  </if> 
+  </select>
+  <!-- 获取想要的页面数据 -->
+  <select id="list" parameterType="java.util.Map" 	resultMap="BaseResultMap">
+   SELECT * FROM  uploaddownload 
+   		<if test="keyWord != null and keyWord != '' ">
+   			 where  CONCAT(imei,name)  LIKE concat(concat('%',#{keyWord}),'%')
+  		</if> 
+   limit #{pageNo},#{pageSize} 
+  </select>
+</mapper>

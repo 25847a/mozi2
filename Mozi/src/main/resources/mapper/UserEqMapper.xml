@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.UserEqMapper">
+	<resultMap id="BaseResultMap" type="com.sy.pojo.UserEq">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="eq_id" property="eqId" jdbcType="INTEGER" />
+		<result column="typeof" property="typeof" jdbcType="INTEGER" />
+		<result column="authorized" property="authorized" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem"
+										open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, user_id, eq_id, typeof, authorized
+	</sql>
+	<select id="selectByExample" resultMap="BaseResultMap"
+		parameterType="com.sy.pojo.UserEqExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from user_eq
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from user_eq
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from user_eq
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.sy.pojo.UserEqExample">
+		delete from user_eq
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.sy.pojo.UserEq">
+		insert into user_eq (id, user_id, eq_id,
+		typeof, authorized)
+		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+		#{eqId,jdbcType=INTEGER},
+		#{typeof,jdbcType=INTEGER}, #{authorized,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.sy.pojo.UserEq">
+		insert into user_eq
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="eqId != null">
+				eq_id,
+			</if>
+			<if test="typeof != null">
+				typeof,
+			</if>
+			<if test="authorized != null">
+				authorized,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="eqId != null">
+				#{eqId,jdbcType=INTEGER},
+			</if>
+			<if test="typeof != null">
+				#{typeof,jdbcType=INTEGER},
+			</if>
+			<if test="authorized != null">
+				#{authorized,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.sy.pojo.UserEqExample"
+		resultType="java.lang.Integer">
+		select count(*) from user_eq
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update user_eq
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=INTEGER},
+			</if>
+			<if test="record.userId != null">
+				user_id = #{record.userId,jdbcType=INTEGER},
+			</if>
+			<if test="record.eqId != null">
+				eq_id = #{record.eqId,jdbcType=INTEGER},
+			</if>
+			<if test="record.typeof != null">
+				typeof = #{record.typeof,jdbcType=INTEGER},
+			</if>
+			<if test="record.authorized != null">
+				authorized = #{record.authorized,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update user_eq
+		set id = #{record.id,jdbcType=INTEGER},
+		user_id = #{record.userId,jdbcType=INTEGER},
+		eq_id = #{record.eqId,jdbcType=INTEGER},
+		typeof = #{record.typeof,jdbcType=INTEGER},
+		authorized = #{record.authorized,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.UserEq">
+		update user_eq
+		<set>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="eqId != null">
+				eq_id = #{eqId,jdbcType=INTEGER},
+			</if>
+			<if test="typeof != null">
+				typeof = #{typeof,jdbcType=INTEGER},
+			</if>
+			<if test="authorized != null">
+				authorized = #{authorized,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.sy.pojo.UserEq">
+		update user_eq
+		set user_id = #{userId,jdbcType=INTEGER},
+		eq_id = #{eqId,jdbcType=INTEGER},
+		typeof = #{typeof,jdbcType=INTEGER},
+		authorized = #{authorized,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<select id="getuserimei2" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select * from user_eq where eq_id=#{eqId} and typeof = 2   
+			LIMIT 0, 1 
+	</select>
+	<select id="geteqid"  parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	     select eq_id  from user_eq     where   user_id = #{userId}  and  typeof=2
+	</select>
+	<select id="selectguardianship" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	     select * from user_eq   where  user_id=#{userId}  and typeof=0
+	</select>
+	<select id="ifguardianship" parameterType="java.lang.Integer"   resultMap="BaseResultMap">
+	    select * from user_eq where eq_id=#{eqId} and  typeof = 0
+	</select>
+	<select id="ifuse" parameterType="java.lang.Integer"   resultMap="BaseResultMap">
+	     select * from user_eq   where  eq_id=#{eqId}  and typeof = 2
+	</select>
+	<select id="ifObserved" parameterType="java.lang.Integer"   resultMap="BaseResultMap">
+	     select * from user_eq   where  eq_id=#{eqId}  and typeof=1  and user_id=#{userId}
+	</select>
+	<select id="selelctequser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	  	 select * from user_eq   where  eq_id = #{eqId} 
+	</select>
+
+	
+	<delete id="deleteequse" parameterType="com.sy.pojo.UserEq"  >
+	    delete from user_eq   where   typeof = 1  and eq_id = #{eqId}  and user_id = #{userId} 
+	</delete>
+	<delete id="deleteequsetype" parameterType="com.sy.pojo.UserEq"  >
+	    delete from user_eq   where   user_id=#{userId}  and eq_id = #{eqId}  and typeof=#{typeof}
+	</delete>
+	<select id="selectuserqe" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+	          select *  from user_eq     where   user_id = #{userId} 
+	</select>
+	
+	<select id="selectGuardian"  resultMap="BaseResultMap" >
+	         select * from user_eq where eq_id = #{eqId} and user_id = #{mid} and typeof = 0
+	</select>
+	
+	<select id="geteqiduse"  parameterType="java.lang.Integer" resultType="java.lang.Integer">
+	 select  eq_id  from user_eq     where   user_id = #{userId}  and  typeof=2
+	</select>
+	<delete id="deleteguardian"  parameterType="java.lang.Integer"  >
+	  delete from user_eq where eq_id = #{eqId}
+	</delete>
+	<delete id="deleteuserid"  parameterType="java.lang.Integer"   >
+	  delete from user_eq   where  user_id = #{userId}
+	</delete>
+</mapper>

@@ -1,0 +1,36 @@
+package com.sy.service;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Map;
+
+import com.sy.pojo.JfhealthNew;
+import com.sy.pojo.Push;
+
+/**
+ * 
+ * @author Administrator
+ *
+ */
+public interface PushService {
+	/**
+	 * 查询推送表
+	 * @return
+	 * @throws SQLException
+	 */
+	public Push selectPush(Map<String,Object> map)throws SQLException, ParseException;
+	/**
+	 * 修改推送表
+	 * @param date
+	 * @return
+	 * @throws SQLException
+	 */
+	public int updatePushById(Map<String,Object> map) throws SQLException;
+	/**
+	 * 推送消息
+	 * @param map
+	 * @throws SQLException
+	 */
+	public String queryPushNews(Map<String,Object> map,JfhealthNew jfhealthNew)throws SQLException;
+	
+}

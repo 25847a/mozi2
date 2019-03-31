@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.EquipmentMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.Equipment" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="lordpower" property="lordpower" jdbcType="INTEGER" />
+    <result column="signalxhao" property="signalxhao" jdbcType="VARCHAR" />
+    <result column="bluetooth_type" property="bluetoothType" jdbcType="VARCHAR" />
+    <result column="eq_status" property="eqStatus" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="eqtype" property="eqtype" jdbcType="VARCHAR" />
+    <result column="bluetooth_name" property="bluetoothName" jdbcType="VARCHAR" />
+    <result column="bluetooth_status" property="bluetoothStatus" jdbcType="VARCHAR" />
+    <result column="bluetooth_electricity" property="bluetoothElectricity" jdbcType="INTEGER" />
+    <result column="clock" property="clock" jdbcType="VARCHAR" />
+    <result column="phone1" property="phone1" jdbcType="VARCHAR" />
+    <result column="phone2" property="phone2" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="uploadtime" property="uploadtime" jdbcType="TIMESTAMP" />
+    <result column="bluetoothmac" property="bluetoothmac" jdbcType="VARCHAR" />
+    <result column="bluetooth_list" property="bluetoothList" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, imei, lordpower, signalxhao, bluetooth_type, eq_status, createtime, updatetime, 
+    eqtype, bluetooth_name, bluetooth_status, bluetooth_electricity, clock, phone1, phone2, 
+    name, version, uploadtime, bluetoothmac
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.EquipmentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from equipment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from equipment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from equipment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sy.pojo.EquipmentExample" >
+    delete from equipment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sy.pojo.Equipment" >
+    insert into equipment (id, imei, lordpower, 
+      signalxhao, bluetooth_type, eq_status, 
+      createtime, updatetime, eqtype, 
+      bluetooth_name, bluetooth_status, bluetooth_electricity, 
+      clock, phone1, phone2, 
+      name, version, uploadtime, 
+      bluetoothmac)
+    values (#{id,jdbcType=INTEGER}, #{imei,jdbcType=VARCHAR}, #{lordpower,jdbcType=INTEGER}, 
+      #{signalxhao,jdbcType=VARCHAR}, #{bluetoothType,jdbcType=VARCHAR}, #{eqStatus,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{eqtype,jdbcType=VARCHAR}, 
+      #{bluetoothName,jdbcType=VARCHAR}, #{bluetoothStatus,jdbcType=VARCHAR}, #{bluetoothElectricity,jdbcType=INTEGER}, 
+      #{clock,jdbcType=VARCHAR}, #{phone1,jdbcType=VARCHAR}, #{phone2,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, #{uploadtime,jdbcType=TIMESTAMP}, 
+      #{bluetoothmac,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sy.pojo.Equipment" >
+    insert into equipment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="imei != null" >
+        imei,
+      </if>
+      <if test="lordpower != null" >
+        lordpower,
+      </if>
+      <if test="signalxhao != null" >
+        signalxhao,
+      </if>
+      <if test="bluetoothType != null" >
+        bluetooth_type,
+      </if>
+      <if test="eqStatus != null" >
+        eq_status,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="eqtype != null" >
+        eqtype,
+      </if>
+      <if test="bluetoothName != null" >
+        bluetooth_name,
+      </if>
+      <if test="bluetoothStatus != null" >
+        bluetooth_status,
+      </if>
+      <if test="bluetoothElectricity != null" >
+        bluetooth_electricity,
+      </if>
+      <if test="clock != null" >
+        clock,
+      </if>
+      <if test="phone1 != null" >
+        phone1,
+      </if>
+      <if test="phone2 != null" >
+        phone2,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="uploadtime != null" >
+        uploadtime,
+      </if>
+      <if test="bluetoothmac != null" >
+        bluetoothmac,
+      </if>
+      <if test="agentid != null" >
+        agentid,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="imei != null" >
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="lordpower != null" >
+        #{lordpower,jdbcType=INTEGER},
+      </if>
+      <if test="signalxhao != null" >
+        #{signalxhao,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothType != null" >
+        #{bluetoothType,jdbcType=VARCHAR},
+      </if>
+      <if test="eqStatus != null" >
+        #{eqStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eqtype != null" >
+        #{eqtype,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothName != null" >
+        #{bluetoothName,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothStatus != null" >
+        #{bluetoothStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothElectricity != null" >
+        #{bluetoothElectricity,jdbcType=INTEGER},
+      </if>
+      <if test="clock != null" >
+        #{clock,jdbcType=VARCHAR},
+      </if>
+      <if test="phone1 != null" >
+        #{phone1,jdbcType=VARCHAR},
+      </if>
+      <if test="phone2 != null" >
+        #{phone2,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bluetoothmac != null" >
+        #{bluetoothmac,jdbcType=VARCHAR},
+      </if>
+      <if test="agentid != null" >
+        #{agentid,jdbcType=INTEGER},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sy.pojo.EquipmentExample" resultType="java.lang.Integer" >
+    select count(*) from equipment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update equipment
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.imei != null" >
+        imei = #{record.imei,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lordpower != null" >
+        lordpower = #{record.lordpower,jdbcType=INTEGER},
+      </if>
+      <if test="record.signalxhao != null" >
+        signalxhao = #{record.signalxhao,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bluetoothType != null" >
+        bluetooth_type = #{record.bluetoothType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eqStatus != null" >
+        eq_status = #{record.eqStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.eqtype != null" >
+        eqtype = #{record.eqtype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bluetoothName != null" >
+        bluetooth_name = #{record.bluetoothName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bluetoothStatus != null" >
+        bluetooth_status = #{record.bluetoothStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bluetoothElectricity != null" >
+        bluetooth_electricity = #{record.bluetoothElectricity,jdbcType=INTEGER},
+      </if>
+      <if test="record.clock != null" >
+        clock = #{record.clock,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone1 != null" >
+        phone1 = #{record.phone1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone2 != null" >
+        phone2 = #{record.phone2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uploadtime != null" >
+        uploadtime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bluetoothmac != null" >
+        bluetoothmac = #{record.bluetoothmac,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update equipment
+    set id = #{record.id,jdbcType=INTEGER},
+      imei = #{record.imei,jdbcType=VARCHAR},
+      lordpower = #{record.lordpower,jdbcType=INTEGER},
+      signalxhao = #{record.signalxhao,jdbcType=VARCHAR},
+      bluetooth_type = #{record.bluetoothType,jdbcType=VARCHAR},
+      eq_status = #{record.eqStatus,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      eqtype = #{record.eqtype,jdbcType=VARCHAR},
+      bluetooth_name = #{record.bluetoothName,jdbcType=VARCHAR},
+      bluetooth_status = #{record.bluetoothStatus,jdbcType=VARCHAR},
+      bluetooth_electricity = #{record.bluetoothElectricity,jdbcType=INTEGER},
+      clock = #{record.clock,jdbcType=VARCHAR},
+      phone1 = #{record.phone1,jdbcType=VARCHAR},
+      phone2 = #{record.phone2,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=VARCHAR},
+      uploadtime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      bluetoothmac = #{record.bluetoothmac,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="imeiUpdateAgentAccount" parameterType="com.sy.pojo.Equipment" >
+    update equipment
+    set agentid = #{agentid} where imei = #{imei}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Equipment" >
+    update equipment 
+ <set >
+      <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="lordpower != null" >
+        lordpower = #{lordpower,jdbcType=INTEGER},
+      </if>
+      <if test="signalxhao != null" >
+        signalxhao = #{signalxhao,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothType != null" >
+        bluetooth_type = #{bluetoothType,jdbcType=VARCHAR},
+      </if>
+      <if test="eqStatus != null" >
+        eq_status = #{eqStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime},
+      </if>
+      <if test="eqtype != null" >
+        eqtype = #{eqtype,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothName != null" >
+        bluetooth_name = #{bluetoothName,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothStatus != null" >
+        bluetooth_status = #{bluetoothStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bluetoothElectricity != null" >
+        bluetooth_electricity = #{bluetoothElectricity,jdbcType=INTEGER},
+      </if>
+      <if test="clock != null" >
+        clock = #{clock,jdbcType=VARCHAR},
+      </if>
+      <if test="phone1 != null" >
+        phone1 = #{phone1,jdbcType=VARCHAR},
+      </if>
+      <if test="phone2 != null" >
+        phone2 = #{phone2,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        uploadtime = #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bluetoothmac != null" >
+        bluetoothmac = #{bluetoothmac,jdbcType=VARCHAR},
+      </if>
+      </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sy.pojo.Equipment" >
+    update equipment
+    set imei = #{imei,jdbcType=VARCHAR},
+      lordpower = #{lordpower,jdbcType=INTEGER},
+      signalxhao = #{signalxhao,jdbcType=VARCHAR},
+      bluetooth_type = #{bluetoothType,jdbcType=VARCHAR},
+      eq_status = #{eqStatus,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      eqtype = #{eqtype,jdbcType=VARCHAR},
+      bluetooth_name = #{bluetoothName,jdbcType=VARCHAR},
+      bluetooth_status = #{bluetoothStatus,jdbcType=VARCHAR},
+      bluetooth_electricity = #{bluetoothElectricity,jdbcType=INTEGER},
+      clock = #{clock,jdbcType=VARCHAR},
+      phone1 = #{phone1,jdbcType=VARCHAR},
+      phone2 = #{phone2,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR},
+      uploadtime = #{uploadtime,jdbcType=TIMESTAMP},
+      bluetoothmac = #{bluetoothmac,jdbcType=VARCHAR},
+      bluetooth_list = #{bluetoothList}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+     <select id="getequipment"  parameterType="java.lang.String" resultMap="BaseResultMap">
+       select * from equipment  where  imei = #{imei}  LIMIT 0, 1
+  </select>
+    <select id="getcount" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select count(*) from  equipment 
+      <if test="_parameter != null and _parameter != '' ">
+   			 where  CONCAT(imei)  LIKE concat(concat('%',#{_parameter}),'%')
+  	  </if> 
+  </select>
+     <select id="getcount2" parameterType="java.util.Map" resultType="java.lang.Integer">
+      select count(id) from  equipment where 1 = 1
+      <if test="keyWord != null and keyWord != '' ">
+   			 and CONCAT(imei)  LIKE concat(concat('%',#{keyWord}),'%')
+  		</if> 
+  	  <if test="eqStatus == 'H:1' or eqStatus == 'H:0' ">
+   			 and  eq_status  = #{eqStatus}
+  	  </if> 
+  	  <if test="time != null and time != '' ">
+   			 and  updatetime  like concat(concat('%',#{time}),'%')
+  	  </if> 
+  	  <if test="agentid != null and agentid != '' ">
+   			 and  agentid = #{agentid}
+  	  </if> 
+  </select>
+  <!-- 获取想要的页面数据 -->
+  <select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
+   		SELECT * FROM  equipment  where 1 = 1 
+   		<if test="keyWord != null and keyWord != '' ">
+   			 and CONCAT(imei)  LIKE concat(concat('%',#{keyWord}),'%')
+  		</if> 
+   		<if test="eqStatus == 'H:1' or eqStatus == 'H:0' ">
+   			 and  eq_status  = #{eqStatus}
+  		</if> 
+   		 <if test="time != null and time != '' ">
+   			 and  updatetime  like concat(concat('%',#{time}),'%')
+  	  	</if>
+   		 <if test="agentid != null and agentid != '' ">
+   			 and  agentid  = #{agentid}
+  	  	</if>
+   limit #{pageNo},#{pageSize} 
+  </select>
+  <select id="selectImei"  resultType="java.lang.Object">
+                 select imei from equipment where imei in
+                  <foreach item="item" index="index" collection="list" 
+                         open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+  </select>
+  <select id="selectEqNumber" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+                 select count(id) from equipment where agentid = #{agentid}
+  </select>
+  <select id="selectequipment"  resultMap="BaseResultMap">
+             select * from equipment where imei like "86%"
+  </select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+       
+     <bean id="jobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.sy.Quartz.QuartzTask"></property>
+        
+    </bean>
+      
+    
+   
+	
+    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">  
+	    <property name="jobDetail" ref="jobDetail"/>  
+	    <property name="startDelay" value="5000"/>  
+	    <property name="repeatInterval" value="10000"/>  
+	</bean>
+    <!-- 定义核心调度器 -->
+    <bean id="scheduler"  lazy-init="false" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+      <property name="triggers">  
+            <list>     
+                <ref bean="simpleTrigger" />  
+            </list>  
+        </property>
+        <!-- 设置是否Spring容器初始化后马上启动Scheduler，默认为true。如果设置为false则需要手工启动Scheduler -->  
+       <property name="autoStartup" value="true"/>  
+       <property name="schedulerName" value="cronScheduler" />    
+    </bean>
+</beans>

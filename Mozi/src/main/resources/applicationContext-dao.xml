@@ -1,0 +1,186 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.3.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	 <!-- 启用注解 -->  
+    <context:annotation-config />  
+	<!-- 启用动态代理增强，非接口类也允许使用事务控制 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- 加载 db.properties 文件中的内容，db.properties文件中 key 要有一定的特殊规则 -->
+	<context:property-placeholder location="classpath:*.properties" />
+
+
+
+
+	<!-- c3p0连接池配置 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<!-- 用户名 -->
+		<property name="user" value="${jdbc.username}" />
+		<!-- 用户密码 -->
+		<property name="password" value="${jdbc.password}" />
+		<!-- 驱动串 -->
+		<property name="driverClass" value="${jdbc.driver}" />
+		<!-- url -->
+		<property name="jdbcUrl" value="${jdbc.url}" />
+
+		<!--连接池中保留的最大连接数。默认值: 15 -->
+		<property name="maxPoolSize" value="20" />
+		<!-- 连接池中保留的最小连接数，默认为：3 -->
+		<property name="minPoolSize" value="2" />
+		<!-- 初始化连接池中的连接数，取值应在minPoolSize与maxPoolSize之间，默认为3 -->
+		<property name="initialPoolSize" value="2" />
+
+		<!--最大空闲时间，60秒内未使用则连接被丢弃。若为0则永不丢弃。默认值: 0 -->
+		<property name="maxIdleTime" value="60"></property>
+
+		<!-- 当连接池连接耗尽时，客户端调用getConnection()后等待获取新连接的时间，超时后将抛出SQLException，如设为0则无限期等待。单位毫秒。默认: 
+			0 -->
+		<property name="checkoutTimeout" value="3000" />
+
+		<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。默认值: 3 -->
+		<property name="acquireIncrement" value="2" />
+
+		<!--定义在从数据库获取新连接失败后重复尝试的次数。默认值: 30 ；小于等于0表示无限次 -->
+		<property name="acquireRetryAttempts" value="0" />
+
+		<!--重新尝试的时间间隔，默认为：1000毫秒 -->
+		<property name="acquireRetryDelay" value="1000" />
+
+		<!--关闭连接时，是否提交未提交的事务，默认为false，即关闭连接，回滚未提交的事务 -->
+		<property name="autoCommitOnClose" value="false"></property>
+
+		<!--c3p0将建一张名为Test的空表，并使用其自带的查询语句进行测试。如果定义了这个参数那么属性preferredTestQuery将被忽略。你不能在这张Test表上进行任何操作，它将只供c3p0测试使用。默认值: 
+			null -->
+		<property name="automaticTestTable" value="Test"></property>
+
+		<!--如果为false，则获取连接失败将会引起所有等待连接池来获取连接的线程抛出异常，但是数据源仍有效保留，并在下次调用getConnection()的时候继续尝试获取连接。如果设为true，那么在尝试获取连接失败后该数据源将申明已断开并永久关闭。默认: 
+			false -->
+		<property name="breakAfterAcquireFailure" value="false"></property>
+
+		<!--每60秒检查所有连接池中的空闲连接。默认值: 0，不检查 -->
+		<property name="idleConnectionTestPeriod" value="60"></property>
+		<!--c3p0全局的PreparedStatements缓存的大小。如果maxStatements与maxStatementsPerConnection均为0，则缓存不生效，只要有一个不为0，则语句的缓存就能生效。如果默认值: 
+			0 -->
+		<property name="maxStatements" value="100"></property>
+
+		<!--maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存statements数。默认值: 0 -->
+		<property name="maxStatementsPerConnection" value="0"></property>
+	</bean>
+
+<!-- c3p0连接池配置 -->
+	<bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<!-- 用户名 -->
+		<property name="user" value="${jdbc.username}" />
+		<!-- 用户密码 -->
+		<property name="password" value="${jdbc.password}" />
+		<!-- 驱动串 -->
+		<property name="driverClass" value="${jdbc.driver}" />
+		<!-- url -->
+		<property name="jdbcUrl" value="${jdbc.url2}" />
+</bean>
+<bean id="dynamicDataSource" class="com.sy.date.converter.DynamicDataSource">  
+     <property name="targetDataSources">  
+         <map key-type="java.lang.String">
+             <!-- 指定lookupKey和与之对应的数据源 -->
+             <entry key="dataSource" value-ref="dataSource"></entry> 
+              <entry key="dataSource2" value-ref="dataSource2"></entry>  
+         </map>  
+     </property>  
+     <!-- 这里可以指定默认的数据源 -->
+     <property name="defaultTargetDataSource" ref="dataSource" />  
+</bean>  
+	<!-- 事务管理器 对 mybatis连接数据库事务控制，spring 使用jdbc的事务控制类 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+	<!-- SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 数据库连接池 -->
+		<property name="dataSource" ref="dynamicDataSource" />
+		<!-- 加载myBatis的全局配置文件 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 指定mybatis mapper文件的位置 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+	</bean>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
+        <constructor-arg ref="sqlSessionFactory" />  
+    </bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="insert*" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="add*" propagation="REQUIRED" read-only="false"
+				rollback-for="java.lang.Exception" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+		<!-- aop事物处理切入路径配置 -->
+	    <bean id="timeHandler" class="com.sy.aop.TimeHandler" />
+	<!-- aop事物处理切入路径配置 -->
+	<aop:config>
+		<aop:pointcut id="pc" expression="execution(* com.sy..service..*(..))" />
+		<aop:advisor pointcut-ref="pc" advice-ref="txAdvice" />
+		<aop:aspect id="time" ref="timeHandler">
+		    <aop:pointcut id="AllMethod" expression="execution(* com.sy..service..*(..))" />
+              <!--  <aop:before method="printTime" pointcut-ref="AllMethod" />-->  
+                <aop:after method="log" pointcut-ref="AllMethod" />
+            </aop:aspect>
+	</aop:config>
+
+
+
+	<!-- mapper 扫描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描包路径 、 如果需要扫描多个包、中间使用半角逗号隔开 -->
+		<property name="basePackage" value="com.sy.mapper" />
+		<!-- SqlSessionFactory -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	<!-- #注入配置文件 --> 
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">  
+            <property name="locations">  
+                <list>  
+                     <value>classpath:db.properties</value>    
+                </list>  
+            </property>  
+        </bean>
+        <!-- % 注入1-->  
+        <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">  
+            <property name="properties" ref="configProperties"/>  
+        </bean>
+        <!-- %注入2
+        <bean id="propertyConfigurer1" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">  
+            <property name="location">  
+            <value>db.properties</value>  
+            </property>  
+        </bean> -->   
+      <!--  <import resource="spring-quartz.xml"/>  -->
+</beans>

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.JfhealthdaoMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.Jfhealthdao" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="HRV" property="HRV" jdbcType="INTEGER" />
+    <result column="sbp_ave" property="sbpAve" jdbcType="INTEGER" />
+    <result column="dbp_ave" property="dbpAve" jdbcType="INTEGER" />
+    <result column="Heartrate" property="heartrate" jdbcType="INTEGER" />
+    <result column="Bloodoxygen" property="bloodoxygen" jdbcType="INTEGER" />
+    <result column="microcirculation" property="microcirculation" jdbcType="INTEGER" />
+    <result column="respirationrate" property="respirationrate" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.sy.pojo.Jfhealthdao" extends="BaseResultMap" >
+    <result column="Amedicalreport" property="amedicalreport" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate, 
+    phone, imei, createtime
+  </sql>
+  <sql id="Blob_Column_List" >
+    Amedicalreport
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.sy.pojo.JfhealthdaoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from jfhealthdao
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.JfhealthdaoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from jfhealthdao
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from jfhealthdao
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from jfhealthdao
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.sy.pojo.JfhealthdaoExample" >
+    delete from jfhealthdao
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.sy.pojo.Jfhealthdao" >
+    insert into jfhealthdao (id, HRV, sbp_ave, 
+      dbp_ave, Heartrate, Bloodoxygen, 
+      microcirculation, respirationrate, phone, 
+      imei, createtime, Amedicalreport
+      )
+    values (#{id,jdbcType=INTEGER}, #{HRV,jdbcType=INTEGER}, #{sbpAve,jdbcType=INTEGER}, 
+      #{dbpAve,jdbcType=INTEGER}, #{heartrate,jdbcType=INTEGER}, #{bloodoxygen,jdbcType=INTEGER}, 
+      #{microcirculation,jdbcType=INTEGER}, #{respirationrate,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{imei,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{amedicalreport,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sy.pojo.Jfhealthdao" >
+    insert into jfhealthdao
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="HRV != null" >
+        HRV,
+      </if>
+      <if test="sbpAve != null" >
+        sbp_ave,
+      </if>
+      <if test="dbpAve != null" >
+        dbp_ave,
+      </if>
+      <if test="heartrate != null" >
+        Heartrate,
+      </if>
+      <if test="bloodoxygen != null" >
+        Bloodoxygen,
+      </if>
+      <if test="microcirculation != null" >
+        microcirculation,
+      </if>
+      <if test="respirationrate != null" >
+        respirationrate,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="imei != null" >
+        imei,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="amedicalreport != null" >
+        Amedicalreport,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="HRV != null" >
+        #{HRV,jdbcType=INTEGER},
+      </if>
+      <if test="sbpAve != null" >
+        #{sbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="dbpAve != null" >
+        #{dbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="heartrate != null" >
+        #{heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="bloodoxygen != null" >
+        #{bloodoxygen,jdbcType=INTEGER},
+      </if>
+      <if test="microcirculation != null" >
+        #{microcirculation,jdbcType=INTEGER},
+      </if>
+      <if test="respirationrate != null" >
+        #{respirationrate,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amedicalreport != null" >
+        #{amedicalreport,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.sy.pojo.JfhealthdaoExample" resultType="java.lang.Integer" >
+    select count(*) from jfhealthdao
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update jfhealthdao
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.HRV != null" >
+        HRV = #{record.HRV,jdbcType=INTEGER},
+      </if>
+      <if test="record.sbpAve != null" >
+        sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="record.dbpAve != null" >
+        dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="record.heartrate != null" >
+        Heartrate = #{record.heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="record.bloodoxygen != null" >
+        Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
+      </if>
+      <if test="record.microcirculation != null" >
+        microcirculation = #{record.microcirculation,jdbcType=INTEGER},
+      </if>
+      <if test="record.respirationrate != null" >
+        respirationrate = #{record.respirationrate,jdbcType=INTEGER},
+      </if>
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.imei != null" >
+        imei = #{record.imei,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.amedicalreport != null" >
+        Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update jfhealthdao
+    set id = #{record.id,jdbcType=INTEGER},
+      HRV = #{record.HRV,jdbcType=INTEGER},
+      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
+      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
+      Heartrate = #{record.heartrate,jdbcType=INTEGER},
+      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
+      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
+      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      imei = #{record.imei,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update jfhealthdao
+    set id = #{record.id,jdbcType=INTEGER},
+      HRV = #{record.HRV,jdbcType=INTEGER},
+      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
+      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
+      Heartrate = #{record.heartrate,jdbcType=INTEGER},
+      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
+      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
+      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      imei = #{record.imei,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Jfhealthdao" >
+    update jfhealthdao
+    <set >
+      <if test="HRV != null" >
+        HRV = #{HRV,jdbcType=INTEGER},
+      </if>
+      <if test="sbpAve != null" >
+        sbp_ave = #{sbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="dbpAve != null" >
+        dbp_ave = #{dbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="heartrate != null" >
+        Heartrate = #{heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="bloodoxygen != null" >
+        Bloodoxygen = #{bloodoxygen,jdbcType=INTEGER},
+      </if>
+      <if test="microcirculation != null" >
+        microcirculation = #{microcirculation,jdbcType=INTEGER},
+      </if>
+      <if test="respirationrate != null" >
+        respirationrate = #{respirationrate,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="imei != null" >
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
+      <if test="amedicalreport != null" >
+        Amedicalreport = #{amedicalreport,jdbcType=LONGVARCHAR},
+      </if>
+        createtime = NOW()
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPhone" parameterType="java.util.Map" >
+    update jfhealthdao
+    <set >
+      <if test="HRV != null" >
+        HRV = #{HRV,jdbcType=INTEGER},
+      </if>
+      <if test="sbpAve != null" >
+        sbp_ave = #{sbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="dbpAve != null" >
+        dbp_ave = #{dbpAve,jdbcType=INTEGER},
+      </if>
+      <if test="Heartrate != null" >
+        Heartrate = #{Heartrate,jdbcType=INTEGER},
+      </if>
+      <if test="Bloodoxygen != null" >
+        Bloodoxygen = #{Bloodoxygen,jdbcType=INTEGER},
+      </if>
+      <if test="microcirculation != null" >
+        microcirculation = #{microcirculation,jdbcType=INTEGER},
+      </if>
+      <if test="respirationrate != null" >
+        respirationrate = #{respirationrate,jdbcType=INTEGER},
+      </if>
+        createtime = NOW(),
+   	  </set>
+   		 where  phone = #{phone,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sy.pojo.Jfhealthdao" >
+    update jfhealthdao
+    set HRV = #{HRV,jdbcType=INTEGER},
+      sbp_ave = #{sbpAve,jdbcType=INTEGER},
+      dbp_ave = #{dbpAve,jdbcType=INTEGER},
+      Heartrate = #{heartrate,jdbcType=INTEGER},
+      Bloodoxygen = #{bloodoxygen,jdbcType=INTEGER},
+      microcirculation = #{microcirculation,jdbcType=INTEGER},
+      respirationrate = #{respirationrate,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      Amedicalreport = #{amedicalreport,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sy.pojo.Jfhealthdao" >
+    update jfhealthdao
+    set HRV = #{HRV,jdbcType=INTEGER},
+      sbp_ave = #{sbpAve,jdbcType=INTEGER},
+      dbp_ave = #{dbpAve,jdbcType=INTEGER},
+      Heartrate = #{heartrate,jdbcType=INTEGER},
+      Bloodoxygen = #{bloodoxygen,jdbcType=INTEGER},
+      microcirculation = #{microcirculation,jdbcType=INTEGER},
+      respirationrate = #{respirationrate,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      imei = #{imei,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <select id="selelctJfhealthdao" parameterType="java.lang.String"  resultType="java.lang.Integer">
+   SELECT id FROM jfhealthdao where imei=#{imei}
+		ORDER BY createtime desc 
+		LIMIT 0, 1
+  </select>
+  <!--  <select id="getJfhealthdao" parameterType="java.lang.String" resultMap="BaseResultMap">
+   SELECT * FROM jfhealthdao where imei=#{imei}
+		ORDER BY createtime desc 
+		LIMIT 0, 1
+  </select> -->
+   <delete id="deletejfhealthdao" parameterType="java.lang.String" >
+   	delete  FROM jfhealthdao where phone = #{phone}
+  </delete>
+   <select id="JfhealthdaoInfo" parameterType="java.lang.String"  resultMap="BaseResultMap">
+  	 SELECT * FROM jfhealthdao where imei=#{imei} and phone=#{account}
+		ORDER BY createtime desc 
+		LIMIT 0, 1
+  </select>
+   <select id="getjfhealthdao" parameterType="java.lang.String"  resultMap="BaseResultMap">
+   SELECT * FROM jfhealthdao where  phone=#{phone}
+		ORDER BY createtime desc 
+		LIMIT 0, 1
+  </select>
+</mapper>

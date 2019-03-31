@@ -1,0 +1,133 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-4.3.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+
+
+	<!-- 全局异常处理器 只要实现 HandlerExceptionResolver 接口就是全局异常处理器 全局异常处理器只能有一个 <bean 
+		id="dddd" class="com.sy.exception.CustomExceptionResolver" /> -->
+
+	<!-- 组件扫描:可以扫描 controller、service、... 这里让扫描 controller 指定 controller 的包 -->
+	<context:component-scan base-package="com.sy.controller,com.sy.date.converter,com.sy.interceptor" />
+
+	<!-- 视图解析器 -->
+	<!-- 解析 jsp 视图，默认使用 jstl 标签，classpath下的得有 jstl 的包 配置 jsp 所在的路径 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
+	<!-- jsp储存视图的路径 -->
+		<property name="prefix" value="/WEB-INF/view/"></property>
+		<property name="suffix" value=".jsp" 
+		/> </bean> 
+
+	<!-- 静态资源解析 包括：js、css、images.... -->
+	<mvc:annotation-driven />
+	<mvc:resources location="/Mobile Surveys - Survey Anyplace_files/" mapping="/Mobile Surveys - Survey Anyplace_files/**" />
+	<mvc:resources location="/media/" mapping="/media/**/**" />
+	<mvc:resources location="/image/" mapping="/image/**" />
+	<mvc:resources location="/img/" mapping="/img/**" />
+	<mvc:resources location="/css/" mapping="/css/**" />
+	<mvc:resources location="/js/" mapping="/js/**" />
+	<mvc:resources location="/cssindex/" mapping="/cssindex/**" />
+	<mvc:resources location="/resources/" mapping="/resources/**" />
+	<mvc:resources location="/swagger/" mapping="/swagger/**" />
+	<mvc:resources location="/jsp/" mapping="/jsp/**" />
+	<mvc:resources location="/views/" mapping="/views/**" />
+	<mvc:resources location="/index.html" mapping="/index.html" />
+	<mvc:resources location="/h5/" mapping="/h5/**/**" />
+	<mvc:resources location="/jksj/" mapping="/jksj/**/**" />
+
+	<!-- 使用mva:mvc:annotation-driven代替注解映射器和注解适配器配置 默认加载很多的参数绑定方法、比如：json转换解析器就默认加载了、如果使用这个就不用配置上边两个配置了 
+		实际开发时使用 注入自定义参数绑定 :conversion-service="conversionService" 注入校验器:validator="validator" -->
+	<!-- 用户于解决 augularJs 乱码问题 -->
+	<!-- 处理请求返回json字符串的中文乱码问题 -->
+	<mvc:annotation-driven conversion-service="conversionService">
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 自定义参数绑定 conversionService -->
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- 转换器 -->
+		<property name="converters">
+			<list>
+				<!-- String 转 Date -->
+				<bean class="com.sy.date.converter.CustomDateConverter" />
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件的大小最大限制为 5MB -->
+		<property name="maxUploadSize">
+			<!-- 以字节为单位 -->
+			<value>52428800000</value>
+		</property>
+	</bean>
+
+
+
+<!-- 拦截器配置 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/Mobile Surveys - Survey Anyplace_files/**"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/media/**"/>
+			<mvc:exclude-mapping path="/cssindex/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/img/**"/>
+			<mvc:exclude-mapping path="/image/**"/>
+			<mvc:exclude-mapping path="/user/test"/>
+			<mvc:exclude-mapping path="/user/login"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/jsp/**"/>
+			<mvc:exclude-mapping path="/h5/pay"/>
+			<bean class="com.sy.interceptor.SecurityInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+		
+    <!-- 全局异常处理
+    <bean id="exceptionHandler" class="com.sy.exception.CustomExceptionResolver" />   -->  
+    
+    <!--Bean自动代理处理器 配置
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator" >
+        <property name="beanNames">
+            <list>
+                配置需要进行日志记录的Service和Dao
+                <value>*Dao</value>
+                <value>*Mapper</value>
+                <value>*service</value>
+            </list>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>exceptionAdvisor</value>
+				<value>methodLogInterceptor</value>
+                <value>transactionInterceptor</value>
+            </list>
+        </property>
+    </bean> -->
+</beans>
