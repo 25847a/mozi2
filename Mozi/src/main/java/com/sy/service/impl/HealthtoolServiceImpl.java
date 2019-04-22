@@ -75,6 +75,7 @@ public class HealthtoolServiceImpl {
 	private static final String HRV = "HRV";
 
 	public static void main(String[] args) throws Exception {
+		
 		// for(int i =0 ; i <70; i++){
 		// boolean jfstatus = Healthtoolserviceimpl.registered(
 		// Managementconstant.channel_id + String.valueOf(i),
@@ -90,8 +91,8 @@ public class HealthtoolServiceImpl {
 		// System.out.println(time);
 		// respirationrate(Managementconstant.channel_id+"108","123456",
 		// "2018-07-16 17:43:11","6A6668010001010101010000FFFFFFFF");
-		String hrv2 = HRV(Managementconstant.channel_id + "108", "123456", "2018-07-16 17:43:11", "6A6668010001010101010000FFFFFFFF");
-		System.out.println(hrv2);
+		//String hrv2 = HRV(Managementconstant.channel_id + "108", "123456", "2018-07-16 17:43:11", "6A6668010001010101010000FFFFFFFF");
+		//System.out.println(hrv2);
 		// // 血压
 		// String bloodr =
 		// bloodpressure(Managementconstant.channel_id+"108","123456",
@@ -100,6 +101,10 @@ public class HealthtoolServiceImpl {
 		// System.out.println(bloodxygen[0]+"=========="+bloodxygen[1]);
 		// String a="a78961f";
 		// boolean respiration = registered("m123", "123456", "123456");
+		String data="wsWzKYAOjS2Q+oHBiHzWkt/ko63dCQm4aDG0sRIhsrL48jku4b7zaeR42QT8Ly/TJ0253tc4tCauhjC/OHxpEXuGj+BChCDNMA9mIjKEaxLRk+1UfwB+hq3uINAmI48b/ZKPyUJm3QJf3xe2U7erm/ClZ49vl9Q6dNQwVkq9tDy+NbkoOgPUcNuFjKkA/a5Dlwq70vx38FAAqAsYEb7cYSwQiOmASX65Z9Rrf2Px1Pa1I+KfPwd13gYmbNBWHwX+3ToUYtXeaprd36ZYINTHv7QfP6Hl22erzE/Zw/Mc+hxUdflFNycXy3gCAvmq+E4XTNrHVgKZYNs+vD8mJ7mmsuLm0kDaJmTr+aIqS4txxmy9/fDNRei0pK0RWovZBOTFbgGiUNiMX39Xjx+p8qcUN1NgSihXiNwT4UUQ6woormOPmyp2ASM54H5pvO7mjpxgzchp9/wy5Ay6gawLBLoJ3HBP0ipoREaMPCsI2eoKsEheGwZEpOM9ELMBNHdoSGqxqBVUpe4P0RMOeuUOA4EXQADoYiXdZ3rfxSY+QJ/IpRxBoHJcLqVeI4KtExdozHMEt8zu3ZlXZ4Pi1zBWitZ0cfk5GGoB/jyV3UL7REprwGayiOQaa9WsoVMK8NWsJvS6zeUF4Fj3/cmMSwy5SOTblp6hGY4GamthBjyK1cC0sHvFm0vqp1ZXFQ7N4bYcNBiMYFef0B+zMO9hivE2KzcRgFM8LFfJNldXl0PXDG1MoK0S1E8eV8M3ZlmXQ6yjyOh63a0N13mArVA3sUNZz23YDDoPKEx7xN4MLhuZQRLDqagdpSwi0OCsIIBVH2IEXTG/RsE5wo6C3qqt3VM6Gz5V+Q0mGsXxuBDEOKFbH4IGfNGC8HtJvrIYzYwccc0pyE3Py2dzzpuUrj1sfUeF0R8oUlHLfzuhyXzc5twSMgR5Uz5TDjW7tO";
+		
+		String stattime = Uploadhealth("mozistar28706", "123456", data, "6A6668010001010101010000FFFFFFFF", 28706, "T14"); 
+		System.out.println(stattime);
 	}
 
 	private static void init() {
@@ -265,17 +270,141 @@ public class HealthtoolServiceImpl {
 	                    record.setCreatetime(new Date());
 	                    record.setPhone(account);
 	                    record.setImei(imei);
+	                	Jfhealth health = new Jfhealth();
+	                    
+	                	// 高压值检测值
+						double gy = Integer.parseInt(bloodxygen[0]);
+				 		//低压检测值
+						double dy = Integer.parseInt(bloodxygen[1]);
+						 //心率校准值
+	              		double heartrdao = jfdao.getHeartrate()==0?80:jfdao.getHeartrate();
 						// 高压值校准值
-						Integer highpressure = jfdao.getSbpAve()==null?120:jfdao.getSbpAve();
+	              		double highpressure = jfdao.getSbpAve()==0?120:jfdao.getSbpAve();
 						// 低压校准值
-						Integer lowpressure = jfdao.getDbpAve()==null?80:jfdao.getDbpAve();
-
-						// 高压值检测值
+	              		double lowpressure = jfdao.getDbpAve()==0?80:jfdao.getDbpAve();
+						// 心率 检测值
+						 double hear = Double.parseDouble(heartr);
+						 int gnum=0;
+						 int dnum=0;
+						  if(hear<heartrdao && hear!=0){
+							  double sum =(double)hear/(double)heartrdao*100;
+							   if(97<sum && sum<=100){
+								   gnum = (int) (97+Math.random()*(100-97+1));
+								   dnum = (int) (97+Math.random()*(100-97+1));
+								 }else if(94<sum && sum<=97){
+									 gnum = (int) (94+Math.random()*(96-94+1));
+									 dnum = (int) (97+Math.random()*(100-97+1));
+								 } else if(92<sum && sum<=94){
+									 gnum =  (int) (92+Math.random()*(93-92+1));
+									 dnum = (int) (97+Math.random()*(100-97+1));
+								 }else if(90<=hear && hear<=92){
+									 gnum =  (int) (90+Math.random()*(91-90+1));
+									 dnum = (int) (97+Math.random()*(100-97+1));
+								 }else{
+									 hear =hear*(97+Math.random()*(100-97+1))/100;
+									 gnum=(int)(97+Math.random()*(100-97+1));;
+									 dnum = (int) (97+Math.random()*(100-97+1));
+								 }
+							   highpressure=(int) (highpressure*gnum/100);
+							   lowpressure = (int) (lowpressure*dnum/100);
+						  }else if(hear>=heartrdao){
+							  double sum =(double)hear/(double)heartrdao*100;
+							  double gysum =(double)highpressure/(double)gy*100;//求出高压占校准值的比例
+							  double dysum =(double)lowpressure/(double)dy*100;//求出低压占校准值的比例
+							   if(100<=sum && sum<104){
+								   if(90<=gysum && gysum<110){
+									   highpressure=gy;
+									   gnum=100;
+								   }else{
+									   gnum = (int) (100+Math.random()*(102-100+1));
+								   }
+								if(90<=dysum && dysum<110){
+									   lowpressure=dy;
+									   dnum=100; 
+								   }else{
+									   dnum = (int) (100+Math.random()*(102-100+1));
+								   }
+								 }else if(104<=sum && sum<108){
+									 if(90<=gysum && gysum<110){
+										   highpressure=gy;
+										   gnum=100;
+									   }else{
+										   gnum = (int) (103+Math.random()*(104-103+1));
+									   }
+									 if(90<=dysum && dysum<110){
+										   lowpressure=dy;
+										   dnum=100; 
+									   }else{
+										   dnum = (int) (103+Math.random()*(104-103+1));
+									   }
+								 } else if(108<=sum && sum<112){
+									 gnum = (int) (105+Math.random()*(106-105+1));
+									 dnum = (int) (103+Math.random()*(104-103+1));
+								 }else if(112<=sum && sum<116){
+									 gnum = (int) (107+Math.random()*(108-107+1));
+									 dnum = (int) (103+Math.random()*(104-103+1));
+								 }else if(116<=sum && sum<120){
+									 gnum = (int) (109+Math.random()*(110-109+1));
+									 dnum = (int) (103+Math.random()*(104-103+1));
+								 }else if(120<=sum && sum<124){
+									 gnum = (int) (110+Math.random()*(112-110+1));
+									 dnum = (int) (103+Math.random()*(104-103+1));
+								 }else if(124<=sum && sum<128){
+									 gnum = (int) (113+Math.random()*(114-113+1));
+									 dnum = (int) (103+Math.random()*(104-103+1));
+								 }else if(128<=sum && sum<132){
+									 gnum = (int) (115+Math.random()*(116-115+1));
+									 dnum = (int) (115+Math.random()*(116-115+1));
+								 }else if(132<=sum && sum<136){
+									 gnum = (int) (117+Math.random()*(118-117+1));
+									 dnum = (int) (117+Math.random()*(118-117+1));
+								 }else if(136<=sum && sum<140){
+									 gnum = (int) (119+Math.random()*(120-119+1));
+									 dnum = (int) (119+Math.random()*(120-119+1));
+								 }else if(140<=sum && sum<144){
+									 gnum = (int) (121+Math.random()*(122-121+1));
+									 dnum = (int) (121+Math.random()*(122-121+1));
+								 }else if(144<=sum && sum<148){
+									 gnum = (int) (123+Math.random()*(124-123+1));
+									 dnum = (int) (123+Math.random()*(124-123+1));
+								 }else if(148<=sum && sum<152){
+									 gnum = (int) (125+Math.random()*(127-125+1));
+									 dnum = (int) (125+Math.random()*(127-125+1));
+								 }else if(152<=sum && sum<156){
+									 gnum = (int) (128+Math.random()*(130-128+1));
+									 dnum = (int) (128+Math.random()*(130-128+1));
+								 }else if(156<=sum && sum<158){
+									 gnum = (int) (130+Math.random()*(131-130+1));
+									 dnum = (int) (130+Math.random()*(131-130+1));
+								 }else{
+									 hear =hear*(100+Math.random()*(104-100+1))/100;
+									 gnum=(int)(100+Math.random()*(104-100+1));
+									 dnum=(int)(100+Math.random()*(104-100+1));
+								 }
+							  highpressure=(int) (highpressure*gnum/100);
+							  lowpressure = (int) (lowpressure*dnum/100);
+						  }else{
+							  hear =heartrdao*(98+Math.random()*(102-98+1))/100;
+							  gnum=(int)(98+Math.random()*(102-98+1));
+							  dnum=(int)(98+Math.random()*(102-98+1));
+							  highpressure=(int) (highpressure*gnum/100);
+							  lowpressure = (int) (lowpressure*dnum/100);
+						  }
+						  health.setHeartrate((int)hear);;
+						  // 高压
+						  health.setSbpAve((int)highpressure);
+						  // 低压
+						  health.setDbpAve((int)lowpressure);
+						 /**	// 高压值校准值
+							Integer highpressure = jfdao.getSbpAve()==null?120:jfdao.getSbpAve();
+							// 低压校准值
+							Integer lowpressure = jfdao.getDbpAve()==null?80:jfdao.getDbpAve();
+							// 高压值检测值
 						 int gy = Integer.parseInt(bloodxygen[0]);
 						//低压检测值
 						 int dy = Integer.parseInt(bloodxygen[1]);
-						 
-						 if(gy==0||dy==0){
+							*/
+					/**	 if(gy==0||dy==0){
 							 
 							    //高压部分,校准值正负10%  
 								Random r =  new Random();
@@ -293,24 +422,15 @@ public class HealthtoolServiceImpl {
 								lowpressure = highLowPressureVal(lowpressure, Integer.parseInt(bloodxygen[1]));
 							}
 				
-
-						Jfhealth health = new Jfhealth();
+					 	*/
 						// 报告
 						health.setAmedicalreport(amedical);
 						// 血氧
 						health.setBloodoxygen(Integer.parseInt(bloodxy)<93?(int)(95+Math.random()*(99-95+1)):Integer.parseInt(bloodxy));
-						//health.setBloodoxygen(Integer.parseInt(bloodxy));
-						// 高压
-						health.setSbpAve(highpressure);
-						// 低压
-						health.setDbpAve(lowpressure);
-						
-						
-						
+						/**		//心率校准值
 						// 心率 检测值
 						int hear = Integer.parseInt(heartr);
-						//心率校准值
-						Integer heartrdao = jfdao.getHeartrate();
+					Integer heartrdao = jfdao.getHeartrate();
 						if(hear==0){
 							Random r =  new Random();
 							int s = r.nextInt((heartrdao/10)*2)+(heartrdao-heartrdao/10)+1;
@@ -319,7 +439,7 @@ public class HealthtoolServiceImpl {
 							//校准值0.8加检测值0.2
 							health.setHeartrate(highLowPressureVal(heartrdao,hear));
 						}
-						
+						*/
 						// Hrv
 						if(hrv.equals("0")){
 							Random r = new Random();

@@ -516,18 +516,18 @@ month(createtime)= #{month} ORDER BY sbp_ave DESC LIMIT 1;
 	<!-- 11获取血压数据 （根据年月日 周）查找血压最小值 -->
    <select id="selecthealthMin" parameterType="java.util.Map" resultMap="BaseResultMap">
   <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
-      select * from  jfhealth  where year(createtime)= #{timedata}    and  phone =#{phone} ORDER BY dbp_ave LIMIT 1 ;
+      select * from  jfhealth  where year(createtime)= #{timedata}    and  phone =#{phone} ORDER BY dbp_ave LIMIT 1,1 ;
   </if>
   <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
-	  select * from jfhealth  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ORDER BY dbp_ave LIMIT 1 ;
+	  select * from jfhealth  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ORDER BY dbp_ave LIMIT 1,1 ;
 	</if>
 	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
 	  select * from jfhealth  where  day(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year}  and  
 
-month(createtime)= #{month} ORDER BY dbp_ave LIMIT 1 ;
+month(createtime)= #{month} ORDER BY dbp_ave LIMIT 1,1 ;
 	</if>
 	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
-	  select * from jfhealth  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone} ORDER BY dbp_ave LIMIT 1 ;
+	  select * from jfhealth  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone} ORDER BY dbp_ave LIMIT 1,1 ;
 	</if>
 	</select>
 	

@@ -37,6 +37,9 @@ public interface PushMapper {
 	@Select("select * from push where userId = #{userId}")
 	public List<Push> selectPushList(Integer userId);
 	
+	//@Select("select * from push where userId = #{userId} and alias = #{alias}")
+	//public Push selectPushInfo(@Param("userId")Integer userId,@Param("alias")Integer alias);
+	
 	@Delete("delete from push where userId = #{userId} and alias = #{alias}")
 	public Integer removePush(@Param("userId")Integer userId,@Param("alias")Integer alias);
 	

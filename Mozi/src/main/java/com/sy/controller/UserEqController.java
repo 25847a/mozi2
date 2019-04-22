@@ -24,10 +24,7 @@ import com.sy.service.EquipmentService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.vo.Userdata;
-
 import io.netty.channel.Channel;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "usereq")
@@ -247,7 +244,7 @@ public class UserEqController {
 			}
 			}else{
 				re.setCode(350);
-				re.setMessage("请先断开蓝牙");
+				re.setMessage("请先断开衣服");
 			}
 		}else if(typeof==1){
 			status = usereqservice.deleteequse(e.getId(),
@@ -371,6 +368,7 @@ public class UserEqController {
 			if (userdata != null && userdata.size() > 0) {
 				re.setCode(200);
 				re.setMessage("获取所有设备使用者信息成功！！！");
+				logger.info("获取所有设备使用者信息成功>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+userdata);
 				re.setData(userdata);
 			} else {
 				re.setCode(200);
@@ -379,6 +377,7 @@ public class UserEqController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		logger.info("嘉康请求:usereq/selectuserdata>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+re.toString());
 			return re;
 	}
 
