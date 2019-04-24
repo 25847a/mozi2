@@ -368,7 +368,6 @@ public class UserEqController {
 			if (userdata != null && userdata.size() > 0) {
 				re.setCode(200);
 				re.setMessage("获取所有设备使用者信息成功！！！");
-				logger.info("获取所有设备使用者信息成功>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+userdata);
 				re.setData(userdata);
 			} else {
 				re.setCode(200);
@@ -377,7 +376,6 @@ public class UserEqController {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		logger.info("嘉康请求:usereq/selectuserdata>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+re.toString());
 			return re;
 	}
 

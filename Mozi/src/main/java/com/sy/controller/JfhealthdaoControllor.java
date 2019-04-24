@@ -83,8 +83,8 @@ public class JfhealthdaoControllor {
 			re.setMessage("userId为null！！！");
 		}else{
 		Jfhealthdao jfhealthdao = jfhealthdaoservice.getjfhealthdao("mozistar"+userId);
+		User user = userMapper.selectByPrimaryKey(Integer.valueOf(userId));
 		if(jfhealthdao==null){
-			User user = userMapper.selectByPrimaryKey(Integer.valueOf(userId));
 			jfhealthdao = new Jfhealthdao();
 			jfhealthdao.setCreatetime(new Date());
 			jfhealthdao.setPhone("mozistar"+userId);
@@ -102,6 +102,7 @@ public class JfhealthdaoControllor {
 		String createtime = formatter.format(jfhealthdao.getCreatetime());
 		Map<String,Object> data = new HashMap<>();
 			data.put("createtime", createtime);
+			data.put("calibration", user.getCalibration());
 			data.put("HRV", jfhealthdao.getHRV()==null?59:jfhealthdao.getHRV());
 			data.put("Heartrate", jfhealthdao.getHeartrate()==null?80:jfhealthdao.getHeartrate());
 			data.put("Bloodoxygen", jfhealthdao.getBloodoxygen()==null?97:jfhealthdao.getBloodoxygen());

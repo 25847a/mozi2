@@ -439,7 +439,7 @@ public class EquipmentController {
 				logger.info("设备号<" + imei + ">校准失败,返回的数据解析失败======");
 				break;
 			} else {
-				if (i == 65) {
+				if (i == 52) {
 					logger.info("设备号<" + imei + ">校准失败,校准超时======");
 					break;
 				}

@@ -546,7 +546,7 @@ public class UserController {
 						u.getAge(), u.getGender(), u.getPhone(), u.getAddress(),
 						u.getAvatar(), u.getWechat(), u.getQq(), u.getCreatetime(),
 						u.getAtlasttime(), u.getWeight(), u.getHeight(), u.getBorn(),
-						u.getCode(), u.getHighpressure(), u.getLowpressure(),"1",u.getImei(),"5");
+						u.getCode(), u.getHighpressure(), u.getLowpressure(),"0",u.getImei(),"5");
 				
 				Integer key = userservice.adduserkey(user);
 				
