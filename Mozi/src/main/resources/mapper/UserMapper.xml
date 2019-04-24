@@ -10,6 +10,7 @@
     <result column="age" property="age" jdbcType="INTEGER" />
     <result column="gender" property="gender" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="calibration" property="calibration" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
     <result column="wechat" property="wechat" jdbcType="VARCHAR" />
@@ -85,7 +86,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, role, account, password, name, age, gender, phone, address, avatar, wechat, qq, 
+    id, role, account, password, name, age, gender, phone, calibration,address, avatar, wechat, qq, 
     createtime, atlasttime, weight, height, born, code, highpressure, lowpressure,imei
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.UserExample" >
