@@ -37,6 +37,7 @@ import com.sy.service.PushService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.utils.BinaryReadWrite;
+import com.sy.utils.DataParsing;
 import com.sy.utils.HttpClientUtil;
 import com.sy.utils.Managementconstant;
 
@@ -271,287 +272,72 @@ public class HealthtoolServiceImpl {
 	                    record.setPhone(account);
 	                    record.setImei(imei);
 	                	Jfhealth health = new Jfhealth();
-	                    
-	                	// 高压值检测值
-						double gy = Integer.parseInt(bloodxygen[0]);
-				 		//低压检测值
-						double dy = Integer.parseInt(bloodxygen[1]);
-						 //心率校准值
-	              		double heartrdao = jfdao.getHeartrate()==0?80:jfdao.getHeartrate();
-						// 高压值校准值
-	              		double highpressure = jfdao.getSbpAve()==0?120:jfdao.getSbpAve();
-						// 低压校准值
-	              		double lowpressure = jfdao.getDbpAve()==0?80:jfdao.getDbpAve();
-						// 心率 检测值
-						 double hear = Double.parseDouble(heartr);
-						 int gnum=0;
-						 int dnum=0;
-						  if(hear<heartrdao && hear!=0){
-							  double sum =(double)hear/(double)heartrdao*100;
-							   if(97<sum && sum<=100){
-								   gnum = (int) (97+Math.random()*(100-97+1));
-								   dnum = (int) (97+Math.random()*(100-97+1));
-								 }else if(94<sum && sum<=97){
-									 gnum = (int) (94+Math.random()*(96-94+1));
-									 dnum = (int) (97+Math.random()*(100-97+1));
-								 } else if(92<sum && sum<=94){
-									 gnum =  (int) (92+Math.random()*(93-92+1));
-									 dnum = (int) (97+Math.random()*(100-97+1));
-								 }else if(90<=hear && hear<=92){
-									 gnum =  (int) (90+Math.random()*(91-90+1));
-									 dnum = (int) (97+Math.random()*(100-97+1));
-								 }else{
-									 hear =hear*(97+Math.random()*(100-97+1))/100;
-									 gnum=(int)(97+Math.random()*(100-97+1));;
-									 dnum = (int) (97+Math.random()*(100-97+1));
-								 }
-							   highpressure=(int) (highpressure*gnum/100);
-							   lowpressure = (int) (lowpressure*dnum/100);
-						  }else if(hear>=heartrdao){
-							  double sum =(double)hear/(double)heartrdao*100;
-							  double gysum =(double)highpressure/(double)gy*100;//求出高压占校准值的比例
-							  double dysum =(double)lowpressure/(double)dy*100;//求出低压占校准值的比例
-							   if(100<=sum && sum<104){
-								   if(90<=gysum && gysum<110){
-									   highpressure=gy;
-									   gnum=100;
-								   }else{
-									   gnum = (int) (100+Math.random()*(102-100+1));
-								   }
-								if(90<=dysum && dysum<110){
-									   lowpressure=dy;
-									   dnum=100; 
-								   }else{
-									   dnum = (int) (100+Math.random()*(102-100+1));
-								   }
-								 }else if(104<=sum && sum<108){
-									 if(90<=gysum && gysum<110){
-										   highpressure=gy;
-										   gnum=100;
-									   }else{
-										   gnum = (int) (103+Math.random()*(104-103+1));
-									   }
-									 if(90<=dysum && dysum<110){
-										   lowpressure=dy;
-										   dnum=100; 
-									   }else{
-										   dnum = (int) (103+Math.random()*(104-103+1));
-									   }
-								 } else if(108<=sum && sum<112){
-									 gnum = (int) (105+Math.random()*(106-105+1));
-									 dnum = (int) (103+Math.random()*(104-103+1));
-								 }else if(112<=sum && sum<116){
-									 gnum = (int) (107+Math.random()*(108-107+1));
-									 dnum = (int) (103+Math.random()*(104-103+1));
-								 }else if(116<=sum && sum<120){
-									 gnum = (int) (109+Math.random()*(110-109+1));
-									 dnum = (int) (103+Math.random()*(104-103+1));
-								 }else if(120<=sum && sum<124){
-									 gnum = (int) (110+Math.random()*(112-110+1));
-									 dnum = (int) (103+Math.random()*(104-103+1));
-								 }else if(124<=sum && sum<128){
-									 gnum = (int) (113+Math.random()*(114-113+1));
-									 dnum = (int) (103+Math.random()*(104-103+1));
-								 }else if(128<=sum && sum<132){
-									 gnum = (int) (115+Math.random()*(116-115+1));
-									 dnum = (int) (115+Math.random()*(116-115+1));
-								 }else if(132<=sum && sum<136){
-									 gnum = (int) (117+Math.random()*(118-117+1));
-									 dnum = (int) (117+Math.random()*(118-117+1));
-								 }else if(136<=sum && sum<140){
-									 gnum = (int) (119+Math.random()*(120-119+1));
-									 dnum = (int) (119+Math.random()*(120-119+1));
-								 }else if(140<=sum && sum<144){
-									 gnum = (int) (121+Math.random()*(122-121+1));
-									 dnum = (int) (121+Math.random()*(122-121+1));
-								 }else if(144<=sum && sum<148){
-									 gnum = (int) (123+Math.random()*(124-123+1));
-									 dnum = (int) (123+Math.random()*(124-123+1));
-								 }else if(148<=sum && sum<152){
-									 gnum = (int) (125+Math.random()*(127-125+1));
-									 dnum = (int) (125+Math.random()*(127-125+1));
-								 }else if(152<=sum && sum<156){
-									 gnum = (int) (128+Math.random()*(130-128+1));
-									 dnum = (int) (128+Math.random()*(130-128+1));
-								 }else if(156<=sum && sum<158){
-									 gnum = (int) (130+Math.random()*(131-130+1));
-									 dnum = (int) (130+Math.random()*(131-130+1));
-								 }else{
-									 hear =hear*(100+Math.random()*(104-100+1))/100;
-									 gnum=(int)(100+Math.random()*(104-100+1));
-									 dnum=(int)(100+Math.random()*(104-100+1));
-								 }
-							  highpressure=(int) (highpressure*gnum/100);
-							  lowpressure = (int) (lowpressure*dnum/100);
-						  }else{
-							  hear =heartrdao*(98+Math.random()*(102-98+1))/100;
-							  gnum=(int)(98+Math.random()*(102-98+1));
-							  dnum=(int)(98+Math.random()*(102-98+1));
-							  highpressure=(int) (highpressure*gnum/100);
-							  lowpressure = (int) (lowpressure*dnum/100);
-						  }
-						  health.setHeartrate((int)hear);;
-						  // 高压
-						  health.setSbpAve((int)highpressure);
-						  // 低压
-						  health.setDbpAve((int)lowpressure);
-						 /**	// 高压值校准值
-							Integer highpressure = jfdao.getSbpAve()==null?120:jfdao.getSbpAve();
-							// 低压校准值
-							Integer lowpressure = jfdao.getDbpAve()==null?80:jfdao.getDbpAve();
-							// 高压值检测值
-						 int gy = Integer.parseInt(bloodxygen[0]);
-						//低压检测值
-						 int dy = Integer.parseInt(bloodxygen[1]);
-							*/
-					/**	 if(gy==0||dy==0){
-							 
-							    //高压部分,校准值正负10%  
-								Random r =  new Random();
-								int s = r.nextInt((highpressure/10)*2)+(highpressure-highpressure/10)+1;
-								highpressure = s;
-								
-							    //低压部分  校准值正负10%  
-								int d = r.nextInt((lowpressure/10)*2)+(lowpressure-lowpressure/10)+1;
-								lowpressure = d;
-								
-							}else{
-								
-								//不等于0 校准值0.8 加 检测值0.2
-								highpressure = highLowPressureVal(highpressure, Integer.parseInt(bloodxygen[0]));
-								lowpressure = highLowPressureVal(lowpressure, Integer.parseInt(bloodxygen[1]));
-							}
-				
-					 	*/
+	                	//血压,心率
+	                	health= DataParsing.bloodPressure(health, jfdao, heartr, bloodxygen[0], bloodxygen[1]);
 						// 报告
 						health.setAmedicalreport(amedical);
 						// 血氧
 						health.setBloodoxygen(Integer.parseInt(bloodxy)<93?(int)(95+Math.random()*(99-95+1)):Integer.parseInt(bloodxy));
-						/**		//心率校准值
-						// 心率 检测值
-						int hear = Integer.parseInt(heartr);
-					Integer heartrdao = jfdao.getHeartrate();
-						if(hear==0){
-							Random r =  new Random();
-							int s = r.nextInt((heartrdao/10)*2)+(heartrdao-heartrdao/10)+1;
-							health.setHeartrate(s);
-						}else{
-							//校准值0.8加检测值0.2
-							health.setHeartrate(highLowPressureVal(heartrdao,hear));
-						}
-						*/
 						// Hrv
-						if(hrv.equals("0")){
-							Random r = new Random();
-							int nextInt = r.nextInt(15)+45;
-							hrv = nextInt+"";
-							//Integer HRV = jfdao.getHRV()==null?59:jfdao.getHRV();
-							//health.setHRV(function(HRV,Integer.parseInt(hrv)));
-							health.setHRV(Integer.parseInt(hrv));
-						}else{
-							health.setHRV(Integer.parseInt(hrv));
-						}
-						// 微循环 
-						if(microcir.equals("0")){
-							//70
-							Random r = new Random();
-							int nextInt = r.nextInt(14)+63;
-							microcir = nextInt+"";
-							//Integer microcirculation = jfdao.getMicrocirculation()==null?85:jfdao.getMicrocirculation();
-							//health.setMicrocirculation(function(microcirculation, Integer.parseInt(microcir)));
-							health.setMicrocirculation( Integer.parseInt(microcir));
-						}else{
-							health.setMicrocirculation( Integer.parseInt(microcir));
-						}
-						
-						// 呼吸检测值
-						int resp = Integer.parseInt(respiration);
-						//呼吸校准值
-						Integer respirationratedao = jfdao.getRespirationrate();
-					
-						if(resp==0){
-							Random r =  new Random();
-							int s = r.nextInt((respirationratedao/10)*2)+(respirationratedao-respirationratedao/10)+1;
-							health.setRespirationrate(s);
-						}else{
-							//校准值0.8加检测值0.2
-							health.setRespirationrate(highLowPressureVal(respirationratedao,resp));
-						}
-						
-						
-
+						health = DataParsing.DataHrv(health, jfdao, hrv);
+						//微循环
+						health = DataParsing.DataMicrocirculation(health, jfdao, microcir);
+						//呼吸
+						health = DataParsing.respirationrate(health, jfdao, respiration);
 						// 创建时间
 						health.setCreatetime(new Date());
 						health.setPhone(account);
 						health.setImei(imei);
-						
-						JfhealthNew jfhealthNew = new JfhealthNew();
-						BeanUtils.copyProperties(jfhealthNew, health);
-
 						// 插入健康数据表
 						jfhealthmapper.insertSelective(health);
-						realhealthMapper.insertRealhealth(record);
-
+				//		realhealthMapper.insertRealhealth(record);
 						// 插入最新数据表,供app接口查询
-
+						JfhealthNew jfhealthNew = new JfhealthNew();
+						jfhealthNew.setHRV(health.getHRV());
+						jfhealthNew.setSbpAve(health.getSbpAve());
+						jfhealthNew.setDbpAve(health.getDbpAve());
+						jfhealthNew.setHeartrate(health.getHeartrate());
+						jfhealthNew.setBloodoxygen(health.getBloodoxygen());
+						jfhealthNew.setMicrocirculation(health.getMicrocirculation());
+						jfhealthNew.setAmedicalreport(health.getAmedicalreport());
+						jfhealthNew.setRespirationrate(health.getRespirationrate());
+						jfhealthNew.setCreatetime(new Date());
+						jfhealthNew.setPhone(health.getPhone());
+						jfhealthNew.setImei(imei);
 						JfhealthNew newjfhealthNew = jfhealthNewMapper.newJfhealthNew(imei.toString());
-
 						if (newjfhealthNew != null) {
 							jfhealthNew.setId(newjfhealthNew.getId());
 							jfhealthNewMapper.updateByPrimaryKeyWithBLOBs(jfhealthNew);
+							logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>才健更新最新数据");
 						} else {
 							jfhealthNewMapper.insertSelective(jfhealthNew);
+							logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>才健插入最新数据");
 						}
-
 						// 开启极光推送
 						// 比较监护者设置的通知范围,不在该范围内就通知监护者
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put("user", u);
+						// $R05|OK|H1:心率,H2:高压,H3:底压,H4:血氧,H5:微循环,H6:HRV,H8:呼吸频率 G1 步数 G3卡路里
 						String queryPushNews = pushService.queryPushNews(map, jfhealthNew);
-						returnStr = "$R05|H1:" + health.getHeartrate() + ",H2:" + highpressure + ",H3:" + lowpressure
-								+ ",H4:" + health.getBloodoxygen() + ",H5:" + microcir + ",H6:" + hrv + ",H8:"
-								+ respiration + ",H9:" + queryPushNews + ",G1:" + Step_whennum + ",G3:" + Carrieroadnum
+						returnStr = "$R05|H1:" + health.getHeartrate() + ",H2:" + health.getSbpAve() + ",H3:" + health.getDbpAve()
+								+ ",H4:" + health.getBloodoxygen() + ",H5:" + health.getMicrocirculation() + ",H6:" + health.getHRV() + ",H8:"
+								+ health.getRespirationrate() + ",H9:" + queryPushNews + ",G1:" + Step_whennum + ",G3:" + Carrieroadnum
 								+ "\r\n";
 					} else {
 						returnStr = "nocalibration";
 					}
-
 				} else {
 					// T15手动校准数据
 					if (jfdao == null) {
 						jfdao = new Jfhealthdao();
-						jfdao.setAmedicalreport(amedical);
-						jfdao.setBloodoxygen(Integer.parseInt(bloodxy));
-						jfdao.setSbpAve(Integer.parseInt(bloodxygen[0]));
-						jfdao.setDbpAve(Integer.parseInt(bloodxygen[1]));
-						jfdao.setCreatetime(new Date());
-						jfdao.setHeartrate(Integer.parseInt(heartr));
-						jfdao.setHRV(Integer.parseInt(hrv));
-						jfdao.setMicrocirculation(Integer.parseInt(microcir));
-						jfdao.setRespirationrate(Integer.parseInt(respiration));
-						jfdao.setPhone(account);
-						jfdao.setImei(imei);
+						jfdao=DataParsing.DataHealthdao(jfdao, heartr, amedical, bloodxy, bloodxygen[0], bloodxygen[1], hrv, microcir, respiration, account, imei);
 						jfhealthdaoservice.addJfhealthdao(jfdao);
 					} else {
-						Integer heartrate = Integer.parseInt(heartr);
-
-						jfdao.setHeartrate(heartrate);
-
-						jfdao.setAmedicalreport(amedical);
-						jfdao.setBloodoxygen(Integer.parseInt(bloodxy));
-						jfdao.setSbpAve(Integer.parseInt(bloodxygen[0]));
-						jfdao.setDbpAve(Integer.parseInt(bloodxygen[1]));
-						jfdao.setCreatetime(new Date());
-
-						jfdao.setHRV(Integer.parseInt(hrv));
-						jfdao.setMicrocirculation(Integer.parseInt(microcir));
-						jfdao.setRespirationrate(Integer.parseInt(respiration));
-						jfdao.setPhone(account);
-						jfdao.setImei(imei);
+						jfdao=DataParsing.DataHealthdao(jfdao, heartr, amedical, bloodxy, bloodxygen[0], bloodxygen[1], hrv, microcir, respiration, account, imei);
 						jfhealthdaoservice.updatajf(jfdao);
 					}
-					returnStr = "$R05|H1:" + heartr + ",H2:" + jfdao.getSbpAve() + ",H3:" + jfdao.getDbpAve() + ",H4:"
-							+ bloodxy + ",H5:" + microcir + ",H6:" + hrv + ",H8:" + respiration + ",H9:0,G1:"
+					returnStr = "$R05|H1:" + jfdao.getHeartrate() + ",H2:" + jfdao.getSbpAve() + ",H3:" + jfdao.getDbpAve() + ",H4:"
+							+ jfdao.getBloodoxygen() + ",H5:" + jfdao.getMicrocirculation() + ",H6:" + jfdao.getHRV() + ",H8:" + jfdao.getRespirationrate() + ",H9:0,G1:"
 							+ Step_whennum + ",G3:" + Carrieroadnum + "\r\n";
 				}
 				return returnStr;

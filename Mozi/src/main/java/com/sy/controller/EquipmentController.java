@@ -433,14 +433,14 @@ public class EquipmentController {
 			String msg = BluetoothMap.gethealthmap(imei);
 			if (msg != null && msg.contains("A")) {
 				st = true;
-				logger.info("设备号<" + imei + ">健康数据校准成功=======================" + msg);
+				logger.info("设备号<" + imei + ">健康数据学习成功=======================" + msg);
 				break;
 			} else if (msg != null && msg.contains("b")) {
-				logger.info("设备号<" + imei + ">校准失败,返回的数据解析失败======");
+				logger.info("设备号<" + imei + ">学习失败,返回的数据解析失败======");
 				break;
 			} else {
 				if (i == 52) {
-					logger.info("设备号<" + imei + ">校准失败,校准超时======");
+					logger.info("设备号<" + imei + ">学习失败,学习超时======");
 					break;
 				}
 				i++;
@@ -472,7 +472,7 @@ public class EquipmentController {
 						ChannelFuture writeAndFlush = c.writeAndFlush("$R17\r\n");
 						writeAndFlush.addListener(new ChannelFutureListener() {
 							public void operationComplete(ChannelFuture future) {
-								logger.info("发送成功,开始校准");
+								logger.info("发送成功,开始学习");
 							}
 						});
 						boolean st = taskhealthcali(imei);
@@ -481,10 +481,10 @@ public class EquipmentController {
 							user.setCalibration("1");
 							userMapper.updateCalibration(user);
 							re.setCode(200);
-							re.setMessage("校准完成！！！");
+							re.setMessage("学习完成！！！");
 						} else {
 							re.setCode(602);
-							re.setMessage("校准失败！！！");
+							re.setMessage("学习失败！！！");
 						}
 					} else {
 						logger.info(imei+"=====不在线");
@@ -492,7 +492,7 @@ public class EquipmentController {
 						re.setMessage("设备不在线");
 					}
 				} else {
-					logger.info(imei+ ">>>>>校准失败>>>>>>bluetoothType===="+bluetoothType);
+					logger.info(imei+ ">>>>>学习失败>>>>>>bluetoothType===="+bluetoothType);
 					re.setCode(602);
 					re.setMessage("没有蓝牙");
 				}
@@ -504,7 +504,7 @@ public class EquipmentController {
 		} catch (Exception e) {
 			logger.info(e.getMessage());
 			re.setCode(350);
-			re.setMessage("校准失败");
+			re.setMessage("学习失败");
 		}
 		return re;
 	}

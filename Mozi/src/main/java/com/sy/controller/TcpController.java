@@ -293,7 +293,7 @@ public class TcpController {
 							if("nouser".equals(jfshuju)){
 								logger.info(imei+"=============没有绑定不需要上传数据");
 							}else if("nocalibration".equals(jfshuju)){
-								logger.info(imei+"=============没有校准不允许上传数据");
+								logger.info(imei+"=============没有学习不允许上传数据");
 							}else if (jfshuju==null){
 								logger.info(imei+"=============数据解析出错");
 							}else{
@@ -307,7 +307,7 @@ public class TcpController {
 								channelHandlerContext.writeAndFlush(jfshuju);
 								BluetoothMap.addhealthmap(imei, "A");
 							} else {
-								logger.info(imei+"=============校准失败,数据解析出错");
+								logger.info(imei+"=============学习失败,数据解析出错");
 								BluetoothMap.addhealthmap(imei, "B");
 							}
 							

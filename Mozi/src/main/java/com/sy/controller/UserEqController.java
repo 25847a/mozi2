@@ -374,6 +374,8 @@ public class UserEqController {
 				re.setMessage("未有用户数据 ！！");
 			}
 			} catch (Exception e) {
+				re.setCode(200);
+				re.setMessage("未有用户数据 ！！！！");
 				e.printStackTrace();
 			}
 			return re;

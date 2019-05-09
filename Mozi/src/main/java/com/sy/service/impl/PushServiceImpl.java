@@ -73,7 +73,7 @@ public class PushServiceImpl implements PushService {
 		}
 		User u = (User) map.get("user");
 		List<Push> pushList = pushMapper.selectPushList(u.getId());// 这个使用者的所有开关数据
-		
+		//userId  使用者 ; alias 监护者
 		if (pushList != null && pushList.size() > 0) {
 			for (Push push : pushList) {
 				

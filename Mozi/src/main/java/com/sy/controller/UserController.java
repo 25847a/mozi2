@@ -747,7 +747,7 @@ public class UserController {
 		try{
 			String calibration = user.getCalibration();
 			Integer id = user.getId();
-			logger.info("设置校准状态id="+id+"calibration="+calibration);
+			logger.info("设置学习状态id="+id+"calibration="+calibration);
 			userMapper.updateCalibration(user);
 		}catch (Exception e) {
 			logger.info(e.getMessage());
