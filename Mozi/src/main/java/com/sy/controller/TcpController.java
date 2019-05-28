@@ -560,6 +560,7 @@ public class TcpController {
 	 * @param equipment
 	 */
 	private static void T02(String[] texts,String imei,Equipment equipment){
+		logger.info("才健测试>>>>>>>>>>>>>>>>>>>>>"+imei);
 		User user = userservice.getUser(imei);
 		if (user != null) {
 			if (equipment != null) {

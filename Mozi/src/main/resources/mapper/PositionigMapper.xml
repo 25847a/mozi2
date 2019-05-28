@@ -102,6 +102,11 @@
 		delete from positionig
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
+	<!-- 根据imei删除数据 -->
+	<delete id="deletePositionigInfo" parameterType="java.lang.String">
+		delete from positionig
+		where imei = #{imei,jdbcType=VARCHAR}
+	</delete>
 	<delete id="deleteByExample" parameterType="com.sy.pojo.PositionigExample">
 		delete from positionig
 		<if test="_parameter != null">

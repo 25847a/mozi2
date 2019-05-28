@@ -40,135 +40,6 @@ public class UserEqController {
 
 	private final static Logger logger = LoggerFactory.getLogger(UserEqController.class);
 	/**
-	 * 添加监护者
-	 * 
-	 * @param u
-	 * @return
-	 */
-	/*@RequestMapping(value = "addguardianship")
-	@ResponseBody
-	public ResultBase addguardianship(@RequestBody Map m) {
-		ResultBase re = new ResultBase();
-		UserEq u = new UserEq();
-		u.setUserId(Integer.parseInt((String) m.get("userid")));
-		Equipment e = equipmentservice.selectquipmentimei((String) m
-				.get("imei"));
-		u.setEqId(e.getId());
-		u.setTypeof(0);
-		if (usereqservice.ifguardianship(u.getEqId())) {
-			boolean status = usereqservice.addUserEq(u);
-			if (status) {
-				re.setCode(200);
-				re.setMessage("添加设备监护者成功！！！");
-			} else {
-				re.setCode(400);
-				re.setMessage("添加设备监护者失败！！！");
-			}
-		} else {
-			re.setCode(350);
-			re.setMessage("该设备已经被占用！！！");
-		}
-		return re;
-	}*/
-
-	/**
-	 * 添加观察者
-	 * 
-	 * @param u
-	 * @return
-	 * @throws SQLException 
-	 */
-	/*@RequestMapping(value = "addObserved")
-	@ResponseBody
-	public ResultBase addObserved(@RequestBody Map m) throws SQLException {
-		ResultBase re = new ResultBase();
-		Equipment e = equipmentservice.selectquipmentimei((String) m
-				.get("imei"));
-		
-		//用imei 获取使用者
-		User user = userservice.getUser(e.getImei());
-		if(user==null){
-			re.setCode(350);
-			re.setMessage("设备未绑定");
-			return re;
-		}
-		
-		//用eqId 获取监护者
-		User use = usereqservice.getuserimei0(e.getId());
-		
-		Integer mid = Integer.parseInt((String) m.get("mid"));
-		
-		if (mid == use.getId()) {
-			re.setCode(350);
-			re.setMessage("已经是监护者");
-		} else {
-			UserEq u = new UserEq();
-			u.setUserId(mid);
-			u.setEqId(e.getId());
-			u.setTypeof(1);
-			u.setAuthorized((String) m.get("authorized"));
-			if (usereqservice.ifObserved(u)) {
-				boolean status = usereqservice.addUserEq(u);
-				if (status) {
-					 	Push push = new Push();
-					    push.setUserId(user.getId());
-					    push.setAlias(mid);
-					    push.setAllNotifyOn(true);
-					    push.setHeartHigThd(100);
-					    push.setHeartLowThd(60);
-					    push.setHbpstart(90);
-					    push.setHbpend(120);
-					    push.setLbpstart(60);
-					    push.setLbpend(80);
-					    pushMapper.addPush(push);
-						re.setCode(200);
-						re.setMessage("添加设备观察者成功！！！");
-				} else {
-					re.setCode(400);
-					re.setMessage("添加设备观察者失败！！！");
-				}
-			} else {
-				re.setCode(350);
-				re.setMessage("已经是观察者！！！");
-			}
-		}
-
-		return re;
-	}*/
-
-	/**
-	 * 添加使用者
-	 * 
-	 * @param u
-	 * @return
-	 */
-	/*@RequestMapping(value = "bindDev")
-	@ResponseBody
-	public ResultBase adduse(@RequestBody Map m) {
-		ResultBase re = new ResultBase();
-		UserEq u = new UserEq();
-		u.setUserId(Integer.parseInt((String) m.get("userid")));
-		Equipment e = equipmentservice.selectquipmentimei((String) m
-				.get("imei"));
-		u.setEqId(e.getId());
-		u.setTypeof(2);
-		if (usereqservice.ifuse(u.getEqId())) {
-			boolean status = usereqservice.addUserEq(u);
-			if (status) {
-				re.setCode(200);
-				re.setMessage("添加设备使用者成功！！！");
-			} else {
-				re.setCode(400);
-				re.setMessage("添加设备使用者失败！！！");
-			}
-		} else {
-			re.setCode(350);
-			re.setMessage("该设备已经被占用！！！");
-		}
-		return re;
-	}*/
-
-	/**
 	 * 获取该设备有关用户的关联关系数据,后台使用
 	 * @param u
 	 * @return
@@ -201,27 +72,21 @@ public class UserEqController {
 	@ResponseBody
 	public ResultBase deleteguardian(@RequestBody Map m) {
 		
-		
 		ResultBase re = new ResultBase();
 		try {
 		Integer typeof = Integer.parseInt((String) m.get("typeof"));
 								
 		Integer mid = Integer.parseInt((String) m.get("mid"));		
 		
-		Equipment e = equipmentservice.selectquipmentimei((String) m
-				.get("imei"));
-		
-		String bluetoothmac = e.getBluetoothmac();
-		String bluetoothName = e.getBluetoothName();
-		String bluetoothType = e.getBluetoothType();
+		Equipment e = equipmentservice.selectquipmentimei((String) m.get("imei"));
 		
 		//卡片的id
 		Integer userId = Integer.parseInt((String) m.get("userId"));
 		boolean status = false;
 		
 		if(typeof==2){
-			if(bluetoothmac.equals("000000000000") && bluetoothName.equals("000000000000")&&bluetoothType.equals("0")){
-				status = usereqservice.deleteguardian(e.getId(), userId,mid);
+			if(e.getBluetoothmac().equals("000000000000") && e.getBluetoothName().equals("000000000000")&&e.getBluetoothType().equals("0")){
+				status = usereqservice.deleteguardian(e.getImei(),e.getId(), userId,mid);//删除用户
 				if (status) {
 					
 					Channel c =	NettyChannelMap.get(e.getImei());

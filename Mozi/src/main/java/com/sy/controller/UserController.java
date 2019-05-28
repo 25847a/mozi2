@@ -2,8 +2,6 @@ package com.sy.controller;
 
 import java.io.File;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.EquipmentDataMapper;
@@ -47,7 +44,6 @@ import com.sy.service.UserService;
 import com.sy.service.UseravatarService;
 import com.sy.service.UsercodeService;
 import com.sy.service.impl.HealthtoolServiceImpl;
-import com.sy.utils.ApiUtils;
 import com.sy.utils.DeleteFileUtil;
 import com.sy.utils.GB2312Utils;
 import com.sy.utils.MD5Util;
@@ -56,10 +52,8 @@ import com.sy.utils.PageModel;
 import com.sy.vo.Loginuse;
 import com.sy.vo.Loginuser;
 import com.sy.vo.Usermanagement;
-
 import io.netty.channel.Channel;
 import io.netty.channel.socket.SocketChannel;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "user", method = RequestMethod.POST)
@@ -145,8 +139,6 @@ public class UserController {
 					uservode.setCode(u.getCode());
 					uservode.setPhoen(u.getPhone());
 					if (usercodeservic.ifusercode(uservode)) {
-						u.setHighpressure(0);
-						u.setLowpressure(0);
 						boolean status = userservice.addUser(u);
 						if (status) {
 							User ulog = userservice.landingUser(u.getAccount(),
@@ -158,9 +150,7 @@ public class UserController {
 									ulog.getAvatar(), ulog.getWechat(),
 									ulog.getQq(), ulog.getCreatetime(),
 									ulog.getAtlasttime(), ulog.getWeight(),
-									ulog.getHeight(), ulog.getBorn(),
-									ulog.getHighpressure(),
-									ulog.getLowpressure());
+									ulog.getHeight(), ulog.getBorn());
 							re.setData(luser);
 							re.setMessage("添加成功！！！");
 							re.setCode(200);
@@ -189,50 +179,6 @@ public class UserController {
 		return re;
 
 	}
-
-	/**
-	 * 注册使用者
-	 * 
-	 * @param u
-	 * @return
-	 */
-	/*@RequestMapping("addDevUser")
-	@ResponseBody
-	public ResultData<Loginuser> addDevUser(@RequestBody User u) {
-		ResultData<Loginuser> re = new ResultData<Loginuser>();
-		u.setAccount(null);
-		u.setPassword(null);
-		u.setRole("使用者");
-		Integer key = userservice.adduserkey(u);
-		if (key != 0) {
-			User ulog = userservice.getUser(key);
-			boolean jfstatus = HealthtoolServiceImpl.registered(
-					Managementconstant.channel_id + String.valueOf(key),
-					"12345", "123456");
-			if (jfstatus) {
-				Loginuser luser = new Loginuser(ulog.getId(), ulog.getRole(),
-						ulog.getName(), ulog.getAge(), ulog.getGender(),
-						ulog.getPhone(), ulog.getAddress(), ulog.getAvatar(),
-						ulog.getWechat(), ulog.getQq(), ulog.getCreatetime(),
-						ulog.getAtlasttime(), ulog.getWeight(),
-						ulog.getHeight(), ulog.getBorn());
-				re.setData(luser);
-				re.setMessage("添加使用者成功！！！");
-				re.setCode(200);
-			} else {
-				re.setMessage("添加使用者失败！！！");
-				re.setCode(350);
-			}
-
-		} else {
-			re.setMessage("添加使用者失败！！！");
-			re.setCode(350);
-		}
-
-		return re;
-
-	}*/
-
 	/**
 	 * 用户登陆
 	 * 
@@ -546,7 +492,7 @@ public class UserController {
 						u.getAge(), u.getGender(), u.getPhone(), u.getAddress(),
 						u.getAvatar(), u.getWechat(), u.getQq(), u.getCreatetime(),
 						u.getAtlasttime(), u.getWeight(), u.getHeight(), u.getBorn(),
-						u.getCode(), u.getHighpressure(), u.getLowpressure(),"0",u.getImei(),"5");
+						u.getCode(),"0",u.getImei(),"5");
 				
 				Integer key = userservice.adduserkey(user);
 				

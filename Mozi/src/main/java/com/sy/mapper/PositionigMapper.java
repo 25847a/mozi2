@@ -13,7 +13,9 @@ public interface PositionigMapper {
     int deleteByExample(PositionigExample example);
 
     int deleteByPrimaryKey(Integer id);
-
+    //根据IMEI删除数据
+    int deletePositionigInfo(String imei);
+    
     int insert(Positionig record);
 
     int insertSelective(Positionig record);

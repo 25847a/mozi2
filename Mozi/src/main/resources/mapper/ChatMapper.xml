@@ -115,6 +115,10 @@
     delete from chat
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteCharInfo" parameterType="java.lang.String" >
+    delete from chat
+    where imei = #{imei,jdbcType=VARCHAR}
+  </delete>
   <delete id="deleteByExample" parameterType="com.sy.pojo.ChatExample" >
     delete from chat
     <if test="_parameter != null" >

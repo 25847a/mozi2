@@ -6,41 +6,35 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-
+import com.sy.mapper.ChatMapper;
 import com.sy.mapper.EquipmentDataMapper;
 import com.sy.mapper.EquipmentMapper;
-import com.sy.mapper.GroupPhoneMapper;
 import com.sy.mapper.JfhealthMapper;
 import com.sy.mapper.JfhealthNewMapper;
+import com.sy.mapper.JfhealthdaoMapper;
+import com.sy.mapper.PositionigMapper;
 import com.sy.mapper.PushMapper;
+import com.sy.mapper.SensorstatusMapper;
 import com.sy.mapper.UserEqMapper;
 import com.sy.mapper.UserMapper;
+import com.sy.mapper.UsercodeMapper;
 import com.sy.pojo.Equipment;
 import com.sy.pojo.EquipmentData;
 import com.sy.pojo.GroupPhone;
 import com.sy.pojo.Jfhealth;
 import com.sy.pojo.JfhealthNew;
-import com.sy.pojo.Jfhealthdao;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
-import com.sy.service.EquipmentDataService;
-import com.sy.service.EquipmentService;
 import com.sy.service.GroupPhoneService;
-import com.sy.service.JfhealthService;
 import com.sy.service.JfhealthdaoService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.service.UseravatarService;
-import com.sy.vo.Usereqvo;
-import com.sy.vo.Userqedata;
-
-import net.sf.json.JSONArray;
 
 @Service
 public class UserEqServiceImpl implements UserEqService {
@@ -72,7 +66,16 @@ public class UserEqServiceImpl implements UserEqService {
 	private UserEqService usereqservice;
 	@Autowired
 	private GroupPhoneService groupPhoneMapper;
-	
+	@Autowired
+	ChatMapper chatMapper;
+	@Autowired
+	JfhealthdaoMapper jfhealthdaoMapper;
+	@Autowired
+	SensorstatusMapper sensorstatusMapper;
+	@Autowired
+	UsercodeMapper usercodeMapper;
+	@Autowired
+	PositionigMapper positionigMapper;
 	
 	@Override
 	public User getuserimei0(Integer eqId) {
@@ -214,46 +217,6 @@ public class UserEqServiceImpl implements UserEqService {
 	public List<UserEq> selectuserqe(Integer userid) {
 		return eqMapper.selectuserqe(userid);
 	}
-
-	/*@Override
-	public Userqedata selectdata(String imei) {
-		Equipment e = equipmentservice.selectquipmentimei(imei);
-		if (e != null) {
-			List<User> us = usereqservice.selelctequser(e.getId());
-			List<Usereqvo> usereqvos = new ArrayList<Usereqvo>();
-			Userqedata data = new Userqedata();
-			if (us != null) {
-				for (User u : us) {
-					Usereqvo usereqvo = new Usereqvo();
-					usereqvo.setIconPath(u.getAvatar());
-					usereqvo.setUsername(u.getName());
-					usereqvo.setBluetoothStatus(e.getBluetoothName());
-					usereqvo.setUserStatus("跑步");
-					usereqvo.setDeviceEnergy(e.getBluetoothElectricity());
-					usereqvo.setUserid(u.getId());
-					usereqvo.setManagenment(u.getRole());
-					boolean stas = false;
-					if (e.getEqStatus().equals("H:1")) {
-						stas = true;
-					}
-					usereqvo.setLoactionStatus(stas);
-					usereqvo.setMessageStatus(stas);
-					usereqvo.setAclokStatus(stas);
-					usereqvos.add(usereqvo);
-
-				}
-				data.setUsers(usereqvos);
-			}
-			EquipmentData eqdata = equipmentdateservice.selectdata(userEqservice.getimei(imei));
-			if (eqdata != null) {
-				data.setEqdata(eqdata);
-			}
-
-			return data;
-		} else {
-			return null;
-		}
-	}*/
 
 	@Override
 	public List<Map<String, Object>> selectuserdata(Integer userid) {
@@ -561,8 +524,8 @@ public class UserEqServiceImpl implements UserEqService {
 		m.put("aclokStatus", stas);
 		user.put("age", u.getAge());
 		user.put("phone", u.getPhone());
-		user.put("highpressure", u.getHighpressure());
-		user.put("lowpressure", u.getLowpressure());
+//		user.put("highpressure", u.getHighpressure());
+//		user.put("lowpressure", u.getLowpressure());
 		// 出生
 		user.put("born", u.getBorn());
 		// 性别
@@ -618,177 +581,6 @@ public class UserEqServiceImpl implements UserEqService {
 		m.put("guardian", guardian);
 		return m;
 	}
-
-	/*@Override
-	public List<Map<String, Object>> Userequipmentdata(Integer userid) {
-		List<UserEq> ues = usereqservice.selectuserqe(userid);
-
-		if (ues != null && ues.size() >= 0) {
-			List<Map<String, Object>> es = new ArrayList<Map<String, Object>>();
-			for (UserEq ue : ues) {
-				Map<String, Object> detail = new HashMap<String, Object>();
-				if (ue.getTypeof() == 2) {
-					Equipment e = equipmentMapper.selectByPrimaryKey(ue.getEqId());
-					User u = userservice.getUser(ue.getUserId());
-					detail.put("iconPath", u.getAvatar());
-					detail.put("username", u.getName());
-					detail.put("userStatus", "跑步");
-					detail.put("deviceEnergy", e.getBluetoothElectricity());
-					detail.put("userid", u.getId());
-					detail.put("imei", e.getImei());
-					boolean status = false;
-					if (e.getBluetoothStatus().equals("1")) {
-						status = true;
-					}
-					detail.put("bluetoothStatus", status);
-					boolean stas = false;
-					if (e.getEqStatus().equals("H:1")) {
-						stas = true;
-					}
-					detail.put("loactionStatus", stas);
-					detail.put("messageStatus", stas);
-					detail.put("aclokStatus", stas);
-					es.add(detail);
-				}
-			}
-			return es;
-		} else {
-			return null;
-		}
-	}*/
-
-	/*@Override
-	public Map<String, Object> userhealthdata(Integer userid) {
-		Map<String, Object> detail = new HashMap<String, Object>();
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-		if (userid != null) {
-			Equipment e = equipmentMapper.selectByPrimaryKey(eqMapper.geteqiduse(userid));
-			User u = userservice.getUser(userid);
-			detail.put("iconPath", u.getAvatar());
-			detail.put("username", u.getName());
-			detail.put("deviceEnergy", e.getBluetoothElectricity());
-			detail.put("userid", u.getId());
-			detail.put("imei", e.getImei());
-			if (u.getRole().equals("使用者")) {
-				detail.put("managenment", true);
-			} else {
-				detail.put("managenment", false);
-			}
-
-			boolean status = false;
-			if (e.getBluetoothStatus().equals("1")) {
-				status = true;
-			}
-			detail.put("bluetoothStatus", status);
-			boolean stas = false;
-			if (e.getEqStatus().equals("H:1")) {
-				stas = true;
-			}
-			detail.put("loactionStatus", stas);
-			detail.put("messageStatus", stas);
-			detail.put("aclokStatus", stas);
-
-			EquipmentData eqdata = null;
-			if (userid != null) {
-				eqdata = equipmentdateservice.selectdata(userid);
-			}
-
-			if (eqdata != null) {
-				if (eqdata.getMocrocirculation() == 0) {
-					detail.put("userStatus", "静止");
-				}
-				if (eqdata.getMocrocirculation() == 1) {
-					detail.put("userStatus", "慢走");
-				}
-				if (eqdata.getMocrocirculation() == 2) {
-					detail.put("userStatus", "跑步");
-				}
-				detail.put("updatetime", eqdata.getCreatetime());
-				map.put("name", "heat");
-				map.put("desc", "热量");
-				map.put("category", "1");
-				map.put("lastestValue", "1");
-				map.put("unit", "卡");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "heartrate");
-				map.put("desc", "心率");
-				map.put("category", "2");
-				map.put("lastestValue", eqdata.getHeartrate());
-				map.put("unit", "次/分");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "pressure");
-				map.put("desc", "血压");
-				map.put("category", "3");
-				map.put("lastestValue", eqdata.getBloodpressure());
-				map.put("unit", "mmHg");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "mocrocirculation");
-				map.put("desc", "微循环");
-				map.put("category", "4");
-				map.put("lastestValue", eqdata.getMocrocirculation());
-				map.put("unit", "单位");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "sleeping");
-				map.put("desc", "睡眠");
-				map.put("category", "5");
-				String time = String.valueOf(eqdata.getSleeping());
-				if (time.contains(".")) {
-					int qian = Integer.valueOf(time.substring(0, time.indexOf(".")));
-					int hou = Integer.valueOf(time.substring(time.indexOf(".") + 1, time.length()));
-					map.put("lastestValue", qian * 60 * 1000 + hou * 60 * 1000);
-				} else {
-					map.put("lastestValue", Integer.valueOf(time) * 60 * 1000);
-				}
-				map.put("unit", "秒");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "skindegree");
-				map.put("desc", "肤度");
-				map.put("category", "6");
-				map.put("lastestValue", "1");
-				map.put("unit", "度");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "crash");
-				map.put("desc", "冲撞");
-				map.put("category", "7");
-				map.put("lastestValue", eqdata.getCrash());
-				map.put("unit", "次");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "hrv");
-				map.put("desc", "心跳异常");
-				map.put("category", "8");
-				map.put("lastestValue", eqdata.getHrv());
-				map.put("unit", "单位");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "Step_when");
-				map.put("desc", "当天步数");
-				map.put("category", "9");
-				map.put("lastestValue", eqdata.getStepWhen());
-				map.put("unit", "步");
-				list.add(map);
-				map = new HashMap<String, Object>();
-				map.put("name", "qxygen");
-				map.put("desc", "血氧");
-				map.put("category", "10");
-				map.put("lastestValue", eqdata.getQxygen());
-				map.put("unit", "单位");
-				list.add(map);
-			}
-			detail.put("detail", list);
-
-		}
-		return detail;
-	}*/
-
 	/**
 	 * 取消观察者
 	 */
@@ -810,25 +602,24 @@ public class UserEqServiceImpl implements UserEqService {
 	/**
 	 * 取消关注的
 	 */
-	public boolean deleteguardian(Integer eqId, Integer userId,Integer mid) {
+	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer mid)throws Exception {
 		try {
-			//删除关系表数据
-			eqMapper.deleteguardian(eqId);
-			//删除原始健康数据
-			equipmentDataMapper.deletedata(userId);
-			//删除用户
-			userservice.deleteUser(userId);
-			// 删除校准数据
-			jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);
-			// 删除上传的数据
-			jMapper.deletejfhealth("mozistar" + userId);
-			jMapperNew.deletejfhealth("mozistar"+userId);
+			positionigMapper.deletePositionigInfo(imei);
+			pushMapper.deletePushInfo(userId);
+			eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
+			userservice.deleteUser(userId);    //更改用户OK
+			jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
+			chatMapper.deleteCharInfo(imei);
+			jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
+			sensorstatusMapper.deleteSensorstatusInfo(imei);
+			//usercodeMapper   这个是验证码的，不删除也没事
 			
 			//删除通知数据
-			pushMapper.removePush(userId,mid);
+		//	pushMapper.removePush(userId,mid);
 			
 			return true;
 		} catch (Exception e) {
+			System.out.println(e);
 			return false;
 		}
 	}
@@ -879,7 +670,7 @@ public class UserEqServiceImpl implements UserEqService {
 				// 再删除全部的关联关系
 				// eqMapper.deleteguardian(eqid);
 				// 再删除这个使用者
-				usermapper.deleteByPrimaryKey(userid);
+				usermapper.deleteUser(userid);
 				// 删除校准数据
 				jfhealthFdaoservice.delectjfhealthdao("mozistar" + userid);
 				// 删除上传的数据
@@ -908,7 +699,7 @@ public class UserEqServiceImpl implements UserEqService {
 						eqMapper.deleteguardian(eqid);
 						
 						// 再删除这个使用者
-						usermapper.deleteByPrimaryKey(eq.getUserId());
+						usermapper.deleteUser(eq.getUserId());
 						
 						// 删除校准数据
 						jfhealthFdaoservice.delectjfhealthdao("mozistar" + eq.getUserId());
@@ -929,7 +720,7 @@ public class UserEqServiceImpl implements UserEqService {
 						eqMapper.deleteguardian(eqid);
 						
 						// 再删除这个使用者
-						usermapper.deleteByPrimaryKey(userid);
+						usermapper.deleteUser(userid);
 
 						// 删除校准数据
 						jfhealthFdaoservice.delectjfhealthdao("mozistar" + userid);

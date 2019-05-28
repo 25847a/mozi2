@@ -13,7 +13,12 @@ public interface SensorstatusMapper {
     int deleteByExample(SensorstatusExample example);
 
     int deleteByPrimaryKey(Integer id);
-
+    /**
+     *  取消关注删除用户的相关信息
+     * @param imei
+     * @return
+     */
+    int deleteSensorstatusInfo(String imei);
     int insert(Sensorstatus record);
 
     int insertSelective(Sensorstatus record);

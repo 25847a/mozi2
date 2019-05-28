@@ -1,36 +1,20 @@
 package com.sy.mapper;
 
-import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
-
 import com.sy.pojo.Jfhealthdao;
-import com.sy.pojo.JfhealthdaoExample;
 
 public interface JfhealthdaoMapper {
-    int countByExample(JfhealthdaoExample example);
-
-    int deleteByExample(JfhealthdaoExample example);
-
     int deleteByPrimaryKey(Integer id);
-
+    //根据imei和phone删除校准值
+    int deleteJfhealthdaoInfo(@Param(value = "imei")String imei,@Param(value = "phone")String phone);
+  
     int insert(Jfhealthdao record);
 
     int insertSelective(Jfhealthdao record);
 
-    List<Jfhealthdao> selectByExampleWithBLOBs(JfhealthdaoExample example);
-
-    List<Jfhealthdao> selectByExample(JfhealthdaoExample example);
-
     Jfhealthdao selectByPrimaryKey(Integer id);
-
-    int updateByExampleSelective(@Param("record") Jfhealthdao record, @Param("example") JfhealthdaoExample example);
-
-    int updateByExampleWithBLOBs(@Param("record") Jfhealthdao record, @Param("example") JfhealthdaoExample example);
-
-    int updateByExample(@Param("record") Jfhealthdao record, @Param("example") JfhealthdaoExample example);
 
     int updateByPrimaryKeySelective(Jfhealthdao record);
 

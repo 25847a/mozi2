@@ -8,14 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-
 import com.google.gson.Gson;
 import com.sy.common.JpushClientUtil;
 import com.sy.mapper.EquipmentDataMapper;
@@ -34,7 +31,6 @@ import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.service.JfhealthdaoService;
 import com.sy.service.PushService;
-import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.utils.BinaryReadWrite;
 import com.sy.utils.DataParsing;
@@ -145,7 +141,7 @@ public class HealthtoolServiceImpl {
 		float h = 170;
 		if (u == null) {
 			u = new User(null, null, null, null, null, 50, "男", null, null, null, null, null, null, null, w, h, null,
-					null, null, null, null, null,null);
+					null, null, null, null);
 		}
 		SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String starttime = time.format(new Date());
@@ -272,6 +268,7 @@ public class HealthtoolServiceImpl {
 	                    record.setPhone(account);
 	                    record.setImei(imei);
 	                	Jfhealth health = new Jfhealth();
+	                	logger.info("才健正在采集数据:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	                	//血压,心率
 	                	health= DataParsing.bloodPressure(health, jfdao, heartr, bloodxygen[0], bloodxygen[1]);
 						// 报告
@@ -289,6 +286,7 @@ public class HealthtoolServiceImpl {
 						health.setPhone(account);
 						health.setImei(imei);
 						// 插入健康数据表
+						logger.info("才健准备插入数据:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 						jfhealthmapper.insertSelective(health);
 				//		realhealthMapper.insertRealhealth(record);
 						// 插入最新数据表,供app接口查询
@@ -304,6 +302,7 @@ public class HealthtoolServiceImpl {
 						jfhealthNew.setCreatetime(new Date());
 						jfhealthNew.setPhone(health.getPhone());
 						jfhealthNew.setImei(imei);
+						logger.info("才健获取最新数据:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 						JfhealthNew newjfhealthNew = jfhealthNewMapper.newJfhealthNew(imei.toString());
 						if (newjfhealthNew != null) {
 							jfhealthNew.setId(newjfhealthNew.getId());
@@ -405,7 +404,7 @@ public class HealthtoolServiceImpl {
 		float h = 170;
 		if (u == null) {
 			u = new User(null, null, null, null, null, 50, "男", null, null, null, null, null, null, null, w, h, null,
-					null, null, null, null, null,null);
+					null, null, null, null);
 		}
 		SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String starttime = time.format(new Date());
@@ -432,23 +431,6 @@ public class HealthtoolServiceImpl {
 		} else {
 			createMap.put("calibrate", "1");
 		}
-		if (u.getHighpressure() != null && u.getLowpressure() != null) {
-			String sbp = "";
-			String dbp = "";
-			if (u.getHighpressure() < 100) {
-				sbp = "0" + String.valueOf(u.getHighpressure());
-			} else {
-				sbp = String.valueOf(u.getHighpressure());
-			}
-
-			if (u.getLowpressure() < 100) {
-				dbp = "0" + String.valueOf(u.getLowpressure());
-			} else {
-				dbp = String.valueOf(u.getLowpressure());
-			}
-			createMap.put("activity", "reference_dbp:" + dbp + ",reference_sbp:" + sbp);
-		}
-
 		createMap.put("height", u.getHeight());
 		createMap.put("weight", u.getWeight());
 		createMap.put("age", u.getAge());

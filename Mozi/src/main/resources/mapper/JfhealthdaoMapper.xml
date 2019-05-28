@@ -82,36 +82,6 @@
   <sql id="Blob_Column_List" >
     Amedicalreport
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.sy.pojo.JfhealthdaoExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from jfhealthdao
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.JfhealthdaoExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from jfhealthdao
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -124,12 +94,11 @@
     delete from jfhealthdao
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.sy.pojo.JfhealthdaoExample" >
-    delete from jfhealthdao
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
+  <!-- 根据imei和phone删除校准值 -->
+  <delete id="deleteJfhealthdaoInfo" parameterType="java.lang.String" >
+   DELETE FROM jfhealthdao where imei= #{imei,jdbcType=VARCHAR} and phone=#{phone,jdbcType=VARCHAR}
   </delete>
+  
   <insert id="insert" parameterType="com.sy.pojo.Jfhealthdao" >
     insert into jfhealthdao (id, HRV, sbp_ave, 
       dbp_ave, Heartrate, Bloodoxygen, 
@@ -221,91 +190,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.sy.pojo.JfhealthdaoExample" resultType="java.lang.Integer" >
-    select count(*) from jfhealthdao
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update jfhealthdao
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.HRV != null" >
-        HRV = #{record.HRV,jdbcType=INTEGER},
-      </if>
-      <if test="record.sbpAve != null" >
-        sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="record.dbpAve != null" >
-        dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="record.heartrate != null" >
-        Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      </if>
-      <if test="record.bloodoxygen != null" >
-        Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      </if>
-      <if test="record.microcirculation != null" >
-        microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      </if>
-      <if test="record.respirationrate != null" >
-        respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      </if>
-      <if test="record.phone != null" >
-        phone = #{record.phone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.imei != null" >
-        imei = #{record.imei,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createtime != null" >
-        createtime = #{record.createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.amedicalreport != null" >
-        Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update jfhealthdao
-    set id = #{record.id,jdbcType=INTEGER},
-      HRV = #{record.HRV,jdbcType=INTEGER},
-      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      imei = #{record.imei,jdbcType=VARCHAR},
-      createtime = #{record.createtime,jdbcType=TIMESTAMP},
-      Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update jfhealthdao
-    set id = #{record.id,jdbcType=INTEGER},
-      HRV = #{record.HRV,jdbcType=INTEGER},
-      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      imei = #{record.imei,jdbcType=VARCHAR},
-      createtime = #{record.createtime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Jfhealthdao" >
     update jfhealthdao
     <set >
@@ -405,11 +289,6 @@
 		ORDER BY createtime desc 
 		LIMIT 0, 1
   </select>
-  <!--  <select id="getJfhealthdao" parameterType="java.lang.String" resultMap="BaseResultMap">
-   SELECT * FROM jfhealthdao where imei=#{imei}
-		ORDER BY createtime desc 
-		LIMIT 0, 1
-  </select> -->
    <delete id="deletejfhealthdao" parameterType="java.lang.String" >
    	delete  FROM jfhealthdao where phone = #{phone}
   </delete>

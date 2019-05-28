@@ -80,8 +80,10 @@
     id, auth_name, url, descn, createtime
   </sql>
   
-  
-  
+  <!-- 取消关注删除用户需要删除预警值 -->
+  	<delete id="deletePushInfo" parameterType="java.lang.Integer">
+  		delete from push where userId=#{userId}
+  	</delete>
  	<!-- 查询 -->
  	<select id="selectPush" resultMap="BaseResultMap" parameterType="java.util.Map">
 	    SELECT * FROM push WHERE alias= #{alias} and userId=#{userId}

@@ -39,13 +39,6 @@ public class UserServiceImpl implements UserService {
 	public boolean addUser(User u) {
 		u.setCreatetime(new Date());
 		u.setAtlasttime(new Date());
-		if(u.getHighpressure()==null){
-			u.setHighpressure(0);
-		}
-		if(u.getLowpressure()==null){
-			u.setLowpressure(0);
-		}
-		
 		String p=u.getPassword();
 		u.setPassword(MD5Util.MD5(p));
 		int num = userMapper.insertSelective(u);
@@ -347,12 +340,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Integer adduserkey(User u) {
-		if(u.getHighpressure()==null){
-			u.setHighpressure(0);
-		}
-		if(u.getLowpressure()==null){
-			u.setLowpressure(0);
-		}
 		u.setCreatetime(new Date());
 		u.setAtlasttime(new Date());
 		userMapper.adduserkey(u);
@@ -371,7 +358,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Integer deleteUser(Integer userId) {
-		int deleteByPrimaryKey = userMapper.deleteByPrimaryKey(userId);
+		int deleteByPrimaryKey = userMapper.deleteUser(userId);
 		return deleteByPrimaryKey;
 	}
 	/**

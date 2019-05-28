@@ -33,11 +33,6 @@ public class Loginuse {
 	    private Float height;
 
 	    private Date born;
-
-	    private Integer highpressure;
-
-	    private Integer lowpressure;
-
 		public Loginuse() {
 			super();
 			// TODO Auto-generated constructor stub
@@ -46,8 +41,7 @@ public class Loginuse {
 		public Loginuse(Integer id, String role, String name, Integer age,
 				String gender, String phone, String address, String avatar,
 				String wechat, String qq, Date createtime, Date atlasttime,
-				Float weight, Float height, Date born, Integer highpressure,
-				Integer lowpressure) {
+				Float weight, Float height, Date born) {
 			super();
 			this.id = id;
 			this.role = role;
@@ -64,8 +58,6 @@ public class Loginuse {
 			this.weight = weight;
 			this.height = height;
 			this.born = born;
-			this.highpressure = highpressure;
-			this.lowpressure = lowpressure;
 		}
 
 		public Integer getId() {
@@ -187,22 +179,4 @@ public class Loginuse {
 		public void setBorn(Date born) {
 			this.born = born;
 		}
-
-		public Integer getHighpressure() {
-			return highpressure;
-		}
-
-		public void setHighpressure(Integer highpressure) {
-			this.highpressure = highpressure;
-		}
-
-		public Integer getLowpressure() {
-			return lowpressure;
-		}
-
-		public void setLowpressure(Integer lowpressure) {
-			this.lowpressure = lowpressure;
-		}
-
-	    
 }

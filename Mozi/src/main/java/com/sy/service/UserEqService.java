@@ -135,7 +135,7 @@ public interface UserEqService {
 	 */
 	public Map<String, Object> userdata(String imei);
 	
-	public boolean deleteguardian(Integer eqId, Integer userId,Integer alias);
+	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer alias)throws Exception;
 	
 	
 	public boolean deleteequsetype(Integer eqId, Integer userId,Integer typeof);

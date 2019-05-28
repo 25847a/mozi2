@@ -93,6 +93,11 @@
     delete from sensorstatus
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <!-- 取消关注删除用户的相关信息 -->
+  <delete id="deleteSensorstatusInfo" parameterType="java.lang.String" >
+   DELETE FROM sensorstatus WHERE imei=#{imei}
+  </delete>
+  
   <delete id="deleteByExample" parameterType="com.sy.pojo.SensorstatusExample" >
     delete from sensorstatus
     <if test="_parameter != null" >

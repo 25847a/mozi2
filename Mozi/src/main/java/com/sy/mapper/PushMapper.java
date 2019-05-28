@@ -29,7 +29,13 @@ public interface PushMapper {
 	 * @throws SQLException
 	 */
 	public Push selectPushInfo(Map<String,Object> map)throws SQLException;
-	
+	/**
+	 * 取消关注删除用户需要删除预警值
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public int deletePushInfo(Integer userId)throws SQLException;
 	public int insertPush(Map<String,Object> map)throws SQLException;
 	public int addPush(Push push)throws SQLException;
 	public int addPushMap(Map<String,Object> map)throws SQLException;

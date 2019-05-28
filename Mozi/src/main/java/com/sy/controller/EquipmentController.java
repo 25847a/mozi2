@@ -494,7 +494,7 @@ public class EquipmentController {
 				} else {
 					logger.info(imei+ ">>>>>学习失败>>>>>>bluetoothType===="+bluetoothType);
 					re.setCode(602);
-					re.setMessage("没有蓝牙");
+					re.setMessage("没有衣服连接");
 				}
 			} else {
 				re.setCode(602);

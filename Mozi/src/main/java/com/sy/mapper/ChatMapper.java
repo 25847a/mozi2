@@ -14,6 +14,12 @@ public interface ChatMapper {
     int deleteByExample(ChatExample example);
 
     int deleteByPrimaryKey(Integer id);
+    /**
+     * 通过IMEI号删除
+     * @param imei
+     * @return
+     */
+    int deleteCharInfo(String imei);
 
     int insert(Chat record);
 
