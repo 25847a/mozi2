@@ -23,6 +23,7 @@ import com.sy.pojo.UserEq;
 import com.sy.service.EquipmentService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
+import com.sy.utils.DataRow;
 import com.sy.vo.Userdata;
 import io.netty.channel.Channel;
 
@@ -40,24 +41,20 @@ public class UserEqController {
 
 	private final static Logger logger = LoggerFactory.getLogger(UserEqController.class);
 	/**
-	 * 获取该设备有关用户的关联关系数据,后台使用
+	 * 关注列表
 	 * @param u
 	 * @return
 	 */
-	@RequestMapping(value = "selectusereq")
+	@RequestMapping(value = "queryUserEqFollowList")
 	@ResponseBody
-	public ResultData<List<User>> selectusereq(@RequestBody Map m) {
-		ResultData<List<User>> re = new ResultData<List<User>>();
-		Equipment e = equipmentservice.selectquipmentimei((String) m
-				.get("imei"));
-		List<User> us = usereqservice.selelctequser(e.getId());
-		if (us != null) {
-			re.setCode(200);
-			re.setMessage("获取设备操作者成功！！！");
-			re.setData(us);
-		} else {
+	public ResultData<List<Map<String,Object>>> queryUserEqFollowList(@RequestBody Map<String,Object> map) {
+		ResultData<List<Map<String,Object>>> re = new ResultData<List<Map<String,Object>>>();
+		try {
+			re = usereqservice.queryUserEqFollowList(map,re);
+		} catch (Exception e) {
 			re.setCode(400);
 			re.setMessage("获取设备操作者失败！！！");
+			logger.error("UserEqController>>>>>>>>>>>>>>>>>>queryUserEqFollowList",e);
 		}
 		return re;
 	}
@@ -161,13 +158,7 @@ public class UserEqController {
 				    push.setUserId(user.getId());
 				    push.setAlias(mid);
 				    push.setAllNotifyOn(true);
-				    push.setHeartHigThd(100);
-				    push.setHeartLowThd(60);
-				    push.setHbpstart(90);
-				    push.setHbpend(120);
-				    push.setLbpstart(60);
-				    push.setLbpend(80);
-				    pushMapper.addPush(push);
+				    pushMapper.insert(push);
 				    re.setCode(200);
 					re.setMessage("关注成功");
 					} else {
@@ -183,35 +174,26 @@ public class UserEqController {
 		return re;
 	}
 
+
 	/**
-	 * 获取多个imei里面的管理人员已经使用只最新数据
-	 * 
+	 * 获取app首页数据
+	 * m
 	 * @return
 	 */
-	/*@RequestMapping(value = "selelctUsereqvo")
+	@RequestMapping(value = "selectuserdata1")
 	@ResponseBody
-	public ResultData<List<Userqedata>> selelctUsereqvo(@RequestBody Map m) {
-		ResultData<List<Userqedata>> re = new ResultData<List<Userqedata>>();
-		String imeis = (String) m.get("imeis");
-		String imeiss[] = imeis.split(",");
-		List<Userqedata> userdatas = new ArrayList<Userqedata>();
-		if (imeiss.length >= 0) {
-			for (String imei : imeiss) {
-				Userqedata userdata = usereqservice.selectdata(imei);
-				if (userdata != null) {
-					userdatas.add(userdata);
-				}
+	public ResultData<List<Userdata>> selectuserdata1(@RequestBody DataRow map) {
+		ResultData<List<Userdata>> re = new ResultData<List<Userdata>>();
+		try {
+			re = usereqservice .selectuserdata1(map,re);
+			} catch (Exception e) {
+				re.setCode(200);
+				re.setMessage("未有用户数据 ！！！！");
+				logger.error("UserEqController>>>>>>>>>>>>>>>>>selectuserdata1",e);
 			}
-			re.setCode(200);
-			re.setMessage("获取设备管理员信息成功！！！");
-			re.setData(userdatas);
-		} else {
-			re.setCode(350);
-			re.setMessage("该设备没有对应的用户管理员！！！");
-		}
-		return re;
-	}*/
-
+			return re;
+	}
+	
 	/**
 	 * 获取app首页数据
 	 * 
@@ -246,28 +228,6 @@ public class UserEqController {
 			return re;
 	}
 
-	/**
-	 * 通过userid获取用户健康数据
-	 * 
-	 * @return
-	 */
-	/*@RequestMapping(value = "userhealthdata")
-	@ResponseBody
-	public ResultData<Map<String, Object>> userhealthdata(@RequestBody Map m) {
-		Integer userid = Integer.parseInt((String) m.get("userid"));
-		ResultData<Map<String, Object>> re = new ResultData<Map<String, Object>>();
-		Map<String, Object> userdata = usereqservice.userhealthdata(userid);
-		if (userdata != null) {
-			re.setCode(200);
-			re.setMessage("获取设备使用者健康数据成功！！！");
-			re.setData(userdata);
-			return re;
-		} else {
-			re.setCode(350);
-			re.setMessage("该用户不是使用！！！");
-			return re;
-		}
-	}*/
 
 	/**
 	 * 点击卡片接口
@@ -347,38 +307,6 @@ public class UserEqController {
 				User user2 = userservice.getUser(userid);
 				user2.setImei(imei);
 				userservice.updateUser(user2);
-				/*Equipment newe = equipmentservice.selectquipmentimei(imei);
-				if (newe == null) {
-					Equipment adde = new Equipment();
-					adde.setImei(imei);
-					adde.setCreatetime(new Date());
-					adde.setUpdatetime(new Date());
-					adde.setEqStatus("H:0");
-					adde.setBluetoothElectricity(0);
-					adde.setBluetoothStatus("0");
-					adde.setBluetoothType("0");
-					adde.setClock("闹钟");
-					adde.setName("设备信息");
-					adde.setEqtype("1");
-					adde.setLordpower(0);
-					adde.setVersion("0.0");
-					adde.setSignalxhao("0");
-					adde.setBluetoothName("蓝牙");
-					equipmentservice.addEquipment(adde);
-					newe = equipmentservice.selectquipmentimei(imei);
-				}*/
-				
-				
-				
-				/*if (usereqservice.ifuse(usereq.getEqId())) {
-					usereqservice.deleteequsetype(e.getId(), user0.getId(), 0);
-					usereqservice.deleteequsetype(e.getId(), userid, 2);
-					/*UserEq use = new UserEq();
-					use.setEqId(usereq.getEqId());
-					use.setUserId(user0.getId());
-					use.setTypeof(0);
-					usereqservice.addUserEq(use);
-					boolean status = usereqservice.addUserEq(usereq);*/
 					if (status) {
 						re.setCode(200);
 						re.setMessage("跟换设备成功！！！");
@@ -408,22 +336,5 @@ public class UserEqController {
 			re.setMessage("该用户没有关联人员！！！");
 		}
 		return re;
-	}
-	
-	/**
-	 * 后台删除使用
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping(value = "deleteusereq")
-	@ResponseBody
-	public  ResultBase  deleteusereq(Integer id){
-		ResultBase re = new ResultBase();
-		if(usereqservice.deleteusereq(id)){
-			re.setCode(200);
-		}else {
-			re.setCode(400);
-		}
-		return  re;
 	}
 }

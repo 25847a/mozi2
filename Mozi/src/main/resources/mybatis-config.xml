@@ -15,7 +15,8 @@
 			作用：在延迟加载中 不是一次查询全部、而是需要时 、在去查
 		 -->
 		<setting name="aggressiveLazyLoading" value="false"/>
-		
+		<!-- 该setting设置是当SQL字段为null,支持key返回 -->
+		<setting name="callSettersOnNulls" value="true"/>
 		<setting name="logImpl" value="LOG4J"/>
 	</settings>
 	

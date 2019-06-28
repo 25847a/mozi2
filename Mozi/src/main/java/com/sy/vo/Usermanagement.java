@@ -4,90 +4,43 @@ import java.util.Date;
 
 //使用者注册绑定设备监护人
 public class Usermanagement {
-
+	//主键ID
 	private Integer id;
-	
+	//监护者ID
 	private Integer mid;
-
+	//角色
 	private String role;
-
+	//姓名
 	private String name;
-
+	//手机号码
+	private String account;
+	//密码
+	private String password;
+	//年龄
 	private Integer age;
-
+	//男女
 	private String gender;
-
-	private String phone;
-
+	//地址
 	private String address;
-
-	private String avatar;
-
-	private String wechat;
-
-	private String qq;
-
+	//创建时间
 	private Date createtime;
-
-	private Date atlasttime;
-
+	//体重
 	private Float weight;
-
+	//身高
 	private Float height;
-
+	//生日
 	private Date born;
-
-	private String code;
-
-	private Integer userid;
-	
+	//imei号
 	private String imei;
-
-    private Integer highpressure;
-
-    private Integer lowpressure;
-	
-	public Usermanagement(Integer id, String role, String name, Integer age,
-			String gender, String phone, String address, String avatar,
-			String wechat, String qq, Date createtime, Date atlasttime,
-			Float weight, Float height, Date born, String code, Integer userid,
-			String imei, Integer highpressure, Integer lowpressure) {
-		super();
-		this.id = id;
-		this.role = role;
-		this.name = name;
-		this.age = age;
-		this.gender = gender;
-		this.phone = phone;
-		this.address = address;
-		this.avatar = avatar;
-		this.wechat = wechat;
-		this.qq = qq;
-		this.createtime = createtime;
-		this.atlasttime = atlasttime;
-		this.weight = weight;
-		this.height = height;
-		this.born = born;
-		this.code = code;
-		this.userid = userid;
-		this.imei = imei;
-		this.highpressure = highpressure;
-		this.lowpressure = lowpressure;
-	}
-
 	
 	
 	public Integer getMid() {
 		return mid;
 	}
 
-
-
 	public void setMid(Integer mid) {
 		this.mid = mid;
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -113,6 +66,22 @@ public class Usermanagement {
 		this.name = name;
 	}
 
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Integer getAge() {
 		return age;
 	}
@@ -129,14 +98,6 @@ public class Usermanagement {
 		this.gender = gender;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
 	public String getAddress() {
 		return address;
 	}
@@ -144,45 +105,12 @@ public class Usermanagement {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
-	public String getWechat() {
-		return wechat;
-	}
-
-	public void setWechat(String wechat) {
-		this.wechat = wechat;
-	}
-
-	public String getQq() {
-		return qq;
-	}
-
-	public void setQq(String qq) {
-		this.qq = qq;
-	}
-
 	public Date getCreatetime() {
 		return createtime;
 	}
 
 	public void setCreatetime(Date createtime) {
 		this.createtime = createtime;
-	}
-
-	public Date getAtlasttime() {
-		return atlasttime;
-	}
-
-	public void setAtlasttime(Date atlasttime) {
-		this.atlasttime = atlasttime;
 	}
 
 	public Float getWeight() {
@@ -209,21 +137,6 @@ public class Usermanagement {
 		this.born = born;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public Integer getUserid() {
-		return userid;
-	}
-
-	public void setUserid(Integer userid) {
-		this.userid = userid;
-	}
 
 	public String getImei() {
 		return imei;
@@ -231,22 +144,6 @@ public class Usermanagement {
 
 	public void setImei(String imei) {
 		this.imei = imei;
-	}
-
-	public Integer getHighpressure() {
-		return highpressure;
-	}
-
-	public void setHighpressure(Integer highpressure) {
-		this.highpressure = highpressure;
-	}
-
-	public Integer getLowpressure() {
-		return lowpressure;
-	}
-
-	public void setLowpressure(Integer lowpressure) {
-		this.lowpressure = lowpressure;
 	}
 
 	public Usermanagement() {

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.service.IService;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Push;
 
@@ -12,7 +13,7 @@ import com.sy.pojo.Push;
  * @author Administrator
  *
  */
-public interface PushService {
+public interface PushService extends IService<Push>{
 	/**
 	 * 查询推送表
 	 * @return

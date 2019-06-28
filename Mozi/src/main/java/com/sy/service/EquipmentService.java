@@ -2,13 +2,13 @@ package com.sy.service;
 
 import java.util.List;
 import java.util.Map;
-
+import com.baomidou.mybatisplus.service.IService;
 import com.sy.pojo.Equipment;
 import com.sy.utils.PageModel;
 import com.sy.vo.EquipmentVo;
 import com.sy.vo.Equipmentstatus;
 
-public interface EquipmentService {
+public interface EquipmentService extends IService<Equipment>{
 	
 	/**添加设备
 	 * @param e

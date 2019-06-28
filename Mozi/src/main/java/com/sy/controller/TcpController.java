@@ -182,18 +182,8 @@ public class TcpController {
 							
 							positionigservice.addPosition(p);
 							
-							//围栏通知
-							//HealthtoolServiceImpl.fencePush(p,equipment.getId(), imei);
 							
 						} else if (instruction.equals("T06")) {
-							/*String[] hs = texts[2].split(",");
-							EqsmsService eqsmsservice = new EqsmsServiceImpl();
-							Eqsms s = new Eqsms();
-							s.setCratetime(new Date());
-							s.setEsms(hs[1]);
-							s.setImei(imei);
-							s.setPhone(hs[0]);
-							eqsmsservice.addEqsms(s);*/
 						} else if (instruction.equals("T07")) {
 							BluetoothService bluetoothservice = new BluetoothServiceImpl();
 							Bluetooth b = bluetoothservice.getBluetoothid(imei);
@@ -233,17 +223,6 @@ public class TcpController {
 							eservice.updateEquipment(e);
 
 						} else if (instruction.equals("T09")) {
-							/*EqcallService eqcallservice = new EqcallServiceImpl();
-							Eqcall eqcall = new Eqcall();
-
-							String[] hs = texts[2].split(",");
-							eqcall.setAccsss(hs[1]);
-							eqcall.setAnswers(hs[2]);
-							eqcall.setColetime(StringUtil.Convert(Integer.parseInt(hs[4])));
-							eqcall.setCratetime(StringUtil.Convert(Integer.parseInt(hs[3])));
-							eqcall.setImei(imei);
-							eqcall.setPhone(hs[0]);
-							eqcallservice.addEqcall(eqcall);*/
 
 						}else if(instruction.equals("T10")){
 							
@@ -577,7 +556,7 @@ public class TcpController {
 					}
 
 					switch (h) {
-					case "H1":
+					/*case "H1":
 						edata.setHeartrate(Integer.parseInt(text));
 						break;
 					case "H2":
@@ -600,19 +579,17 @@ public class TcpController {
 						break;
 					case "H8":
 						edata.setBreathe(Integer.parseInt(text));
-						break;
+						break;*/
 					case "G1":
 						edata.setStepWhen(Integer.parseInt(text));
-						//步数推送
-						//HealthtoolServiceImpl.walkCountPush(edata.getStepWhen(), user,equipment.getId());
 						break;
-					case "G2":
+				/*	case "G2":
 						edata.setSleeping(Double.parseDouble(text));
-						break;
+						break;*/
 					case "G3":
 						edata.setCarrieroad(Integer.parseInt(text));
 						break;
-					case "G4":
+			/*		case "G4":
 						edata.setSedentary(text);
 						break;
 					case "G5":
@@ -626,18 +603,12 @@ public class TcpController {
 						break;
 					case "T2":
 						edata.setHumidity(Integer.parseInt(text));
-						break;
+						break;*/
 					case "M1":
 						equipment.setLordpower(Integer.parseInt(text));
 						break;
 					case "M2":
 						equipment.setSignalxhao(text);
-						break;
-					case "M3":
-						// edata.setPositioningS(text);
-						break;
-					case "M4":
-						// edata.setPositioningData(text);
 						break;
 					}
 				}

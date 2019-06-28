@@ -2,21 +2,20 @@ package com.sy.mapper;
 
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.Equipment;
 import com.sy.pojo.EquipmentExample;
 
-public interface EquipmentMapper {
+public interface EquipmentMapper extends BaseMapper<Equipment>{
 	int countByExample(EquipmentExample example);
 
 	int deleteByExample(EquipmentExample example);
 
 	int deleteByPrimaryKey(Integer id);
-	int insert(Equipment record);
+	Integer insert(Equipment record);
 
 	int insertSelective(Equipment record);
 

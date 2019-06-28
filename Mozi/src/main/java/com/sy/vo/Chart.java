@@ -1,6 +1,5 @@
 package com.sy.vo;
 
-import java.util.Date;
 
 /**
  * 这个是返回图表数据的实体类(啊健)
@@ -11,7 +10,7 @@ public class Chart {
 	//平均值
 	private Integer HRV;
 	//日期
-	private Date date;
+	private String date;
 	//高压
 	private Integer sbpAve;
 	//低压
@@ -68,10 +67,10 @@ public class Chart {
 	public void setHRV(Integer hRV) {
 		HRV = hRV;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

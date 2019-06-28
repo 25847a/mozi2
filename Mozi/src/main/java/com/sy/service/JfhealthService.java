@@ -4,18 +4,23 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.service.IService;
+import com.sy.common.ResultData;
 import com.sy.pojo.Jfhealth;
+import com.sy.utils.DataRow;
 import com.sy.utils.PageModel;
 import com.sy.vo.Chart;
 import com.sy.vo.SHChart;
 
-public interface JfhealthService {
+public interface JfhealthService extends IService<Jfhealth>{
 
-	/**添加惊凡健康数据
-	 * @param jf
+	
+	/**
+	 * 二级页面数据展示
 	 * @return
+	 * @throws Exception
 	 */
-	public boolean addJfhealth(Jfhealth jf);
+	public ResultData<DataRow> querySecondaryData(DataRow map,ResultData<DataRow> re)throws Exception;
 	
 	/**根据时间获取获取健康数据
 	 * @param map
@@ -23,17 +28,29 @@ public interface JfhealthService {
 	 */
 	public List<Chart>selecthealth(Map map);
 	/**
-     * 根据时间获取最大血压数据
-     * @param map
-     * @return
-     */
-    public Jfhealth selecthealthMax(Map map);
+	 * 血压MAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+    public Map<String,String> selectBloodpressureInfo(Map<String, Object> map);
     /**
-     * 根据时间获取最小血压数据
-     * @param map
-     * @return
-     */
-    public Jfhealth selecthealthMin(Map map);
+	 * 心率MAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+    public Map<String,String> selectHeartRateInfo(Map<String, Object> map);
+    /**
+   	 * HRVMAX,MIN,AVG,COUNT
+   	 * @param map
+   	 * @return
+   	 */
+    public Map<String,String> selectHrvInfo(Map<String, Object> map);
+    /**
+   	 * 步数MAX,MIN,AVG,COUNT
+   	 * @param map
+   	 * @return
+   	 */
+    public Map<String,String> selectStepWhenInfo(Map<String, Object> map);
     /**
      * 根据树洪步数，睡眠健康数据
      * @param map

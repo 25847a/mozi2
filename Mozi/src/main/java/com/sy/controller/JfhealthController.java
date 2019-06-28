@@ -1,33 +1,31 @@
 package com.sy.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpSession;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.sy.common.ResultData;
 import com.sy.mapper.EquipmentDataMapper;
-import com.sy.pojo.EquipmentData;
-import com.sy.pojo.Extend;
 import com.sy.pojo.Jfhealth;
 import com.sy.pojo.Management;
+import com.sy.pojo.User;
 import com.sy.service.EquipmentDataService;
-import com.sy.service.ExtendService;
+import com.sy.service.ConfigService;
 import com.sy.service.JfhealthService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
+import com.sy.utils.DataRow;
+import com.sy.utils.DataUtil;
 import com.sy.utils.Managementconstant;
 import com.sy.utils.PageModel;
 import com.sy.vo.Chart;
@@ -36,6 +34,8 @@ import com.sy.vo.SHChart;
 @Controller
 @RequestMapping(value = "health")
 public class JfhealthController {
+	
+	private final static Logger logger = LoggerFactory.getLogger(JfhealthController.class);
 	private static final String String = null;
 	@Autowired
 	private JfhealthService jfhealthservice;
@@ -48,7 +48,7 @@ public class JfhealthController {
 	@Autowired
 	EquipmentDataMapper equipmentDataMapper;
 	@Autowired
-	ExtendService extendService;
+	ConfigService extendService;
 	
 
 	@RequestMapping(value = "list")
@@ -73,6 +73,26 @@ public class JfhealthController {
 		mo.addObject("pagemodel", pagemodel);
 		return mo;
 	}
+	
+	
+	/**
+	 * 二级页面数据展示
+	 * @param m
+	 * @return
+	 */
+	@RequestMapping("/querySecondaryData")
+	@ResponseBody
+	public ResultData<DataRow> querySecondaryData(@RequestBody DataRow map){
+		ResultData<DataRow> re = new ResultData<DataRow>();
+		try {
+			re =jfhealthservice.querySecondaryData(map,re);
+		} catch (Exception e) {
+			logger.error("JfhealthController>>>>>>>>>>>>>querySecondaryData",e);
+		}
+		return re;
+		
+	}
+	
 	/**
 	 * 1获取血压数据 （根据年月日 周）查找
 	 * @param m
@@ -87,64 +107,8 @@ public class JfhealthController {
 		data.put("name", "pressure");
 		data.put("desc", "血压");
 		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
-		String service = (String) m.get("service");
-		String timedata = (String) m.get("timedata");
-		Integer userId = userEqservice.getimei((String) m.get("imei"));//通过设备号获取用户ID
-		Map<String,Object> map = new HashMap<String,Object>();
-		String[] timedatas = null;
-		if (!service.equals("week")) {//把2018-04-11分成3个数组
-			timedatas = timedata.split("-");
-		}
-		// 日
-		if (service.equals("day")) {
-			map.put("month", timedatas[1]);//04
-			map.put("timedata", timedatas[2]);//11
-			map.put("year", timedatas[0]);//2018
-			map.put("keyWord", "day");
-			// 月
-		} else if (service.equals("month")) {
-			map.put("timedata", timedatas[1]);
-			map.put("year", timedatas[0]);
-			map.put("keyWord", "month");
-			// 年
-		} else if (service.equals("year")) {
-			map.put("timedata", timedatas[0]);
-			map.put("keyWord", "year");
-		} else if (service.equals("week")) {
-			map.put("keyWord", "week");
-		}
-		map.put("phone", Managementconstant.channel_id + String.valueOf(userservice.getUser(userId).getId()));//把用户手机放入Map
-		m.put("phone", Managementconstant.channel_id + String.valueOf(userservice.getUser(userId).getId()));//把用户手机放入Map
+		m.put("userId", Managementconstant.channel_id+m.get("userId"));
 		List<Chart> chart = jfhealthservice.selecthealth(m);//查询用户2018-04-11健康数据
-		Jfhealth bloodpressureMax = jfhealthservice.selecthealthMax(map);//获取时间下最大血压
-		Jfhealth bloodpressureMin = jfhealthservice.selecthealthMin(map);//获取时间下最小血压
-		Jfhealth jfhealth= jfhealthservice.newjfhealth((String) m.get("imei"));
-		if(bloodpressureMax != null && bloodpressureMin !=null && null!=jfhealth) {
-			List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();	
-			Map<String,Object> detail = new HashMap<String,Object>();
-			detail.put(new String("detailId"), "5");
-			detail.put(new String("name"), "血压最高值");
-			detail.put(new String("value"), bloodpressureMax.getSbpAve()+"/"+bloodpressureMax.getDbpAve());
-			detail.put(new String("updateTime"), bloodpressureMax.getCreatetime());
-			list.add(detail);
-			detail = new HashMap<String,Object>();
-			detail.put(new String("detailId"), "10");
-			detail.put(new String("name"), "血压最低值");
-			detail.put(new String("value"), bloodpressureMin.getSbpAve()+"/"+bloodpressureMin.getDbpAve());
-			detail.put(new String("updateTime"), bloodpressureMax.getCreatetime());
-			list.add(detail);
-			detail = new HashMap<String,Object>();
-			detail.put(new String("detailId"), "15");
-			detail.put(new String("name"), "血压");
-			detail.put(new String("value"), jfhealth.getSbpAve()+"/"+jfhealth.getDbpAve());
-			detail.put(new String("updateTime"), jfhealth.getCreatetime());
-			list.add(detail);
-			data.put("detail", list);
-		}else {
-			re.setCode(350);
-			re.setMessage("暂无健康数据！！！");
-			return re;
-		}
 		if (chart != null && chart.size() > 0) {//判断非空
 			 List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();	
 			for (int i = 0; i < chart.size(); i++) {
@@ -158,9 +122,13 @@ public class JfhealthController {
 				chartData.put("updateTime", j.getDate());
 				bloodpressureList.add(chartData);
 			}
+			Map<String,String> map = jfhealthservice.selectBloodpressureInfo(m);
+			List<Map<String,Object>> list = DataUtil.polymerization("最高血压","","最低血压","","最新血压","平均血压",map);	
+			data.put("detail", list);
+			data.put("createtime", map.get("createtime"));
+			data.put("count", map.get("count"));
+			data.put("show", DataUtil.tipsBloodpressure(m));
 			data.put("chartData", bloodpressureList);
-			data.put("h5url","http://120.76.201.150:8080/avatars/120.png");
-			data.put("imageurl", "http://120.76.201.150:8080/avatars/bloodpressure.png");
 			re.setCode(200);
 			re.setData(data);
 			re.setMessage("获取血压健康数据成功！！！");
@@ -179,30 +147,13 @@ public class JfhealthController {
 	@RequestMapping(value = "selecthealth")
 	@ResponseBody
 	public ResultData<Map<String,Object>> selecthealth(@RequestBody Map<String,Object> m) throws ParseException {
-		//List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		//Map<String,Object> detail = new HashMap<String,Object>();
 		Map<String,Object> data = new HashMap<String,Object>();
 		data.put("categoryId", "2");
 		data.put("name", "heartrate");
 		data.put("desc", "心率");
 		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
-		String imei = (String) m.get("imei");
-		Integer userId = userservice.getUser(imei).getId();
-		m.put("phone", Managementconstant.channel_id + String.valueOf(userservice.getUser(userId).getId()));
+		m.put("userId", Managementconstant.channel_id+m.get("userId"));
 		List<Chart> chart = jfhealthservice.selecthealth(m);
-		/*Jfhealth jfhealth= jfhealthservice.newjfhealth((String) m.get("imei"));
-		if(null!=jfhealth) {
-			detail.put(new String("detailId"), "1");
-			detail.put(new String("name"), "心率");
-			detail.put(new String("value"), jfhealth.getHeartrate());
-			detail.put(new String("updateTime"), jfhealth.getCreatetime());
-			list.add(detail);
-			data.put("detail", list);
-		}else {
-			re.setCode(400);
-			re.setMessage("没有健康数据！！！");
-			return re;
-		}*/
 		if (chart != null && chart.size() > 0) {
 		List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();
 			for (int i = 0; i < chart.size(); i++) {
@@ -215,9 +166,14 @@ public class JfhealthController {
 				chartData.put("updateTime",  j.getDate());
 				bloodpressureList.add(chartData);
 			}
+			Map<String,String> map = jfhealthservice.selectHeartRateInfo(m);
+			List<Map<String,Object>> list = DataUtil.polymerization("最快心率","","最慢心率","","最新心率","平均心率",map);	
+			data.put("detail", list);
+			data.put("count", map.get("count"));
+			data.put("createtime", map.get("createtime"));
+			data.put("userId", map.get("userId"));
+			data.put("show", DataUtil.tipsHeartRate(m));
 			data.put("chartData", bloodpressureList);
-			data.put("h5url","http://120.76.201.150:8080/avatars/120.png");
-			data.put("imageurl","http://120.76.201.150:8080/avatars/health.png");
 			re.setCode(200);
 			re.setData(data);
 			re.setMessage("获取心率健康数据成功！！！");
@@ -315,28 +271,12 @@ public class JfhealthController {
 	@ResponseBody
 	public ResultData<Map<String,Object>> selectHrv(@RequestBody Map<String,Object> m)throws ParseException {
 		Map<String,Object> data = new HashMap<String,Object>();
-		//List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		//Map<String,Object> detail = new HashMap<String,Object>();
 		data.put("categoryId", "5");
 		data.put("name", "hrv");
 		data.put("desc", "心率变异性HRV");
 		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
-		Integer userId = userEqservice.getimei((String) m.get("imei"));
-		m.put("phone", Managementconstant.channel_id + String.valueOf(userservice.getUser(userId).getId()));
+		m.put("userId", Managementconstant.channel_id+m.get("userId"));
 		List<Chart> chart = jfhealthservice.selecthealth(m);
-		/*Jfhealth jfhealth= jfhealthservice.newjfhealth((String) m.get("imei"));
-		if(null!=jfhealth) {
-			detail.put(new String("detailId"), "2");
-			detail.put(new String("name"), "心跳变异");
-			detail.put(new String("value"), jfhealth.getHrv());
-			detail.put(new String("updateTime"), jfhealth.getCreatetime());
-			list.add(detail);
-			data.put("detail", list);
-		}else{
-			re.setCode(400);
-			re.setMessage("没有心跳变异数据！！！");
-			return re;
-		}*/
 		if (chart != null && chart.size() > 0) {
 			List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();
 				for (int i = 0; i < chart.size(); i++) {
@@ -349,6 +289,13 @@ public class JfhealthController {
 					chartData.put("updateTime",  j.getDate());
 					bloodpressureList.add(chartData);
 				}
+				Map<String,String> map = jfhealthservice.selectHeartRateInfo(m);
+				List<Map<String,Object>> list = DataUtil.polymerization("最高HRV","","最低HRV","","最新HRV","平均HRV",map);	
+				data.put("detail", list);
+				data.put("count", map.get("count"));
+				data.put("createtime", map.get("createtime"));
+				data.put("userId", map.get("userId"));
+				data.put("show", DataUtil.tipsHrv(m));
 				data.put("chartData", bloodpressureList);
 				re.setCode(200);
 				re.setData(data);
@@ -358,7 +305,6 @@ public class JfhealthController {
 				re.setMessage("没有心跳变异数据！！！");
 			}
 			return re;
-		
 	} 
 	/**
 	 * 获取微循环数据 （根据年月日 周）查找
@@ -412,64 +358,11 @@ public class JfhealthController {
 	public ResultData<Map<String,Object>> selectStepWhen(@RequestBody Map<String,Object> m) {
 		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
 		try {
-			List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-			Map<String,Object> detail = new HashMap<String,Object>();
 			Map<String,Object> data = new HashMap<String,Object>();
-			data.put("categoryId", "7");
+			data.put("categoryId", "3");
 			data.put("name", "step_when");
 			data.put("desc", "步数");
-			Integer userId = userEqservice.getimei((String) m.get("imei"));
-			m.put("userId", userId);
-			
-			 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-			 String dd = df.format(new Date());
-			 Map<String,Object> map= new HashMap<String, Object>();
-			 map.put("countdate", dd+"%");
-			 map.put("userid",userId);
-			 List<EquipmentData> countdata= equipmentDataMapper.selecttheycount(map);
-			 Integer num = 0;//获取步数
-			 Integer reliang = 0;//获取卡里路
-			 
-			 
-			 if(countdata.size() >0 && null!=countdata) {
-					System.out.println("用户id》》》》》》》》》》》》》》》》"+userId);
-					for(EquipmentData eqcount: countdata){
-						int count=eqcount.getStepWhen();
-						num+= count;
-						int reliangNum = eqcount.getCarrieroad();
-						reliang+= reliangNum;
-					} 
-			 }else {
-				 num = 0;
-				 reliang = 0;
-			 }
-			detail.put("detailId", "3");
-			detail.put("name", "步数");
-			detail.put("value", num);
-			detail.put("unit", "步");
-			list.add(detail);
-			detail = new HashMap<String,Object>();
-			detail.put(new String("detailId"), "4");
-			detail.put(new String("name"), "今日消耗热量");
-			detail.put(new String("value"), reliang);
-			detail.put(new String("unit"), "千卡");
-			list.add(detail);
-			detail = new HashMap<String,Object>();
-			detail.put(new String("detailId"), "6");
-			detail.put(new String("name"), "今日行动距离");
-			detail.put(new String("value"), String.valueOf(num*0.6).substring(0, String.valueOf(num*0.6).indexOf(".")));
-			detail.put(new String("unit"), "米");
-			list.add(detail);
-			detail = new HashMap<String,Object>();
-			Extend extend =extendService.selectExtend(1);
-			detail.put(new String("detailId"), "7");
-			detail.put(new String("name"), "目标步数");
-			detail.put(new String("value"), extend.getOption1());
-			detail.put(new String("unit"), "步");
-			list.add(detail);
-			data.put("detail", list);
 			List<SHChart> shChart = jfhealthservice.selectSHChart(m);
-			
 			if (shChart != null && shChart.size() > 0) {
 				List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();
 					for (int i = 0; i < shChart.size(); i++) {
@@ -482,7 +375,18 @@ public class JfhealthController {
 						chartData.put("updateTime",  j.getDate());
 						bloodpressureList.add(chartData);
 					}
+					Map<String,String> map = jfhealthservice.selectStepWhenInfo(m);
+					List<Map<String,Object>> list = DataUtil.polymerization("步数最高",map.get("maxtime"),"步数最低",map.get("mintime"),"最新步数","平均步数",map);	
+					data.put("detail", list);
+					data.put("kilometre", map.get("kilometre"));
+					data.put("createtime", map.get("createtime"));
+					data.put("userId", m.get("userId"));
+					data.put("show", DataUtil.tipsStepWhen(m));
 					data.put("chartData", bloodpressureList);
+					User user2 = userservice.getUser(Integer.valueOf(String.valueOf(m.get("userId"))));
+					data.put("stepNumber", user2.getWalkCount());
+					
+					
 					re.setCode(200);
 					re.setData(data);
 					re.setMessage("获取步数健康数据成功！！！");
@@ -536,44 +440,5 @@ public class JfhealthController {
 			return re;
 		
 	}
-	/**得出两个时间差距的天数时分秒
-	 * @param d1减数
-	 * @param d2被减数
-	 */
-	public String operating(Date d1,Date d2){
-		String text=null;
-        try  
-        {  
-          long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别  
-          long days = diff / (1000 * 60 * 60 * 24);  
-       
-          long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);  
-          long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60);  
-          System.out.println(""+days+"天"+hours+"小时"+minutes+"分");  
-          text=""+days+"天"+hours+"小时"+minutes+"分";
-        }catch (Exception e)  
-        {  
-        	return text;
-        }
-		return text;  
-	}
 	
-	public long Minute(   Date d1 ,Date d2) throws ParseException{
-		   long between=(d1.getTime()-d2.getTime())/1000;//除以1000是为了转换成秒
-		   long min=between/60;
-		   System.out.println(min);
-		   return min;
-	}
-	
-	/**根据分钟得出天数据小时分钟
-	 * @param num
-	 */
-	public String  Minutecount(Integer num){
-		int day = num/(24*60);
-		int hour = (num%(24*60))/60;
-		int minute = (num%(24*60))%60;
-		
-		System.out.println(day+"天"+hour+"小时"+minute+"分");
-		return day+"天"+hour+"小时"+minute+"分";
-	}
 }

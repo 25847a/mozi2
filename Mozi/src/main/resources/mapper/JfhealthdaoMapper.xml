@@ -98,19 +98,6 @@
   <delete id="deleteJfhealthdaoInfo" parameterType="java.lang.String" >
    DELETE FROM jfhealthdao where imei= #{imei,jdbcType=VARCHAR} and phone=#{phone,jdbcType=VARCHAR}
   </delete>
-  
-  <insert id="insert" parameterType="com.sy.pojo.Jfhealthdao" >
-    insert into jfhealthdao (id, HRV, sbp_ave, 
-      dbp_ave, Heartrate, Bloodoxygen, 
-      microcirculation, respirationrate, phone, 
-      imei, createtime, Amedicalreport
-      )
-    values (#{id,jdbcType=INTEGER}, #{HRV,jdbcType=INTEGER}, #{sbpAve,jdbcType=INTEGER}, 
-      #{dbpAve,jdbcType=INTEGER}, #{heartrate,jdbcType=INTEGER}, #{bloodoxygen,jdbcType=INTEGER}, 
-      #{microcirculation,jdbcType=INTEGER}, #{respirationrate,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
-      #{imei,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{amedicalreport,jdbcType=LONGVARCHAR}
-      )
-  </insert>
   <insert id="insertSelective" parameterType="com.sy.pojo.Jfhealthdao" >
     insert into jfhealthdao
     <trim prefix="(" suffix=")" suffixOverrides="," >

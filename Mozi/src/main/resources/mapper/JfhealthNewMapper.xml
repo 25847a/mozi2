@@ -103,36 +103,6 @@
   <sql id="Blob_Column_List" >
     Amedicalreport
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.sy.pojo.JfhealthExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from jfhealth_new
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.JfhealthExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from jfhealth_new
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -145,24 +115,6 @@
     delete from jfhealth_new
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.sy.pojo.JfhealthExample" >
-    delete from jfhealth_new
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.sy.pojo.JfhealthNew" >
-    insert into jfhealth_new (id, HRV, sbp_ave, 
-      dbp_ave, Heartrate, Bloodoxygen, 
-      microcirculation, respirationrate, phone, 
-      imei, createtime, Amedicalreport
-      )
-    values (#{id,jdbcType=INTEGER}, #{HRV,jdbcType=INTEGER}, #{sbpAve,jdbcType=INTEGER}, 
-      #{dbpAve,jdbcType=INTEGER}, #{heartrate,jdbcType=INTEGER}, #{bloodoxygen,jdbcType=INTEGER}, 
-      #{microcirculation,jdbcType=INTEGER}, #{respirationrate,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
-      #{imei,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{amedicalreport,jdbcType=LONGVARCHAR}
-      )
-  </insert>
   <insert id="insertSelective" parameterType="com.sy.pojo.JfhealthNew" >
     insert into jfhealth_new
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -242,94 +194,9 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.sy.pojo.JfhealthExample" resultType="java.lang.Integer" >
-    select count(id) from jfhealth_new
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
   <select id="countImei" parameterType="java.lang.String" resultType="java.lang.Integer" >
     select count(id) from jfhealth_new where imei = #{imei}
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update jfhealth_new
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.HRV != null" >
-        HRV = #{record.HRV,jdbcType=INTEGER},
-      </if>
-      <if test="record.sbpAve != null" >
-        sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="record.dbpAve != null" >
-        dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="record.heartrate != null" >
-        Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      </if>
-      <if test="record.bloodoxygen != null" >
-        Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      </if>
-      <if test="record.microcirculation != null" >
-        microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      </if>
-      <if test="record.respirationrate != null" >
-        respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      </if>
-      <if test="record.phone != null" >
-        phone = #{record.phone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.imei != null" >
-        imei = #{record.imei,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createtime != null" >
-        createtime = #{record.createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.amedicalreport != null" >
-        Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update jfhealth_new
-    set id = #{record.id,jdbcType=INTEGER},
-      HRV = #{record.HRV,jdbcType=INTEGER},
-      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      imei = #{record.imei,jdbcType=VARCHAR},
-      createtime = #{record.createtime,jdbcType=TIMESTAMP},
-      Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update jfhealth_new
-    set id = #{record.id,jdbcType=INTEGER},
-      HRV = #{record.HRV,jdbcType=INTEGER},
-      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      imei = #{record.imei,jdbcType=VARCHAR},
-      createtime = #{record.createtime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.JfhealthNew" >
     update jfhealth_new
     <set >
@@ -398,155 +265,11 @@
       createtime = #{createtime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-   <!-- 11获取步数，睡眠健康数据（根据年月日 周）查找 -->
-	<select id="selectSHChart" parameterType="java.util.Map"
-		resultMap="SHChartBaseResultMap">
-		<if
-			test="service != null and service != '' and  service == 'year' ">
-			SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
-			date_format(createtime, '%Y-%m-%d')
-			as date
-			FROM equipment_data WHERE DATE_FORMAT(createtime, '%Y') =
-			#{timedata} AND
-			user_id=#{userId} GROUP BY date_format(createtime,
-			'%Y%m%d');
-		</if>
-		<if
-			test="service != null and service != '' and  service == 'month' ">
-			
-	SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
-			date_format(createtime, '%Y-%m-%d')
-			as date
-			FROM equipment_data WHERE DATE_FORMAT(createtime, '%Y-%m') =
-			#{timedata} AND
-			user_id=#{userId} GROUP BY date_format(createtime,
-			'%Y%m%d')
-		</if>
-		<if test="service != null and service != '' and  service == 'day' ">
-			SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
-			date_format(createtime,'%Y-%m-%d %H:%i:%S') as date FROM equipment_data WHERE
-			DATE_FORMAT(createtime,'%Y-%m-%d')=#{timedata} AND user_id=#{userId}
-			GROUP BY date_format(createtime, '%Y%m%d %H:%i:%S');
-		</if>
-		<if
-			test="service != null and service != '' and  service == 'week' ">
-			SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
-			date_format(createtime, '%Y-%m-%d')
-			as date FROM equipment_data WHERE
-			YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) AND
-			user_id=#{userId}
-			GROUP BY date_format(createtime, '%Y%m%d');
-		</if>
-	</select>
-  
-   <!-- 11获取血压,心率,血氧,呼吸,心跳变异(HRV),微循环数据 （根据年月日 周）查找 -->
-	<select id="selecthealth" parameterType="java.util.Map"
-		resultMap="ChartBaseResultMap">
-		<if
-			test="service != null and service != '' and  service == 'year' ">
-			SELECT TRUNCATE(avg(HRV),0) as HRV,TRUNCATE(avg(sbp_ave),0) as sbp_ave,TRUNCATE(avg(dbp_ave),0) as dbp_ave,TRUNCATE(avg(Heartrate),0) as Heartrate,
-			TRUNCATE(avg(Bloodoxygen),0) as Bloodoxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate,
-			date_format(createtime, '%Y-%m-%d')
-			as date
-			FROM jfhealth_new WHERE DATE_FORMAT(createtime, '%Y') =
-			#{timedata} AND
-			phone=#{phone} GROUP BY date_format(createtime,
-			'%Y%m%d');
-		</if>
-		<if
-			test="service != null and service != '' and  service == 'month' ">
-			SELECT TRUNCATE(avg(HRV),0) as HRV,TRUNCATE(avg(sbp_ave),0) as sbp_ave,TRUNCATE(avg(dbp_ave),0) as dbp_ave,TRUNCATE(avg(Heartrate),0) as Heartrate,
-			TRUNCATE(avg(Bloodoxygen),0) as Bloodoxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate,
-			date_format(createtime, '%Y-%m-%d')
-			as date FROM jfhealth_new WHERE DATE_FORMAT(createtime, '%Y-%m') =
-			#{timedata} AND phone=#{phone}
-			GROUP BY date_format(createtime,
-			'%Y%m%d');
-		</if>
-		<if test="service != null and service != '' and  service == 'day' ">
-			SELECT TRUNCATE(avg(HRV),0) as HRV,TRUNCATE(avg(sbp_ave),0) as sbp_ave,TRUNCATE(avg(dbp_ave),0) as dbp_ave,TRUNCATE(avg(Heartrate),0) as Heartrate,
-			TRUNCATE(avg(Bloodoxygen),0) as Bloodoxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate,
-			date_format(createtime,'%Y-%m-%d %H:%i:%S') as date FROM jfhealth_new WHERE
-			DATE_FORMAT(createtime,'%Y-%m-%d')=#{timedata} AND phone=#{phone}
-			GROUP BY date_format(createtime, '%Y%m%d %H:%i:%S');
-		</if>
-		<if
-			test="service != null and service != '' and  service == 'week' ">
-			SELECT TRUNCATE(avg(HRV),0) as HRV,TRUNCATE(avg(sbp_ave),0) as sbp_ave,TRUNCATE(avg(dbp_ave),0) as dbp_ave,TRUNCATE(avg(Heartrate),0) as Heartrate,
-			TRUNCATE(avg(Bloodoxygen),0) as Bloodoxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate,
-			date_format(createtime, '%Y-%m-%d')
-			as date FROM jfhealth_new WHERE
-			YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) AND
-			phone=#{phone}
-			GROUP BY date_format(createtime, '%Y%m%d');
-		</if>
-	</select>
-  <!-- 11获取血压数据 （根据年月日 周）查找
-   <select id="selecthealth" parameterType="java.util.Map" resultMap="BaseResultMap">
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
-      select * from  jfhealth_new  where year(createtime)= #{timedata}    and  phone =#{phone};
-  </if>
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
-	  select * from jfhealth_new  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
-	  select * from jfhealth_new  where  day(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year}  and  
-
-month(createtime)= #{month};
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
-	  select * from jfhealth_new  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone};
-	</if>
-	</select> -->
-	<!-- 11获取血压数据 （根据年月日 周）查找血压最大值 -->
-   <select id="selecthealthMax" parameterType="java.util.Map" resultMap="BaseResultMap">
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
-      select * from  jfhealth_new  where year(createtime)= #{timedata}    and  phone =#{phone} ORDER BY sbp_ave DESC LIMIT 1 ;
-  </if>
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
-	  select * from jfhealth_new  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ORDER BY sbp_ave DESC LIMIT 1  ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
-	  select * from jfhealth_new  where  day(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year}  and  
-
-month(createtime)= #{month} ORDER BY sbp_ave DESC LIMIT 1;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
-	  select * from jfhealth_new  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone} ORDER BY sbp_ave DESC LIMIT 1;
-	</if>
-	</select>
-	<!-- 11获取血压数据 （根据年月日 周）查找血压最小值 -->
-   <select id="selecthealthMin" parameterType="java.util.Map" resultMap="BaseResultMap">
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
-      select * from  jfhealth_new  where year(createtime)= #{timedata}    and  phone =#{phone} ORDER BY dbp_ave LIMIT 1 ;
-  </if>
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
-	  select * from jfhealth_new  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ORDER BY dbp_ave LIMIT 1 ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
-	  select * from jfhealth_new  where  day(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year}  and  
-
-month(createtime)= #{month} ORDER BY dbp_ave LIMIT 1 ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
-	  select * from jfhealth_new  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone} ORDER BY dbp_ave LIMIT 1 ;
-	</if>
-	</select>
-	
 	 <select id="getcount" parameterType="java.lang.String" resultType="java.lang.Integer">
       select count(*) from  jfhealth_new 
       <if test="_parameter != null and _parameter != '' ">
    			 where  CONCAT(imei)  LIKE concat(concat('%',#{_parameter}),'%')
   	  </if> 
-  </select>
-  <!-- 获取想要的页面数据 -->
-  <select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
-   SELECT * FROM jfhealth_new
-   		<if test="keyWord != null and keyWord != '' ">
-   			 where  CONCAT(imei)  LIKE concat(concat('%',#{keyWord}),'%')
-  		</if> 
-  		 order by createtime desc
-   limit #{pageNo},#{pageSize} 
   </select>
   <select id="newJfhealthNew" parameterType="java.lang.String"  resultMap="BaseResultMap">
  SELECT *  

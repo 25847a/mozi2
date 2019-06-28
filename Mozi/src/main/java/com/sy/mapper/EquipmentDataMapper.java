@@ -1,45 +1,29 @@
 package com.sy.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.EquipmentData;
-import com.sy.pojo.EquipmentDataExample;
+import com.sy.utils.DataRow;
 
-public interface EquipmentDataMapper {
-    int countByExample(EquipmentDataExample example);
-
-    int deleteByExample(EquipmentDataExample example);
+public interface EquipmentDataMapper extends BaseMapper<EquipmentData>{
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(EquipmentData record);
-
     int insertSelective(EquipmentData record);
 
-    List<EquipmentData> selectByExample(EquipmentDataExample example);
-
     EquipmentData selectByPrimaryKey(Integer id);
-
-    int updateByExampleSelective(@Param("record") EquipmentData record, @Param("example") EquipmentDataExample example);
-
-    int updateByExample(@Param("record") EquipmentData record, @Param("example") EquipmentDataExample example);
 
     int updateByPrimaryKeySelective(EquipmentData record);
 
     int updateByPrimaryKey(EquipmentData record);
     public Integer getcount(String keyWord);
 
-	public List<EquipmentData> list(Map map);
 
 	public EquipmentData selectdata(Integer userId);
 
 	public void deletedata(Integer userId);
-
-	public List<EquipmentData> selectdateequipmentDate(Map m);
-	
 	/**
 	 * 查询当天的步行数
 	 * @param m
@@ -52,6 +36,12 @@ public interface EquipmentDataMapper {
 	 * @return
 	 */
 	public EquipmentData queryEquipmentDataInfo(Integer userId);
+	/**
+	 * 啊健写的获取卡里路提供给硬件
+	 * @param userId
+	 * @return
+	 */
+	public DataRow queryStepWhenCarrieroadSum(Integer userId)throws SQLException;
 	 
 	
 }

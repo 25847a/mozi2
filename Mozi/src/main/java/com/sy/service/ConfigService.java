@@ -1,24 +1,30 @@
 package com.sy.service;
 
-import java.util.Map;
+import java.util.List;
 
-import com.sy.pojo.Extend;
+import com.baomidou.mybatisplus.service.IService;
+import com.sy.pojo.Config;
 
-
-
-public interface ExtendService {
+public interface ConfigService  extends IService<Config>{
 	/**
-	 * 查询
+	 * 通过ID查询
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
-	public Extend selectExtend(Integer id)throws Exception;
+	public Config queryConfigId(Integer id)throws Exception;
 	/**
-	 * 修改
-	 * @param map
+	 * 查询系统配置表集合
+	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
-	public int updateExtendById(Map<String,Object> map)throws Exception;
+	public List<Config> queryConfigList(String type,String lable)throws Exception;
+	/**
+	 * 查询系统配置表信息
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public Config queryConfigInfo(String type,String lable)throws Exception;
 }

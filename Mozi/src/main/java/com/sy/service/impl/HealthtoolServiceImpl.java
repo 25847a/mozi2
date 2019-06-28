@@ -1,20 +1,16 @@
 package com.sy.service.impl;
 
-import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import com.google.gson.Gson;
-import com.sy.common.JpushClientUtil;
 import com.sy.mapper.EquipmentDataMapper;
 import com.sy.mapper.JfhealthMapper;
 import com.sy.mapper.JfhealthNewMapper;
@@ -24,11 +20,8 @@ import com.sy.pojo.EquipmentData;
 import com.sy.pojo.Jfhealth;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Jfhealthdao;
-import com.sy.pojo.Positionig;
-import com.sy.pojo.Push;
 import com.sy.pojo.Realhealth;
 import com.sy.pojo.User;
-import com.sy.pojo.UserEq;
 import com.sy.service.JfhealthdaoService;
 import com.sy.service.PushService;
 import com.sy.service.UserService;
@@ -137,11 +130,8 @@ public class HealthtoolServiceImpl {
 	public static String UploadhealthTset(String phone_num, String password, String data, String device_id)
 			throws Exception {
 		User u = null;
-		float w = 50;
-		float h = 170;
 		if (u == null) {
-			u = new User(null, null, null, null, null, 50, "男", null, null, null, null, null, null, null, w, h, null,
-					null, null, null, null);
+			u = new User(null, null, null, null, null, 50, "男", null, null, null, null, null, null, null);
 		}
 		SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String starttime = time.format(new Date());
@@ -192,16 +182,13 @@ public class HealthtoolServiceImpl {
 	public static String addjfthealth(String imei, String data, String device_id, String type) throws Exception {
 		try {
 			init();
-			//Integer userid = usereqservice.getimei(imei);
 			User u = userservice.getUser(imei);
 			if (u == null) {
-				// return "$R05|ERR1\r\n";
 				return "nouser";
 			} else {
 				// mozistar+使用者id
 				String account = Managementconstant.channel_id + String.valueOf(u.getId());
 				String stattime = Uploadhealth(account, "123456", data, device_id, u.getId(), type);
-				
 				// 血压()
 				String bloodr = bloodpressure(account, "123456", stattime, device_id);
 				// 心率
@@ -218,19 +205,6 @@ public class HealthtoolServiceImpl {
 				// 高低压
 				String[] bloodxygen = bloodr.split(",");
 				
-				EquipmentData eqdata = new EquipmentData();
-				eqdata.setHeartrate(Integer.parseInt(heartr));
-				//eqdata.setBloodpressure(Integer.parseInt(bloodr));
-				eqdata.setHighpressure(Integer.parseInt(bloodxygen[0]));
-				eqdata.setBottompressure(Integer.parseInt(bloodxygen[1]));
-				eqdata.setQxygen(Integer.parseInt(bloodxy));
-				eqdata.setMocrocirculation(Integer.parseInt(microcir));
-				eqdata.setHrv(Integer.parseInt(hrv));
-				eqdata.setBreathe(Integer.parseInt(respiration));
-				eqdata.setCreatetime(new Date());
-				eqdata.setUserId(u.getId());
-				equipmentDataMapper.insertSelective(eqdata);
-
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
 				Map<String, Object> m = new HashMap<String, Object>();
 				m.put("countdate", df.format(new Date()) + "%");
@@ -342,7 +316,7 @@ public class HealthtoolServiceImpl {
 				return returnStr;
 			}
 		} catch (Exception e) {
-			logger.info(e.getMessage());
+			logger.info("addjfthealth>>>>>>>>",e);
 			return null;
 			// return "$R05|ERR2\r\n";
 		}
@@ -400,11 +374,8 @@ public class HealthtoolServiceImpl {
 	public static String Uploadhealth(String phone_num, String password, String data, String device_id, Integer id,
 			String type) throws Exception {
 		User u = userservice.getUser(id);
-		float w = 50;
-		float h = 170;
 		if (u == null) {
-			u = new User(null, null, null, null, null, 50, "男", null, null, null, null, null, null, null, w, h, null,
-					null, null, null, null);
+			u = new User(null, null, null, null, null, 50, "男", null, null, null, null, null, null, null);
 		}
 		SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String starttime = time.format(new Date());
@@ -695,174 +666,4 @@ public class HealthtoolServiceImpl {
 
 	}
 
-	/**
-	 * 高低压值的算法
-	 * 
-	 * @param userval
-	 * @param jfval
-	 * @return
-	 */
-	private static Integer highLowPressureVal(Integer jfdao, Integer jfval) {
-
-		// 用户设置的高压值*0.6
-		jfdao = (int) (jfdao * 0.8);
-		// 硬件的高压值*0.4
-		jfval = (int) (jfval * 0.2);
-		return jfdao + jfval;
-	}
-
-	/**
-	 * 心率的算法
-	 * 
-	 * @param jfdaoval
-	 *            校准值
-	 * @param jfval
-	 *            硬件心率值
-	 * @return
-	 *//*
-		 * private static Integer hartrateVal(Integer jfdaoval, Integer jfval){
-		 * 
-		 * Random r = new Random(); if(jfval<=29){ jfval = r.nextInt(13)+66;
-		 * }else if(jfval>180){ jfval = r.nextInt(13)+66; }else{
-		 * if(jfdaoval==null){ jfdaoval = 80; } //用户设置心率校准值的*0.6 jfdaoval =
-		 * (int) (jfdaoval*0.5); //硬件的心率值*0.4 jfval = (int)
-		 * (jfval*0.5)+jfdaoval; } return jfval; }
-		 */
-	/**
-	 * 算法
-	 * 
-	 * @param bean
-	 *            校准值
-	 * @param jfval
-	 *            硬件心率值
-	 * @return
-	 */
-	private static Integer function(Integer bean, Integer jfval) {
-
-		// 用户设置心率校准值的*0.6
-		Integer jfdaoval = (int)(bean *  0.5);
-		// 硬件的心率值*0.4
-		jfval = (int) (jfval * 0.4) + jfdaoval;
-		return jfval;
-	}
-
-	private static Integer microcirVal(Integer microcirval) {
-		Random r = new Random();
-		if (microcirval < 50) {
-			microcirval = r.nextInt(20) + 71;
-		}
-		return microcirval;
-	}
-
-	/**
-	 * 步数到达极光推送
-	 * 
-	 * @throws ParseException
-	 * @throws SQLException
-	 */
-	public static void walkCountPush(Integer stepWhen, User user,Integer eqId) {
-		try {
-			String walkPushTime = user.getWalkPushTime();
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
-			String dd = df.format(new Date());
-
-			// 目标步数不能为空 && (上次时间 不能为空 || 今天有没有上传过 )
-			if (user.getWalkCount() != null && (walkPushTime == null || !dd.equals(walkPushTime))) {
-
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("countdate", dd + "%");
-				map.put("userid", user.getId());
-				map.put("userId", user.getId());
-
-				// 查询开关
-				Push push = pushService.selectPush(map);
-
-				// 总开关和步数通知开关
-				if (push.getAllNotifyOn() && push.getWalkNotifyOn()) {
-					
-					// 查询当天步数
-					List<EquipmentData> countdata = equipmentDataMapper.selecttheycount(map);
-					Integer num = 0;// 获取步数
-					if (countdata.size() > 0 && null != countdata) {
-						for (EquipmentData eqcount : countdata) {
-							int count = eqcount.getStepWhen();
-							num = num + count;
-						}
-					}
-					if (num >= Integer.valueOf(user.getWalkCount())) {
-						
-						UserEq userEq = userEqMapper.ifguardianship(eqId);
-						// 开启极光推送
-						Thread t = new Thread() {
-							public void run() {
-								JpushClientUtil.sendToAlias(String.valueOf(userEq.getUserId()), "墨子鑫健康管家通知", "步数到达通知",
-										user.getName() + "当天步数已达到目标步数", "", "4");
-							}
-						};
-						t.start();
-					}
-					User u = new User();
-					u.setId(user.getId());
-					u.setWalkPushTime(dd);
-					userservice.updateUser(u);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	/**
-	 * 围栏极光推送
-	 * 
-	 * @throws ParseException
-	 * @throws SQLException
-	 */
-	public static void fencePush(Positionig p,Integer eqId,String imei ) {
-		try {
-				User user = userservice.getUser(imei);
-				
-				if(user!=null){
-					
-					//拿出使用者的半径和圆点
-					//半径
-					String radius = user.getRadius();
-					//圆点
-					String midpoint = user.getMidpoint();
-					
-					//经纬度
-					String[] positioningDataArr = p.getPositioningData().split(":");
-					//经度
-					String longitude = positioningDataArr[0];
-					//纬度
-					String latitude = positioningDataArr[1];
-					
-					//计算是否超出范围
-					
-					
-					
-					//如果超出范围,
-					if(latitude==null){
-					// 查询开关
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("userId", user.getId());
-					Push push = pushService.selectPush(map);
-					
-					// 总开关和围栏通知开关
-					if (push.getAllNotifyOn() && push.getFenceNotifyOn()) {
-							UserEq userEq = userEqMapper.ifguardianship(eqId);
-							// 开启极光推送
-							Thread t = new Thread() {
-								public void run() {
-									JpushClientUtil.sendToAlias(String.valueOf(userEq.getUserId()), "墨子鑫健康管家通知", "围栏通知",
-											user.getName() + "穿戴者不在围栏范围", "", "5");
-								}
-							};
-							t.start();
-						}
-					}
-				}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

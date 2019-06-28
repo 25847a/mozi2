@@ -1,6 +1,5 @@
 package com.sy.vo;
 
-import java.util.Date;
 
 public class SHChart {
 	//睡眠
@@ -8,7 +7,7 @@ public class SHChart {
 	//步数
 	private Integer step_when;
 	//时间
-	private Date date;
+	private String date;
 	public Integer getSleeping() {
 		return sleeping;
 	}
@@ -21,10 +20,10 @@ public class SHChart {
 	public void setStep_when(Integer step_when) {
 		this.step_when = step_when;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	

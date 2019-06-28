@@ -3,27 +3,39 @@ package com.sy.service.impl;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.common.JpushClientUtil;
 import com.sy.mapper.PushMapper;
+import com.sy.mapper.PushRecordMapper;
+import com.sy.mapper.UserEqMapper;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Push;
+import com.sy.pojo.PushRecord;
 import com.sy.pojo.User;
+import com.sy.pojo.UserEq;
+import com.sy.service.PushRecordService;
 import com.sy.service.PushService;
 
 @Service
-public class PushServiceImpl implements PushService {
+public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements PushService {
+
+	private final static Logger logger = LoggerFactory.getLogger(PushServiceImpl.class);
 
 	@Autowired
 	private PushMapper pushMapper;
+	@Autowired
+	PushRecordService pushRecordService;
+	@Autowired
+	private PushRecordMapper pushRecordMapper;
 
 	/**
 	 * 查询推送表
@@ -72,59 +84,43 @@ public class PushServiceImpl implements PushService {
 			pushMapper = (PushMapper) webApplicationContext.getBean("pushMapper");
 		}
 		User u = (User) map.get("user");
-		List<Push> pushList = pushMapper.selectPushList(u.getId());// 这个使用者的所有开关数据
+		List<Push> pushList = pushMapper.selectPushList(u.getId());// 这个使用者的所有开关数据,使用者的ID
 		//userId  使用者 ; alias 监护者
 		if (pushList != null && pushList.size() > 0) {
 			for (Push push : pushList) {
-				
 				if (push.getAllNotifyOn()) {// 总开关true开着
-					
-					if (jfhealth.getHeartrate() < push.getHeartLowThd()
-							|| jfhealth.getHeartrate() > push.getHeartHigThd()) {
+					PushRecord pushRecord = new PushRecord();
+					pushRecord.setUserId(push.getUserId());
+					if (jfhealth.getHeartrate() < push.getHeartLowThd() || jfhealth.getHeartrate() > push.getHeartHigThd()) {
 						// 心率低了 或者 心率高了
-						Thread t = new Thread() {
-							public void run() {
-								JpushClientUtil.sendToAlias(push.getAlias().toString(), u.getName() + "的心率异常",
-										"当前心率" + jfhealth.getHeartrate(),
-										"已经超过正常范围值" + push.getHeartLowThd() + "-" + push.getHeartHigThd(), "2",
-										"{\"userId\":\""+u.getId()+"\"}");
-							}
-						};
+						JpushClientUtil.sendToAlias(push.getAlias().toString(), u.getName() + "的心率异常","当前心率" + jfhealth.getHeartrate(),
+								"已经超过正常范围值" + push.getHeartLowThd() + "-" + push.getHeartHigThd(), "2","{\"userId\":\""+u.getId()+"\"}");
 						str = "1";
-						t.start();
+						pushRecord.setHeartUnusual(jfhealth.getHeartrate());
 					}
-					
 					// 舒张压低了 或者 舒张压高了
 					if (jfhealth.getDbpAve() < push.getLbpstart() || jfhealth.getDbpAve() > push.getLbpend()) {
-
-						Thread t = new Thread() {
-							public void run() {
-								JpushClientUtil.sendToAlias(push.getAlias().toString(), u.getName() + "血压异常",
-										"当前舒张压" + jfhealth.getDbpAve(),
-										"已经超过预警范围值:" + push.getLbpstart() + "-" + push.getLbpend(), "3",
-										"{\"userId\":\""+u.getId()+"\"}");
-							}
-						};
+						JpushClientUtil.sendToAlias(push.getAlias().toString(), u.getName() + "血压异常","当前舒张压" + jfhealth.getDbpAve(),
+										"已经超过预警范围值:" + push.getLbpstart() + "-" + push.getLbpend(), "3","{\"userId\":\""+u.getId()+"\"}");
 						str = "1";
-						t.start();
+						pushRecord.setHighBloodUnusual(jfhealth.getDbpAve());
 					}
-			
 					// 收缩压低了 或者 收缩压高了
 					if (jfhealth.getSbpAve() < push.getHbpstart() || jfhealth.getSbpAve() > push.getHbpend()) {
-
-						Thread t = new Thread() {
-							public void run() {
-								JpushClientUtil.sendToAlias(push.getAlias().toString(), u.getName() + "血压异常",
-										"当前收缩压" + jfhealth.getSbpAve(),
-										"已经超过预警范围值" + push.getHbpstart() + "-" + push.getHbpend(), "3",
-										"{\"userId\":\""+u.getId()+"\"}");
-							}
-						};
+						JpushClientUtil.sendToAlias(push.getAlias().toString(), u.getName() + "血压异常","当前收缩压" + jfhealth.getSbpAve(),
+										"已经超过预警范围值" + push.getHbpstart() + "-" + push.getHbpend(), "3","{\"userId\":\""+u.getId()+"\"}");
 						str = "1";
-						t.start();
+						pushRecord.setLowBloodUnusual(jfhealth.getSbpAve());
+					}
+					if(pushRecord.getHeartUnusual()!=null || pushRecord.getHighBloodUnusual()!=null || pushRecord.getLowBloodUnusual()!=null){
+						if (pushRecordMapper == null) {
+							WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+							pushRecordMapper = (PushRecordMapper) webApplicationContext.getBean("pushRecordMapper");
+						}
+						pushRecordMapper.insertPushRecord(pushRecord);
 					}
 				} else {
-					System.out.println(u.getName() + "该用户没有设置推送开关");
+					logger.info(u.getName() + "该用户没有设置推送开关");
 				}
 			}
 		}

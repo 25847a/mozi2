@@ -2,12 +2,22 @@ package com.sy.service;
 
 import java.util.List;
 import java.util.Map;
-
+import com.baomidou.mybatisplus.service.IService;
+import com.sy.common.ResultData;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
-import com.sy.vo.Userqedata;
+import com.sy.utils.DataRow;
+import com.sy.vo.Userdata;
 
-public interface UserEqService {
+public interface UserEqService extends IService<UserEq>{
+	
+	
+	/**
+	 * 关注列表
+	 * @param u
+	 * @return
+	 */
+	public ResultData<List<Map<String,Object>>> queryUserEqFollowList(Map<String,Object> map,ResultData<List<Map<String,Object>>> re)throws Exception;
 
 	/**
 	 * 根据设备（eq_id）id获取监护者
@@ -40,15 +50,6 @@ public interface UserEqService {
 	 * @return
 	 */
 	public boolean addUserEq(UserEq u);
-
-	/**
-	 * userId获取监护者数据
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	//public UserEq selectguardianship(Integer userId);
-
 	/**
 	 * 判断该设备是否有监护者
 	 * 
@@ -97,37 +98,20 @@ public interface UserEqService {
 	 * @return
 	 */
 	public List<UserEq> selectuserqe(Integer userid);
-
-	/**
-	 * 返回当前imei的所有相关数据
-	 * 
-	 * @param imei
-	 * @return
-	 */
-	//public Userqedata selectdata(String imei);
-
 	/**
 	 * 获取用户所对应的设备状态
 	 * 
 	 * @param userid
 	 * @return
 	 */
-	public List<Map<String, Object>> selectuserdata(Integer userid);
-	
-	/**根据imei获取用户健康数据
-	 * @param imei
-	 * @return
-	 */
-	//public Map<String, Object>  userhealthdata(Integer imei);
-
+	public List<Map<String, Object>> selectuserdata(Integer userid)throws Exception;
 	/**
-	 * 获取用户所对应的设备数据还有使用信息
+	 * 获取用户所对应的设备状态
 	 * 
 	 * @param userid
 	 * @return
 	 */
-	//public List<Map<String, Object>> Userequipmentdata(Integer userid);
-
+	public ResultData<List<Userdata>> selectuserdata1(DataRow map,ResultData<List<Userdata>> re)throws Exception;
 	/**
 	 * 获取单独一个使用者数据
 	 * 
@@ -140,11 +124,6 @@ public interface UserEqService {
 	
 	public boolean deleteequsetype(Integer eqId, Integer userId,Integer typeof);
 	
-	/**删除
-	 * @param id
-	 * @return
-	 */
-	public boolean deleteusereq(Integer id);
 	public boolean deleteEqUser(Integer id);
 
 	UserEq selectUserEq(Integer eqId, Integer mid);

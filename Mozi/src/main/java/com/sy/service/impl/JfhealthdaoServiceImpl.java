@@ -8,8 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.mapper.JfhealthdaoMapper;
+import com.sy.mapper.PushMapper;
 import com.sy.pojo.Jfhealthdao;
+import com.sy.pojo.Push;
 import com.sy.pojo.User;
 import com.sy.service.JfhealthdaoService;
 import com.sy.service.UserEqService;
@@ -17,7 +20,7 @@ import com.sy.service.UserService;
 import com.sy.utils.Managementconstant;
 
 @Service
-public class JfhealthdaoServiceImpl implements JfhealthdaoService {
+public class JfhealthdaoServiceImpl extends ServiceImpl<JfhealthdaoMapper, Jfhealthdao> implements JfhealthdaoService {
 	@Autowired
 	private JfhealthdaoMapper jfhealthdaoMapper;
 

@@ -80,24 +80,11 @@
 		<!--maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存statements数。默认值: 0 -->
 		<property name="maxStatementsPerConnection" value="0"></property>
 	</bean>
-
-<!-- c3p0连接池配置 -->
-	<bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-		<!-- 用户名 -->
-		<property name="user" value="${jdbc.username}" />
-		<!-- 用户密码 -->
-		<property name="password" value="${jdbc.password}" />
-		<!-- 驱动串 -->
-		<property name="driverClass" value="${jdbc.driver}" />
-		<!-- url -->
-		<property name="jdbcUrl" value="${jdbc.url2}" />
-</bean>
 <bean id="dynamicDataSource" class="com.sy.date.converter.DynamicDataSource">  
      <property name="targetDataSources">  
          <map key-type="java.lang.String">
              <!-- 指定lookupKey和与之对应的数据源 -->
              <entry key="dataSource" value-ref="dataSource"></entry> 
-              <entry key="dataSource2" value-ref="dataSource2"></entry>  
          </map>  
      </property>  
      <!-- 这里可以指定默认的数据源 -->
@@ -110,19 +97,46 @@
 	</bean>
 
 
+	
+	
+	
 	<!-- SqlSessionFactory -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
 		<!-- 数据库连接池 -->
 		<property name="dataSource" ref="dynamicDataSource" />
 		<!-- 加载myBatis的全局配置文件 -->
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<!-- 指定mybatis mapper文件的位置 -->
         <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+         <!-- MP 全局配置注 -->  
+    	<property name="globalConfig" ref="globalConfig" />  
 	</bean>
 	
-	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
+<!-- 定义 MP 全局策略 -->  
+	<bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">  
+	    <!-- 主键策略配置 -->  
+	    <!-- 可选参数 AUTO->`0`("数据库ID自增") INPUT->`1`(用户输入ID") ID_WORKER->`2`("全局唯一ID")   
+	        UUID->`3`("全局唯一ID") -->  
+	    <property name="idType" value="2" />  
+	    <!-- 数据库类型配置 -->  
+	    <!-- 可选参数（默认mysql） MYSQL->`mysql` ORACLE->`oracle` DB2->`db2` H2->`h2`   
+	        HSQL->`hsql` SQLITE->`sqlite` POSTGRE->`postgresql` SQLSERVER2005->`sqlserver2005`   
+	        SQLSERVER->`sqlserver` -->  
+	    <property name="dbType" value="mysql" />  
+	    <!-- 全局表为下划线命名设置 true -->  
+	    <property name="dbColumnUnderline" value="false" />  
+ 	    <property name="sqlInjector">  
+	        <bean class="com.baomidou.mybatisplus.mapper.AutoSqlInjector" />  
+	    </property>  
+	</bean> 
+	
+
+<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
         <constructor-arg ref="sqlSessionFactory" />  
     </bean>
+
+
+
 
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>

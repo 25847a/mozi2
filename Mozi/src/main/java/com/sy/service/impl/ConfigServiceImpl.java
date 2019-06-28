@@ -1,39 +1,48 @@
 package com.sy.service.impl;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sy.mapper.ExtendMapper;
-import com.sy.pojo.Extend;
-import com.sy.service.ExtendService;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.sy.mapper.ConfigMapper;
+import com.sy.pojo.Config;
+import com.sy.service.ConfigService;
 @Service
-public class ExtendServiceImpl implements ExtendService{
+public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements ConfigService{
 	
 	@Autowired
-	ExtendMapper systemMapper;
+	ConfigMapper configMapper;
 	/**
-	 * 查询
+	 * 通过ID查询
 	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public Extend selectExtend(Integer id) throws Exception {
-		Extend extend = systemMapper.selectExtend(id);
-		return extend;
+	public Config queryConfigId(Integer id) throws Exception {
+		return configMapper.queryConfigId(id);
 	}
 	/**
-	 * 修改
-	 * @param map
+	 * 查询系统配置表集合
+	 * @param id
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public int updateExtendById(Map<String, Object> map) throws Exception {
-		int row = systemMapper.updateExtendById(map);
-		return row;
+	public List<Config> queryConfigList(String type,String lable) throws Exception {
+		return configMapper.queryConfigList(type,lable);
+	}
+	/**
+	 * 查询系统配置表信息
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Config queryConfigInfo(String type, String lable) throws Exception {
+		return configMapper.queryConfigInfo(type,lable);
 	}
 
 }

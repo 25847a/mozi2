@@ -1,31 +1,38 @@
 package com.sy.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
-
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.UserEq;
-import com.sy.pojo.UserEqExample;
 
-public interface UserEqMapper {
-    int countByExample(UserEqExample example);
+public interface UserEqMapper extends BaseMapper<UserEq>{
+	
+	/**
+	 * 查询关注人使用者列表
+	 * @param u
+	 * @return
+	 */
+	public List<Map<String, Object>> queryUserEqFollowUsersList(Map<String,Object> map)throws SQLException;
+	/**
+	 * 查询关注人观察者列表
+	 * @param u
+	 * @return
+	 */
+	public List<Map<String, Object>> queryUserEqFollowObserverList(Map<String,Object> map)throws SQLException;
+	
 
-    int deleteByExample(UserEqExample example);
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(UserEq record);
+    Integer insert(UserEq record);
 
     int insertSelective(UserEq record);
 
-    List<UserEq> selectByExample(UserEqExample example);
 
     UserEq selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") UserEq record, @Param("example") UserEqExample example);
-
-    int updateByExample(@Param("record") UserEq record, @Param("example") UserEqExample example);
 
     int updateByPrimaryKeySelective(UserEq record);
 
@@ -102,5 +109,19 @@ public interface UserEqMapper {
 	 * @return
 	 */
 	public UserEq  selectGuardian(@Param("eqId") Integer eqId,@Param("mid")Integer mid);
+	/**
+	 * 通过监护者ID查询出使用者ID
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Map<String,String>> queryUserIdUserEq(Map<String,String> map)throws SQLException;
+	/**
+	 * 通过监护者ID查询出使用者ID
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public Map<String,Object> queryUserEq(Map<String,Object> map)throws SQLException;
     
 }

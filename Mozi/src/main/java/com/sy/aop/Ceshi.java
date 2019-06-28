@@ -27,7 +27,8 @@ public class Ceshi {
 		//	update(MZ, list);
 			//插入数据
 			//insert(MZ);//惊凡数据表
-			insertEQ(MZ);
+			insetequipmentdata(MZ);
+		//	insertEQ(MZ);
 			//insetequipmentdata(MZ, list);
 			System.out.println("加载成功");
 		}catch(Exception e){
@@ -45,40 +46,30 @@ public class Ceshi {
 	 * 出t02健康数据
 	 * @throws SQLException 
 	*/
-	public static void 	insetequipmentdata(Connection ZX,List<Map<String,String>> list){
-		Map<String,String> map = new HashMap<String, String>();
+	public static void 	insetequipmentdata(Connection ZX){
 		try {
-			for(int i=0;i<list.size();i++){
-				map=list.get(i);
-			  String sql = "insert into equipment_data ( user_id, heartrate, highpressure, bottompressure, bloodpressure,  mocrocirculation, breathe, sleeping,  step_when, carrieroad, sedentary,  movementstate, bodytemp, humidity, crash, createtime, qxygen, sleeping_s, run_s, step_time, step_each, hrv, mood)"+
-				"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";       
+		boolean fag = true;
+		String date = "2019-06-28 00:00:00";
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			System.out.println(sf.parse(date));
+			Calendar cd = Calendar.getInstance();   
+			 cd.setTime(sf.parse(date));
+			 while(fag) {
+				 cd.add(Calendar.MINUTE, 5);
+			  String sql = "insert into equipment_data ( user_id, step_when,carrieroad,createtime)values(?,?,?,?)";  
 			PreparedStatement ten = ZX.prepareStatement(sql);
-			ten.setInt(1,118);
-			ten.setInt(2,48);
-			ten.setInt(3,52);
-			ten.setInt(4,25);
-			ten.setInt(5,64);
-			ten.setInt(6,32);
-			ten.setInt(7,35);
-			ten.setDouble(8, Double.parseDouble("8.00"));
-			ten.setInt(9,24);
-			ten.setInt(10,12);
-			ten.setString(11, "48");
-			ten.setInt(12,1);
-			ten.setInt(13,4);
-			ten.setInt(14,34);
-			ten.setInt(15,56);
-			ten.setDate(16, new Date(System.currentTimeMillis()));
-			ten.setInt(17,54);
-			ten.setInt(18,6);
-			ten.setInt(19,3);
-			ten.setInt(20,46);
-			ten.setInt(21,23);
-			ten.setInt(22,3);
-			ten.setInt(23,2);
+			ten.setInt(1,28704);
+			ten.setInt(2,(int) (0+Math.random()*(140-0+1)));
+			ten.setInt(3,(int) (0+Math.random()*(140-0+1)));
+			String time = sf.format(cd.getTime());
+			ten.setString(4, time);
 			ten.executeUpdate();
-			}
-		} catch (SQLException e) {
+			 if(time.equals("2018-06-30 23:55:00")) {
+				 fag=false;
+				 System.out.println("OK");
+			 }
+			 }
+		} catch (Exception e) {
 			System.out.println("插入失败"+e);
 			
 		}
@@ -260,7 +251,7 @@ public class Ceshi {
 	 */
 	public static Connection Mozi() {
 		String Driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://192.168.1.170:3306/mozi?useUnicode=true&characterEncoding=utf8";
+		String url = "jdbc:mysql://192.168.1.147:3306/mozi?useUnicode=true&characterEncoding=utf8";
 		String UserName = "root";
 		String Password = "123456";
 		try {

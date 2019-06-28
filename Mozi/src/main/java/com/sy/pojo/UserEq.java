@@ -1,6 +1,13 @@
 package com.sy.pojo;
 
-public class UserEq {
+import java.io.Serializable;
+
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
+
+@TableName("user_eq")
+public class UserEq extends Model<UserEq>{
+	private static final long serialVersionUID = 1L;
     private Integer id;
 
     private Integer userId;
@@ -50,4 +57,10 @@ public class UserEq {
     public void setAuthorized(String authorized) {
         this.authorized = authorized == null ? null : authorized.trim();
     }
+
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
+	}
 }

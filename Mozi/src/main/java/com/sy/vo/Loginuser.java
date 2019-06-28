@@ -20,13 +20,8 @@ public class Loginuser {
 
 	    private String avatar;
 
-	    private String wechat;
-
-	    private String qq;
 
 	    private Date createtime;
-
-	    private Date atlasttime;
 
 	    private Float weight;
 
@@ -97,37 +92,12 @@ public class Loginuser {
 		public void setAvatar(String avatar) {
 			this.avatar = avatar;
 		}
-
-		public String getWechat() {
-			return wechat;
-		}
-
-		public void setWechat(String wechat) {
-			this.wechat = wechat;
-		}
-
-		public String getQq() {
-			return qq;
-		}
-
-		public void setQq(String qq) {
-			this.qq = qq;
-		}
-
 		public Date getCreatetime() {
 			return createtime;
 		}
 
 		public void setCreatetime(Date createtime) {
 			this.createtime = createtime;
-		}
-
-		public Date getAtlasttime() {
-			return atlasttime;
-		}
-
-		public void setAtlasttime(Date atlasttime) {
-			this.atlasttime = atlasttime;
 		}
 
 		public Float getWeight() {
@@ -156,8 +126,7 @@ public class Loginuser {
 
 		public Loginuser(Integer id, String role, String name, Integer age,
 				String gender, String phone, String address, String avatar,
-				String wechat, String qq, Date createtime, Date atlasttime,
-				Float weight, Float height, Date born) {
+				 Date createtime,Float weight, Float height, Date born) {
 			super();
 			this.id = id;
 			this.role = role;
@@ -167,10 +136,7 @@ public class Loginuser {
 			this.phone = phone;
 			this.address = address;
 			this.avatar = avatar;
-			this.wechat = wechat;
-			this.qq = qq;
 			this.createtime = createtime;
-			this.atlasttime = atlasttime;
 			this.weight = weight;
 			this.height = height;
 			this.born = born;

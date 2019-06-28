@@ -21,7 +21,17 @@ public class DataParsing {
 		jfval = (int) (jfval * 0.3);
 		return jfdao + jfval;
 	}
-	
+	/**
+     * 时间换算
+     * @param num
+     * @return
+     */
+    public static String getConversionDate(int num){
+    	 	int time = num*5;
+	        int hours = (int) Math.floor(time / 60);
+	        int minute = time % 60;
+	        return hours + "小时" + minute + "分钟";
+    }
 	/**
 	 * 血压算法
 	 * @param health
@@ -283,4 +293,5 @@ public class DataParsing {
 		jfdao.setImei(imei);
 		return jfdao;
 }
+	
 }

@@ -1,8 +1,14 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
+
+@TableName("user")
+public class User  extends Model<Config>{
+	private static final long serialVersionUID = 1L;
     private Integer id;
 
     private String role;
@@ -25,16 +31,10 @@ public class User {
 
     private String avatar;
 
-    private String wechat;
-
-    private String qq;
-
     private Date createtime;
 
-    private Date atlasttime;
-
     private Float weight;
-
+ 
     private Float height;
 
     private Date born;
@@ -45,15 +45,10 @@ public class User {
     
     private String imei;
     
-    private String radius;
-    
-    private String midpoint;
-    
     private String jfdataUpdateTime;
     
     private String walkCount;
     
-    private String walkPushTime;
     //1.重点关爱  0.不重点关爱
     private Integer love;
     //床位ID(0.代表无床位)
@@ -64,13 +59,15 @@ public class User {
     private Date liveTime;
     //病史
     private String illness;
+    //默认关注首页显示  0.隐藏  1.显示
+    private Integer follow;
 
     
     public User(Integer id, String role, String account, String password,
 			String name, Integer age, String gender, String phone,
-			String address, String avatar, String wechat, String qq,
-			Date createtime, Date atlasttime, Float weight, Float height,
-			Date born, String code) {
+			String address, String avatar,
+			Date createtime, Float weight, Float height,
+			Date born) {
 		super();
 		this.id = id;
 		this.role = role;
@@ -82,21 +79,16 @@ public class User {
 		this.phone = phone;
 		this.address = address;
 		this.avatar = avatar;
-		this.wechat = wechat;
-		this.qq = qq;
 		this.createtime = createtime;
-		this.atlasttime = atlasttime;
 		this.weight = weight;
 		this.height = height;
 		this.born = born;
-		this.code = code;
 	}
     public User(Integer id, String role, String account, String password,
     		String name, Integer age, String gender, String phone,
-    		String address, String avatar, String wechat, String qq,
-    		Date createtime, Date atlasttime, Float weight, Float height,
-    		Date born, String code,String calibration, String imei,
-    		String jfdataUpdateTime
+    		String address, String avatar,
+    		Date createtime, Float weight, Float height,
+    		Date born, String imei
     		) {
     	super();
     	this.id = id;
@@ -109,27 +101,13 @@ public class User {
     	this.phone = phone;
     	this.address = address;
     	this.avatar = avatar;
-    	this.wechat = wechat;
-    	this.qq = qq;
     	this.createtime = createtime;
-    	this.atlasttime = atlasttime;
     	this.weight = weight;
     	this.height = height;
     	this.born = born;
-    	this.code = code;
-    	this.calibration = calibration;
     	this.imei = imei;
-    	this.jfdataUpdateTime = jfdataUpdateTime;
     }
 
-    
-    
-	public String getWalkPushTime() {
-		return walkPushTime;
-	}
-	public void setWalkPushTime(String walkPushTime) {
-		this.walkPushTime = walkPushTime;
-	}
 	public String getWalkCount() {
 		return walkCount;
 	}
@@ -222,36 +200,12 @@ public class User {
         this.avatar = avatar == null ? null : avatar.trim();
     }
 
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat == null ? null : wechat.trim();
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq == null ? null : qq.trim();
-    }
-
     public Date getCreatetime() {
         return createtime;
     }
 
     public void setCreatetime(Date createtime) {
         this.createtime = createtime;
-    }
-
-    public Date getAtlasttime() {
-        return atlasttime;
-    }
-
-    public void setAtlasttime(Date atlasttime) {
-        this.atlasttime = atlasttime;
     }
 
     public Float getWeight() {
@@ -341,21 +295,18 @@ public class User {
 	public void setIllness(String illness) {
 		this.illness = illness;
 	}
-	public String getRadius() {
-		return radius;
+	public Integer getFollow() {
+		return follow;
 	}
-	public void setRadius(String radius) {
-		this.radius = radius;
-	}
-	public String getMidpoint() {
-		return midpoint;
-	}
-	public void setMidpoint(String midpoint) {
-		this.midpoint = midpoint;
+	public void setFollow(Integer follow) {
+		this.follow = follow;
 	}
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+	@Override
+	protected Serializable pkVal() {
+		return this.id;
 	}
     
 }

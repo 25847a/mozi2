@@ -3,36 +3,18 @@ package com.sy.mapper;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.Jfhealth;
-import com.sy.pojo.JfhealthExample;
 import com.sy.vo.Chart;
 import com.sy.vo.SHChart;
 
-public interface JfhealthMapper {
-    int countByExample(JfhealthExample example);
-
-    int deleteByExample(JfhealthExample example);
+public interface JfhealthMapper extends BaseMapper<Jfhealth>{
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(Jfhealth record);
-
     int insertSelective(Jfhealth record);
 
-    List<Jfhealth> selectByExampleWithBLOBs(JfhealthExample example);
-
-    List<Jfhealth> selectByExample(JfhealthExample example);
-
     Jfhealth selectByPrimaryKey(Integer id);
-
-    int updateByExampleSelective(@Param("record") Jfhealth record, @Param("example") JfhealthExample example);
-
-    int updateByExampleWithBLOBs(@Param("record") Jfhealth record, @Param("example") JfhealthExample example);
-
-    int updateByExample(@Param("record") Jfhealth record, @Param("example") JfhealthExample example);
 
     int updateByPrimaryKeySelective(Jfhealth record);
 
@@ -46,18 +28,29 @@ public interface JfhealthMapper {
      */
     public List<Chart> selecthealth(Map map);
     /**
-     * 根据时间获取最大血压数据
-     * @param map
-     * @return
-     */
-    
-    public Jfhealth selecthealthMax(Map map);
+	 * 血压MAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+    public Map<String,String> selectBloodpressureInfo(Map<String, Object> map);
     /**
-     * 根据时间获取最小血压数据
-     * @param map
-     * @return
-     */
-    public Jfhealth selecthealthMin(Map map);
+	 * 心率MAX,MIN,AVG,COUNT
+	 * @param map
+	 * @return
+	 */
+    public Map<String,String> selectHeartRateInfo(Map<String, Object> map);
+    /**
+   	 * HRVMAX,MIN,AVG,COUNT
+   	 * @param map
+   	 * @return
+   	 */
+    public Map<String,String> selectHrvInfo(Map<String, Object> map);
+    /**
+   	 * 步数MAX,MIN,AVG,COUNT
+   	 * @param map
+   	 * @return
+   	 */
+    public Map<String,String> selectStepWhenInfo(Map<String, Object> map);
     /**
      * 根据树洪步数，睡眠健康数据
      * @param map

@@ -104,36 +104,6 @@
   <sql id="Blob_Column_List" >
     Amedicalreport
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.sy.pojo.JfhealthExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from jfhealth
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.JfhealthExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from jfhealth
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -146,24 +116,6 @@
     delete from jfhealth
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.sy.pojo.JfhealthExample" >
-    delete from jfhealth
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.sy.pojo.Jfhealth" >
-    insert into jfhealth (id, HRV, sbp_ave, 
-      dbp_ave, Heartrate, Bloodoxygen, 
-      microcirculation, respirationrate, phone, 
-      imei, createtime, Amedicalreport
-      )
-    values (#{id,jdbcType=INTEGER}, #{HRV,jdbcType=INTEGER}, #{sbpAve,jdbcType=INTEGER}, 
-      #{dbpAve,jdbcType=INTEGER}, #{heartrate,jdbcType=INTEGER}, #{bloodoxygen,jdbcType=INTEGER}, 
-      #{microcirculation,jdbcType=INTEGER}, #{respirationrate,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
-      #{imei,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{amedicalreport,jdbcType=LONGVARCHAR}
-      )
-  </insert>
   <insert id="insertSelective" parameterType="com.sy.pojo.Jfhealth" >
     insert into jfhealth
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -243,91 +195,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.sy.pojo.JfhealthExample" resultType="java.lang.Integer" >
-    select count(*) from jfhealth
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update jfhealth
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.HRV != null" >
-        HRV = #{record.HRV,jdbcType=INTEGER},
-      </if>
-      <if test="record.sbpAve != null" >
-        sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="record.dbpAve != null" >
-        dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="record.heartrate != null" >
-        Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      </if>
-      <if test="record.bloodoxygen != null" >
-        Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      </if>
-      <if test="record.microcirculation != null" >
-        microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      </if>
-      <if test="record.respirationrate != null" >
-        respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      </if>
-      <if test="record.phone != null" >
-        phone = #{record.phone,jdbcType=VARCHAR},
-      </if>
-      <if test="record.imei != null" >
-        imei = #{record.imei,jdbcType=VARCHAR},
-      </if>
-      <if test="record.createtime != null" >
-        createtime = #{record.createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.amedicalreport != null" >
-        Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update jfhealth
-    set id = #{record.id,jdbcType=INTEGER},
-      HRV = #{record.HRV,jdbcType=INTEGER},
-      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      imei = #{record.imei,jdbcType=VARCHAR},
-      createtime = #{record.createtime,jdbcType=TIMESTAMP},
-      Amedicalreport = #{record.amedicalreport,jdbcType=LONGVARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update jfhealth
-    set id = #{record.id,jdbcType=INTEGER},
-      HRV = #{record.HRV,jdbcType=INTEGER},
-      sbp_ave = #{record.sbpAve,jdbcType=INTEGER},
-      dbp_ave = #{record.dbpAve,jdbcType=INTEGER},
-      Heartrate = #{record.heartrate,jdbcType=INTEGER},
-      Bloodoxygen = #{record.bloodoxygen,jdbcType=INTEGER},
-      microcirculation = #{record.microcirculation,jdbcType=INTEGER},
-      respirationrate = #{record.respirationrate,jdbcType=INTEGER},
-      phone = #{record.phone,jdbcType=VARCHAR},
-      imei = #{record.imei,jdbcType=VARCHAR},
-      createtime = #{record.createtime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Jfhealth" >
     update jfhealth
     <set >
@@ -401,7 +268,8 @@
 		resultMap="SHChartBaseResultMap">
 		<if
 			test="service != null and service != '' and  service == 'year' ">
-			SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
+			SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
+			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime, '%Y-%m-%d')
 			as date
 			FROM equipment_data WHERE DATE_FORMAT(createtime, '%Y') =
@@ -412,7 +280,8 @@
 		<if
 			test="service != null and service != '' and  service == 'month' ">
 			
-	SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
+	SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
+			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime, '%Y-%m-%d')
 			as date
 			FROM equipment_data WHERE DATE_FORMAT(createtime, '%Y-%m') =
@@ -421,14 +290,16 @@
 			'%Y%m%d')
 		</if>
 		<if test="service != null and service != '' and  service == 'day' ">
-			SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
+			SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
+			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime,'%Y-%m-%d %H:%i:%S') as date FROM equipment_data WHERE
 			DATE_FORMAT(createtime,'%Y-%m-%d')=#{timedata} AND user_id=#{userId}
 			GROUP BY date_format(createtime, '%Y%m%d %H:%i:%S');
 		</if>
 		<if
 			test="service != null and service != '' and  service == 'week' ">
-			SELECT TRUNCATE(avg(sleeping),0) as sleeping,TRUNCATE(avg(step_when),0) as step_when,
+			SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
+			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime, '%Y-%m-%d')
 			as date FROM equipment_data WHERE
 			YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) AND
@@ -441,23 +312,12 @@
 	<select id="selecthealth" parameterType="java.util.Map"
 		resultMap="ChartBaseResultMap">
 		<if
-			test="service != null and service != '' and  service == 'year' ">
-			SELECT TRUNCATE(avg(HRV),0) as HRV,TRUNCATE(avg(sbp_ave),0) as sbp_ave,TRUNCATE(avg(dbp_ave),0) as dbp_ave,TRUNCATE(avg(Heartrate),0) as Heartrate,
-			TRUNCATE(avg(Bloodoxygen),0) as Bloodoxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate,
-			date_format(createtime, '%Y-%m-%d')
-			as date
-			FROM jfhealth WHERE DATE_FORMAT(createtime, '%Y') =
-			#{timedata} AND
-			phone=#{phone} GROUP BY date_format(createtime,
-			'%Y%m%d');
-		</if>
-		<if
 			test="service != null and service != '' and  service == 'month' ">
 			SELECT TRUNCATE(avg(HRV),0) as HRV,TRUNCATE(avg(sbp_ave),0) as sbp_ave,TRUNCATE(avg(dbp_ave),0) as dbp_ave,TRUNCATE(avg(Heartrate),0) as Heartrate,
 			TRUNCATE(avg(Bloodoxygen),0) as Bloodoxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate,
 			date_format(createtime, '%Y-%m-%d')
 			as date FROM jfhealth WHERE DATE_FORMAT(createtime, '%Y-%m') =
-			#{timedata} AND phone=#{phone}
+			#{timedata} AND phone=#{userId}
 			GROUP BY date_format(createtime,
 			'%Y%m%d');
 		</if>
@@ -465,7 +325,7 @@
 			SELECT TRUNCATE(avg(HRV),0) as HRV,TRUNCATE(avg(sbp_ave),0) as sbp_ave,TRUNCATE(avg(dbp_ave),0) as dbp_ave,TRUNCATE(avg(Heartrate),0) as Heartrate,
 			TRUNCATE(avg(Bloodoxygen),0) as Bloodoxygen,TRUNCATE(avg(microcirculation),0) as microcirculation,TRUNCATE(avg(respirationrate),0) as respirationrate,
 			date_format(createtime,'%Y-%m-%d %H:%i:%S') as date FROM jfhealth WHERE
-			DATE_FORMAT(createtime,'%Y-%m-%d')=#{timedata} AND phone=#{phone}
+			DATE_FORMAT(createtime,'%Y-%m-%d')=#{timedata} AND phone=#{userId}
 			GROUP BY date_format(createtime, '%Y%m%d %H:%i:%S');
 		</if>
 		<if
@@ -475,61 +335,195 @@
 			date_format(createtime, '%Y-%m-%d')
 			as date FROM jfhealth WHERE
 			YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) AND
-			phone=#{phone}
+			phone=#{userId}
 			GROUP BY date_format(createtime, '%Y%m%d');
 		</if>
 	</select>
-  <!-- 11获取血压数据 （根据年月日 周）查找
-   <select id="selecthealth" parameterType="java.util.Map" resultMap="BaseResultMap">
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
-      select * from  jfhealth  where year(createtime)= #{timedata}    and  phone =#{phone};
-  </if>
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
-	  select * from jfhealth  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
-	  select * from jfhealth  where  day(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year}  and  
-
-month(createtime)= #{month};
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
-	  select * from jfhealth  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone};
-	</if>
-	</select> -->
-	<!-- 11获取血压数据 （根据年月日 周）查找血压最大值 -->
-   <select id="selecthealthMax" parameterType="java.util.Map" resultMap="BaseResultMap">
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
-      select * from  jfhealth  where year(createtime)= #{timedata}    and  phone =#{phone} ORDER BY sbp_ave DESC LIMIT 1 ;
-  </if>
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
-	  select * from jfhealth  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ORDER BY sbp_ave DESC LIMIT 1  ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
-	  select * from jfhealth  where  day(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year}  and  
-
-month(createtime)= #{month} ORDER BY sbp_ave DESC LIMIT 1;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
-	  select * from jfhealth  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone} ORDER BY sbp_ave DESC LIMIT 1;
-	</if>
+	<!-- 血压MAX,MIN,AVG,COUNTi(根据年月日 周)查找 -->
+	<select id="selectBloodpressureInfo" parameterType="java.util.Map" resultType="java.util.HashMap">
+		<if test="service != null and service != '' and  service == 'month' ">
+			SELECT tt.*,new,createtime FROM (
+			SELECT CONCAT(MAX(sbp_ave),'/',MAX(dbp_ave)) AS max,CONCAT(MIN(sbp_ave),'/',MIN(dbp_ave)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(sbp_ave)),'/',ROUND(AVG(dbp_ave))) as avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,CONCAT(sbp_ave,'/',dbp_ave) as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND date_format(tp.createtime,'%Y-%m')=#{timedata}
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
+		<if test="service != null and service != '' and  service == 'day' ">
+			SELECT tt.*,new,createtime FROM (
+			SELECT CONCAT(MAX(sbp_ave),'/',MAX(dbp_ave)) AS max,CONCAT(MIN(sbp_ave),'/',MIN(dbp_ave)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(sbp_ave)),'/',ROUND(AVG(dbp_ave))) as avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,CONCAT(sbp_ave,'/',dbp_ave) as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND date_format(tp.createtime,'%Y-%m-%d')=#{timedata}
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
+		<if test="service != null and service != '' and  service == 'week' ">
+			SELECT tt.*,new,createtime FROM (
+			SELECT CONCAT(MAX(sbp_ave),'/',MAX(dbp_ave)) AS max,CONCAT(MIN(sbp_ave),'/',MIN(dbp_ave)) min,COUNT(*) AS count,CONCAT(ROUND(AVG(sbp_ave)),'/',ROUND(AVG(dbp_ave))) as avg,phone FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,CONCAT(sbp_ave,'/',dbp_ave) as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
 	</select>
-	<!-- 11获取血压数据 （根据年月日 周）查找血压最小值 -->
-   <select id="selecthealthMin" parameterType="java.util.Map" resultMap="BaseResultMap">
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'year' ">
-      select * from  jfhealth  where year(createtime)= #{timedata}    and  phone =#{phone} ORDER BY dbp_ave LIMIT 1,1 ;
-  </if>
-  <if test="keyWord != null and keyWord != '' and  keyWord == 'month' ">
-	  select * from jfhealth  where month(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year} ORDER BY dbp_ave LIMIT 1,1 ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'day' ">
-	  select * from jfhealth  where  day(createtime)= #{timedata} and  phone =#{phone} and year(createtime)= #{year}  and  
-
-month(createtime)= #{month} ORDER BY dbp_ave LIMIT 1,1 ;
-	</if>
-	<if test="keyWord != null and keyWord != '' and  keyWord == 'week' ">
-	  select * from jfhealth  where YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) and  phone =#{phone} ORDER BY dbp_ave LIMIT 1,1 ;
-	</if>
+	<!-- 心率MAX,MIN,AVG,COUNTi(根据年月日 周)查找 -->
+	<select id="selectHeartRateInfo" parameterType="java.util.Map" resultType="java.util.HashMap">
+		<if test="service != null and service != '' and  service == 'month' ">
+			SELECT tt.*,new,createtime FROM (
+			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,AVG(heartRate) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND date_format(tp.createtime,'%Y-%m')=#{timedata}
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
+		<if test="service != null and service != '' and  service == 'day' ">
+			SELECT tt.*,new,createtime FROM (
+			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,AVG(heartRate) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND date_format(tp.createtime,'%Y-%m-%d')=#{timedata}
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
+		<if test="service != null and service != '' and  service == 'week' ">
+		SELECT tt.*,new,createtime FROM (
+			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,AVG(heartRate) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
 	</select>
+	<!-- HRBMAX,MIN,AVG,COUNTi(根据年月日 周)查找 -->
+	<select id="selectHrvInfo" parameterType="java.util.Map" resultType="java.util.HashMap">
+		<if test="service != null and service != '' and  service == 'month' ">
+			SELECT tt.*,new,createtime FROM (
+			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,AVG(HRV) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,HRV as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND date_format(tp.createtime,'%Y-%m')=#{timedata}
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
+		<if test="service != null and service != '' and  service == 'day' ">
+			SELECT tt.*,new,createtime FROM (
+			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,AVG(HRV) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,HRV as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND date_format(tp.createtime,'%Y-%m-%d')=#{timedata}
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
+		<if test="service != null and service != '' and  service == 'week' ">
+		SELECT tt.*,new,createtime FROM (
+			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,AVG(HRV) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			)tt
+			 INNER JOIN (
+			SELECT tp.phone,HRV as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE tp.phone=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			) tg
+			 ON tt.phone=tg.phone
+		</if>
+	</select>
+	
+	<!-- 步数MAX,MIN,AVG,COUNTi(根据年月日 周)查找 -->
+	<select id="selectStepWhenInfo" parameterType="java.util.Map" resultType="java.util.HashMap">
+		<if test="service != null and service != '' and  service == 'month' ">
+			SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM (
+			SELECT COUNT(*) AS new,AVG(step_when) as avg,COUNT(*)*50/100000 as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.user_id,date_format(tp.createtime,'%H:%i') as createtime FROM equipment_data tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE user_id=#{userId} AND date_format(tp.createtime,'%Y-%m') =#{timedata}
+			) tg
+			 ON tt.user_id=tg.user_id
+			 INNER JOIN (SELECT SUM(step_when) AS max,date_format(createtime,'%Y-%m-%d') as maxtime,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY step_when DESC  LIMIT 0,1
+			) tv
+			 ON tg.user_id=tv.user_id
+			 INNER JOIN (SELECT SUM(step_when) AS min,date_format(createtime,'%Y-%m-%d') as mintime,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY step_when  LIMIT 0,1
+			) tj
+			 ON tg.user_id= tj.user_id
+		</if>
+		<if test="service != null and service != '' and  service == 'day' ">
+			SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM (
+			SELECT COUNT(*) AS new,AVG(step_when) as avg,COUNT(*)*50/100000 as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}
+			)tt
+			 INNER JOIN (
+			SELECT tp.user_id,date_format(tp.createtime,'%H:%i') as createtime FROM equipment_data tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE user_id=#{userId} AND date_format(tp.createtime,'%Y-%m-%d') =#{timedata}
+			) tg
+			 ON tt.user_id=tg.user_id
+			 INNER JOIN (SELECT SUM(step_when) AS max,date_format(createtime,'%Y-%m-%d') as maxtime,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY step_when DESC  LIMIT 0,1
+			) tv
+			 ON tg.user_id=tv.user_id
+			 INNER JOIN (SELECT SUM(step_when) AS min,date_format(createtime,'%Y-%m-%d') as mintime,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata} GROUP BY date_format(createtime,'%Y-%m') ORDER BY step_when  LIMIT 0,1
+			) tj
+			 ON tg.user_id= tj.user_id
+		</if>
+		<if test="service != null and service != '' and  service == 'week' ">
+			SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM (
+			SELECT COUNT(*) AS new,AVG(step_when) as avg,COUNT(*)*50/100000 as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			)tt
+			 INNER JOIN (
+			SELECT tp.user_id,date_format(tp.createtime,'%H:%i') as createtime FROM equipment_data tp
+			 INNER JOIN (SELECT MAX(createtime) as createtime FROM equipment_data WHERE user_id=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())) tt
+			 ON tp.createtime=tt.createtime
+			 WHERE user_id=#{userId} AND YEARWEEK(date_format(tp.createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			) tg
+			 ON tt.user_id=tg.user_id
+			 INNER JOIN (SELECT SUM(step_when) AS max,date_format(createtime,'%Y-%m-%d') as maxtime,user_id FROM equipment_data WHERE user_id=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW()) GROUP BY date_format(createtime,'%Y-%m') ORDER BY step_when DESC  LIMIT 0,1
+			) tv
+			 ON tg.user_id=tv.user_id
+			 INNER JOIN (SELECT SUM(step_when) AS min,date_format(createtime,'%Y-%m-%d') as mintime,user_id FROM equipment_data WHERE user_id=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW()) GROUP BY date_format(createtime,'%Y-%m') ORDER BY step_when  LIMIT 0,1
+			) tj
+			 ON tg.user_id= tj.user_id
+		</if>
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	 <select id="getcount" parameterType="java.lang.String" resultType="java.lang.Integer">
       select count(*) from  jfhealth 

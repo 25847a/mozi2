@@ -1,13 +1,18 @@
 package com.sy.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.User;
+import com.sy.utils.DataRow;
+import com.sy.vo.LoginReturn;
 
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User>{
 
     /**
      * 更改user的状态,逻辑删除
@@ -16,13 +21,11 @@ public interface UserMapper {
      */
     int deleteUser(Integer id);
 
-    int insert(User record);
+    Integer insert(User record);
 
     int insertSelective(User record);
 
     User selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
 
@@ -50,12 +53,6 @@ public interface UserMapper {
 	 * @return
 	 */
 	public User queryUserInfo(Map map);
-	
-	/**添加使用者返回主键
-	 * @param u
-	 * @return
-	 */
-	public Integer adduserkey(User u);
 	/**
 	 *  查询个人主页使用者的个人信息-啊健 
 	 * @param map
@@ -104,6 +101,27 @@ public interface UserMapper {
 	 */
 	@Update("update user set jfdataUpdateTime = #{jfdataUpdateTime} where id = #{id}")
 	void jfdataUpdateTime(User user);
-	
-	
+	/**
+	 * 根据ID查询用户信息
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	@Select("SELECT * FROM user  where id = #{userId} AND isDelete=0")
+	public User queryIdUser(Map<String,String> map)throws SQLException;
+	/**
+	 * 根据ID查询用户信息
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	@Select("SELECT * FROM user  where id = #{userId} AND isDelete=0")
+	public User queryIdUserInfo(Integer userId)throws SQLException;
+	/**
+	 * 个人中心页面数据
+	 * @param data
+	 * @return
+	 * @throws SQLException
+	 */
+	public LoginReturn queryPersonalCenter(Integer userId)throws SQLException;
 }

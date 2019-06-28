@@ -14,13 +14,14 @@ public class Addressuitl {
 	 public static void main(String[] args) { 
 		    // lat 39.97646    
 		    //log 116.3039  
-		    String add = getAdd( "113.901016","22.579130"); 
+		   /* String add = getAdd( "22.940495","113.336121"); 
 		    JSONObject jsonObject = JSONObject.fromObject(add); 
 		    JSONArray jsonArray = JSONArray.fromObject(jsonObject.getString("addrList")); 
 		    JSONObject j_2 = JSONObject.fromObject(jsonArray.get(0)); 
 		    String allAdd = j_2.getString("admName"); 
 		    String arr[] = allAdd.split(","); 
-		    System.out.println("省："+arr[0]+"\n市："+arr[1]+"\n区："+arr[2]); 
+		    System.out.println("省："+arr[0]+"\n市："+arr[1]+"\n区："+arr[2]); */
+		 System.out.println(Addressuitl.getAdd("22.940495", "113.336121"));
 		  } 
 		    
 	      

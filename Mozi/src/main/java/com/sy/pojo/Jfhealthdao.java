@@ -1,8 +1,13 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Jfhealthdao {
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
+@TableName("jfhealthdao")
+public class Jfhealthdao extends Model<Jfhealthdao>{
+	private static final long serialVersionUID = 1L;
     private Integer id;
 
     private Integer HRV;
@@ -124,6 +129,12 @@ public class Jfhealthdao {
     public void setAmedicalreport(String amedicalreport) {
         this.amedicalreport = amedicalreport == null ? null : amedicalreport.trim();
     }
+
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
+	}
 
     
 }

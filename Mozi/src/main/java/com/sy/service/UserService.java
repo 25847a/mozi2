@@ -2,10 +2,16 @@ package com.sy.service;
 
 import java.util.Map;
 
+import com.baomidou.mybatisplus.service.IService;
+import com.sy.common.ResultData;
 import com.sy.pojo.User;
+import com.sy.utils.DataRow;
 import com.sy.utils.PageModel;
+import com.sy.vo.LoginReturn;
+import com.sy.vo.Loginuser;
+import com.sy.vo.Usermanagement;
 
-public interface UserService {
+public interface UserService  extends IService<User>{
 
 	/**����û�
 	 * @param u
@@ -18,13 +24,19 @@ public interface UserService {
 	 * @return
 	 */
 	public boolean ifUser(String account);
-	
-	/**用户登陆
-	 * @param account
-	 * @param password
+	/**
+	 * 用户登陆
+	 * @param data
 	 * @return
 	 */
-	public User landingUser(String account  ,String password ,String servie);
+	public ResultData<LoginReturn> landingUser(DataRow data,ResultData<LoginReturn> re)throws Exception;
+	/**
+	 *  添加使用者
+	 * @param u
+	 * @return
+	 * @throws Exception 
+	 */
+	public ResultData<Loginuser>addUsermanagement(Usermanagement u,ResultData<Loginuser> re)throws Exception;
 	
 	/**头像上传
 	 * @param avatar
@@ -81,11 +93,6 @@ public interface UserService {
 	 * @return
 	 */
 	public User selectaccount(String account);
-	/**添加使用者返回主键
-	 * @param u
-	 * @return
-	 */
-	public Integer adduserkey(User u);
 	/**
 	 * 啊健写的 查询使用者的详情信息
 	 * @param map
@@ -98,5 +105,6 @@ public interface UserService {
 	public Integer deleteUser(Integer userId);
 	
 	public Integer selectId(String imei);
+	
 
 }

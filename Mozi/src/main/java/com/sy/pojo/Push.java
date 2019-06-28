@@ -1,8 +1,13 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Push {
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
+@TableName("push")
+public class Push extends Model<Push>{
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 编号id
 	 */
@@ -28,20 +33,6 @@ public class Push {
 	 */
 	private Boolean boolPreNotifyOn;
 	/**
-	 * 跌倒通知开关
-	 */
-	private Boolean fallNotifyOn;
-	
-	/**
-	 * 步数通知开关
-	 */
-	private Boolean walkNotifyOn;
-	/**
-	 * 围栏通知开关
-	 */
-	private Boolean fenceNotifyOn;
-	
-	/**
 	 * 心率低阈值
 	 */
 	private Integer heartLowThd;
@@ -49,15 +40,6 @@ public class Push {
 	 * 心率通知高阈值
 	 */
 	private Integer heartHigThd;
-	/**
-	 * 血压通知低阈值
-	 */
-	private Integer boolLowThd;
-	/**
-	 * 血压通知高阈值
-	 */
-	private Integer boolHigThd;
-	
 	
 	/**
 	 * 创建时间
@@ -67,33 +49,22 @@ public class Push {
 	 * 修改时间
 	 */
 	private Integer lbpstart;
-	
+	/**
+	 * 修改时间
+	 */
 	private Integer lbpend;
-	
+	/**
+	 * 修改时间
+	 */
 	private Integer hbpstart;
-	
+	/**
+	 * 修改时间
+	 */
 	private Integer hbpend;
-	
+	/**
+	 * 修改时间
+	 */
 	private Date updateTime;
-
-	
-	
-	
-	public Boolean getFenceNotifyOn() {
-		return fenceNotifyOn;
-	}
-
-	public void setFenceNotifyOn(Boolean fenceNotifyOn) {
-		this.fenceNotifyOn = fenceNotifyOn;
-	}
-
-	public Boolean getWalkNotifyOn() {
-		return walkNotifyOn;
-	}
-
-	public void setWalkNotifyOn(Boolean walkNotifyOn) {
-		this.walkNotifyOn = walkNotifyOn;
-	}
 
 	public Integer getId() {
 		return id;
@@ -135,14 +106,6 @@ public class Push {
 		this.boolPreNotifyOn = boolPreNotifyOn;
 	}
 
-	public Boolean getFallNotifyOn() {
-		return fallNotifyOn;
-	}
-
-	public void setFallNotifyOn(Boolean fallNotifyOn) {
-		this.fallNotifyOn = fallNotifyOn;
-	}
-
 	public Integer getHeartLowThd() {
 		return heartLowThd;
 	}
@@ -157,22 +120,6 @@ public class Push {
 
 	public void setHeartHigThd(Integer heartHigThd) {
 		this.heartHigThd = heartHigThd;
-	}
-
-	public Integer getBoolLowThd() {
-		return boolLowThd;
-	}
-
-	public void setBoolLowThd(Integer boolLowThd) {
-		this.boolLowThd = boolLowThd;
-	}
-
-	public Integer getBoolHigThd() {
-		return boolHigThd;
-	}
-
-	public void setBoolHigThd(Integer boolHigThd) {
-		this.boolHigThd = boolHigThd;
 	}
 
 	public Date getCreateTime() {
@@ -229,6 +176,12 @@ public class Push {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
 	}
 
 	

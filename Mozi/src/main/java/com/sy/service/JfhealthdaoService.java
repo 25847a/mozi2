@@ -2,9 +2,10 @@ package com.sy.service;
 
 import java.util.Map;
 
+import com.baomidou.mybatisplus.service.IService;
 import com.sy.pojo.Jfhealthdao;
 
-public interface JfhealthdaoService {
+public interface JfhealthdaoService extends IService<Jfhealthdao>{
 	
 	public boolean addJfhealthdao(Jfhealthdao j);
 	

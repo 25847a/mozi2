@@ -8,12 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.mapper.EquipmentMapper;
 import com.sy.mapper.SensorstatusMapper;
 import com.sy.pojo.Equipment;
@@ -25,7 +24,7 @@ import com.sy.utils.PageModel;
 import com.sy.vo.EquipmentVo;
 import com.sy.vo.Equipmentstatus;
 @Service
-public class EquipmentServiceImpl implements EquipmentService {
+public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment> implements EquipmentService {
 	@Autowired
 	private SensorstatusMapper sensorstatusmapper;
 	@Autowired

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sy.mapper.ExtendMapper" >
-  <resultMap id="BaseResultMap" type="com.sy.pojo.Extend" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="option1" property="option1" jdbcType="VARCHAR" />
-    <result column="option2" property="option2" jdbcType="VARCHAR" />
-    <result column="option3" property="option3" jdbcType="VARCHAR" />
+<mapper namespace="com.sy.mapper.ConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.Config" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="configName" property="configName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="lable" property="lable" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="INTEGER" />
     <result column="remarks" property="remarks" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -67,21 +69,18 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, auth_name, url, descn, createtime
+    id, configName, type, lable, value,remarks,result
   </sql>
- 	<!-- 查询 -->
- 	<select id="selectExtend" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-	    SELECT * FROM extend WHERE id=#{id}
+ 	<!-- 通过ID查询 -->
+ 	<select id="queryConfigId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+	    SELECT * FROM config WHERE id=#{id}
   	</select>
- 	<!-- 修改 -->
- 	<update id="updateExtendById" parameterType="java.util.Map">
- 		UPDATE extend set option1=#{option1}
- 		<if test="option2!=null and option2!=''">
- 			,option2=#{option2}
- 		</if>
- 		<if test="option3!=null and option3!=''">
- 			,option3=#{option3}
- 		</if>
- 		 WHERE id=#{id}
- 	</update>
+  	<!-- 查询系统配置表信息 -->
+ 	<select id="queryConfigInfo" resultMap="BaseResultMap" parameterType="java.lang.String">
+	    SELECT * FROM config WHERE type=#{type} and lable=#{lable}
+  	</select>
+  	<!-- 查询系统配置表信息 -->
+ 	<select id="queryConfigList" resultMap="BaseResultMap" parameterType="java.lang.String">
+	    SELECT * FROM config WHERE type=#{type} and lable=#{lable}
+  	</select>
 </mapper>

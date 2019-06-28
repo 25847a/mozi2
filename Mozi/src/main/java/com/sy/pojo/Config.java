@@ -1,60 +1,96 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
+
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
+
 /**
  * 啊健
  * @author Administrator
  *
  */
-public class Extend {
+@TableName("config")
+public class Config extends Model<Config>{
+	
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 主键
 	 */
-	private Integer id;
+	private Long id;
 	/**
-	 * 主键
+	 * 配置名称(用于title)
 	 */
-	private String option1;
+	private String configName;
 	/**
-	 * 主键
+	 * 类型
 	 */
-	private String option2;
+	private String type;
 	/**
-	 * 主键
+	 * 标签名
 	 */
-	private String option3;
+	private String lable;
 	/**
-	 * 主键
+	 * 标签值
+	 */
+	private String value;
+	/**
+	 * 类型,扩展字段
+	 */
+	private Integer result;
+	/**
+	 * 备注
 	 */
 	private String remarks;
-	public Integer getId() {
+	
+	
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getOption1() {
-		return option1;
+	public String getConfigName() {
+		return configName;
 	}
-	public void setOption1(String option1) {
-		this.option1 = option1;
+	public void setConfigName(String configName) {
+		this.configName = configName;
 	}
-	public String getOption2() {
-		return option2;
+	public String getType() {
+		return type;
 	}
-	public void setOption2(String option2) {
-		this.option2 = option2;
+	public void setType(String type) {
+		this.type = type;
 	}
-	public String getOption3() {
-		return option3;
+	public String getLable() {
+		return lable;
 	}
-	public void setOption3(String option3) {
-		this.option3 = option3;
+	public void setLable(String lable) {
+		this.lable = lable;
+	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	public Integer getResult() {
+		return result;
+	}
+	public void setResult(Integer result) {
+		this.result = result;
 	}
 	public String getRemarks() {
 		return remarks;
 	}
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
 	}
 	
 }

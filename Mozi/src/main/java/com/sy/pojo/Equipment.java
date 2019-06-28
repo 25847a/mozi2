@@ -1,8 +1,14 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Equipment {
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
+
+@TableName("equipment")
+public class Equipment extends Model<Equipment>{
+	private static final long serialVersionUID = 1L;
     private Integer id;
 
     private String imei;
@@ -221,6 +227,11 @@ public class Equipment {
 
 	public void setBluetoothList(String bluetoothList) {
 		this.bluetoothList = bluetoothList;
+	}
+
+	@Override
+	protected Serializable pkVal() {
+		return this.id;
 	}
     
     
