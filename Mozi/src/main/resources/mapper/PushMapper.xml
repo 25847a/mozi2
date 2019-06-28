@@ -3,81 +3,23 @@
 <mapper namespace="com.sy.mapper.PushMapper" >
   <resultMap id="BaseResultMap" type="com.sy.pojo.Push" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
     <result column="alias" property="alias" jdbcType="INTEGER" />
     <result column="allNotifyOn" property="allNotifyOn" jdbcType="TINYINT" />
     <result column="heartNotifyOn" property="heartNotifyOn" jdbcType="TINYINT" />
     <result column="boolPreNotifyOn" property="boolPreNotifyOn" jdbcType="TINYINT" />
-    <result column="fallNotifyOn" property="fallNotifyOn" jdbcType="TINYINT" />
     <result column="heartLowThd" property="heartLowThd" jdbcType="INTEGER" />
     <result column="heartHigThd" property="heartHigThd" jdbcType="INTEGER" />
-    <result column="boolLowThd" property="boolLowThd" jdbcType="INTEGER" />
-    <result column="boolHigThd" property="boolHigThd" jdbcType="INTEGER" />
-    <result column="walkNotifyOn" property="walkNotifyOn" jdbcType="INTEGER" />
-    <result column="fenceNotifyOn" property="fenceNotifyOn" jdbcType="INTEGER" />
     <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
     <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="lbpstart" property="heartHigThd" jdbcType="INTEGER" />
+    <result column="lbpend" property="heartHigThd" jdbcType="INTEGER" />
+    <result column="hbpstart" property="heartHigThd" jdbcType="INTEGER" />
+    <result column="hbpend" property="heartHigThd" jdbcType="INTEGER" />
 	
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
-    id, auth_name, url, descn, createtime
+    id, userId, alias, allNotifyOn, heartNotifyOn,boolPreNotifyOn,heartLowThd,heartHigThd,createTime,updateTime,lbpstart,lbpend,hbpstart,hbpend
   </sql>
   
   <!-- 取消关注删除用户需要删除预警值 -->
@@ -147,106 +89,6 @@
   	<insert id="insertPush" parameterType="java.util.Map">
   		INSERT INTO push (alias,createTime,updateTime) VALUES (#{userId},NOW(),NOW())
   	</insert>
-  	
-  <insert id="addPush" parameterType="com.sy.pojo.Push" >
-    insert into push
-    <trim prefix="(" suffix=")" suffixOverrides="," >
- 		alias,userId,
-     <if test="allNotifyOn!=null">
- 		allNotifyOn,
- 		</if>
- 		<if test="heartNotifyOn!=null">
- 		heartNotifyOn,
- 		</if>
- 		<if test="boolPreNotifyOn!=null">
- 		boolPreNotifyOn,
- 		</if>
- 		<if test="fallNotifyOn!=null">
- 		fallNotifyOn,
- 		</if>
- 		<if test="walkNotifyOn!=null">
- 		walkNotifyOn,
- 		</if>
- 		<if test="fenceNotifyOn!=null">
- 		fenceNotifyOn,
- 		</if>
- 		<if test="heartLowThd!=null">
- 		heartLowThd,
- 		</if>
- 		<if test="heartHigThd!=null">
- 		heartHigThd,
- 		</if>
- 		<if test="boolLowThd!=null">
- 		boolLowThd,
- 		</if>
- 		<if test="boolHigThd!=null">
- 		boolHigThd,
- 		</if>
- 		<if test="lbpstart!=null">
- 		lbpstart,
- 		</if>
- 		<if test="lbpend!=null">
- 		lbpend,
- 		</if>
- 		<if test="hbpend!=null">
- 		hbpend,
- 		</if>
- 		<if test="hbpstart!=null">
- 		hbpstart,
- 		</if>
- 		createTime,
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-     <if test="alias!=null">
- 		#{alias},#{userId},
- 	</if>
-      <if test="allNotifyOn">
- 		#{allNotifyOn},
- 		</if>
- 		<if test="heartNotifyOn!=null">
- 		#{heartNotifyOn},
- 		</if>
- 		<if test="boolPreNotifyOn!=null">
- 		#{boolPreNotifyOn},
- 		</if>
- 		<if test="fallNotifyOn!=null">
- 		#{fallNotifyOn},
- 		</if>
- 		<if test="walkNotifyOn!=null">
- 		#{walkNotifyOn},
- 		</if>
- 		<if test="fenceNotifyOn!=null">
- 		#{fenceNotifyOn},
- 		</if>
- 		<if test="heartLowThd!=null">
- 		#{heartLowThd},
- 		</if>
- 		<if test="heartHigThd!=null">
- 		#{heartHigThd},
- 		</if>
- 		<if test="boolLowThd!=null">
- 		#{boolLowThd},
- 		</if>
- 		<if test="boolHigThd!=null">
- 		#{boolHigThd},
- 		</if>
- 		<if test="lbpstart!=null">
- 		#{lbpstart},
- 		</if>
- 		<if test="lbpend!=null">
- 		#{lbpend},
- 		</if>
- 		<if test="hbpend!=null">
- 		#{hbpend},
- 		</if>
- 		<if test="hbpstart!=null">
- 		#{hbpstart},
- 		</if>
- 		NOW()
-    </trim>
-  </insert>
-  
-  
   
   <insert id="addPushMap" parameterType="java.util.Map" >
     insert into push
