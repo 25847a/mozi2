@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.GroupRelationMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.GroupRelation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="groupId" property="groupId" jdbcType="BIGINT" />
+    <result column="relationUserId" property="relationUserId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="kind" property="kind" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, groupId, relationUserId,type,kind
+  </sql>
+  <!-- 插入到群主关联群 -->
+  <insert id="insertGroupRelation" parameterType="com.sy.pojo.GroupRelation">
+  insert into group_relation(groupId,relationUserId,type,kind)values(#{groupId},#{relationUserId},#{type},#{kind})
+  </insert>
+  	<!-- 查询社区群成员 -->
+ 	<select id="queryGroupRelationInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+ 		SELECT tp.id,tt.name,tt.age,tp.type,tp.relationUserId as userId,tt.avatar,tt.gender FROM group_relation tp
+		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tt
+		ON tp.relationUserId=tt.id
+		WHERE groupId=#{groupId}
+		ORDER BY type DESC
+ 	</select>
+ 	<!-- 查询活跃排行榜人数 -->
+ 	<select id="queryActiveInfo"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+ 		SELECT tp.id,tt.name,td.count,tt.avatar,CASE WHEN tc.comment IS null then 0 ELSE tc.comment END as comment FROM group_relation tp
+		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tt
+		ON tp.relationUserId=tt.id
+		INNER JOIN (SELECT phone,COUNT(*) AS count FROM jfhealth GROUP BY phone) td
+		ON substring(td.phone,9)=tp.relationUserId
+		LEFT JOIN (SELECT userId,COUNT(comment) as comment FROM comment GROUP BY userId) tc
+		ON tp.relationUserId=tc.userId
+		WHERE groupId=#{groupId} AND tp.type=0
+ 	</select>
+ 	<!-- 查询朋友圈群组关联-->
+ 	<select id="queryGroupRelation" resultType="java.lang.Object"  parameterType="com.sy.pojo.GroupRelation">
+ 		select * from group_relation where groupId=#{groupId} and relationUserId=#{relationUserId}
+ 	</select> 
+ 	<!--删除朋友圈群组关联 -->
+ 	<delete id="deletegroupRelation" parameterType="java.util.HashMap">
+ 		delete from group_relation where groupId=#{groupId}
+ 	</delete>
+ 	<!--删除个人朋友圈群组关联 -->
+ 	<delete id="deletegroupRelationInfo" parameterType="com.sy.pojo.GroupRelation">
+ 		delete from group_relation where groupId=#{groupId} and relationUserId=#{relationUserId}
+ 	</delete>
+</mapper>

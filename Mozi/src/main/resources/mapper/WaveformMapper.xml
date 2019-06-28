@@ -52,6 +52,9 @@
     set userId = #{userId},imei = #{imei}, data = #{data},instructions = #{instructions}
     where id = #{id}
   </update>
-  
+  <!-- 查询波形图数据 -->
+  <select id="queryWaveformInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select * from waveform where userId = #{userId}
+  </select>
   
 </mapper>

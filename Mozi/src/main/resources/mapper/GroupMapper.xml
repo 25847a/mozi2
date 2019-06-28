@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.GroupMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.Group" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="groupName" property="groupName" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="configId" property="configId" jdbcType="INTEGER" />
+    <result column="configId" property="configId" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,groupName, userId, phone, configId,count,remarks,imageUrl
+  </sql>
+ 	<!-- 创建朋友圈群 -->
+ 	<insert id="insertGroup" parameterType="com.sy.pojo.Group" keyProperty="id" useGeneratedKeys="true">
+ 		insert into `group`(groupName,userId,phone,configId,remarks,imageUrl)values(#{groupName},#{userId},#{phone},#{configId},#{remarks},#{imageUrl})
+ 	</insert>
+ 	<!-- 通过监护者查询有社区群列表 -->
+ 	<select id="queryGroupAliasList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	 		SELECT tt.id,tt.groupName,concat(tt.count,'/',(SELECT value FROM config WHERE type='group_count' AND lable='count_type')) as count,td.configName,tc.name,tt.remarks,tt.imageUrl FROM group_relation tp
+			INNER JOIN `group`  tt
+			ON tp.relationUserId=tt.userId
+			LEFT JOIN config td
+			ON tt.configId=td.id
+			INNER JOIN user tc
+			ON tp.relationUserId=tc.id
+			WHERE relationUserId=#{userId}
+ 	</select>
+ 	<!-- 通过使用者查询有社区群列表 -->
+ 	<select id="queryGroupUserIdList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+ 		SELECT tt.id,tt.groupName,concat(tt.count,'/',(SELECT value FROM config WHERE type='group_count' AND lable='count_type')) as count,td.configName,tc.name,tt.remarks,tt.imageUrl FROM  group_relation tp
+		INNER JOIN `group` tt
+		ON tp.groupId=tt.id
+		LEFT JOIN config td
+		ON tt.configId=td.id
+		INNER JOIN user tc
+		ON tp.relationUserId=tc.id
+		WHERE relationUserId=#{userId}
+ 	</select>
+ 	<!-- 推荐的社圈 -->
+ 	<select id="queryRecommendInfo" resultType="java.util.HashMap">
+ 		SELECT tt.id,tt.groupName,tc.name,td.configName,concat(tt.count,'/',(SELECT value FROM config WHERE type='group_count' AND lable='count_type')) as count,tt.remarks,tt.imageUrl FROM `group` tt
+		INNER JOIN user tc
+		ON tt.userId=tc.id
+		LEFT JOIN config td
+		ON tt.configId=td.id
+ 	</select>
+ 	<!-- 通过监护者查询有社区群信息 -->
+ 	<select id="queryGroupAliasInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+ 		select tp.id,tp.groupName,tp.userId,tp.phone,tp.count,tt.configName,td.name from `group` tp
+		LEFT JOIN config tt
+		ON tp.configId=tt.id
+		INNER JOIN user td
+		ON tp.userId=td.id
+		where userId=#{userId}
+ 	</select>
+ 	<!-- 通过手机号码查询社群 -->
+ 	<select id="queryPhoneGroup" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+ 		SELECT tt.id,tt.groupName,tt.userId,tt.phone,concat(tt.count,'/',(SELECT value FROM config WHERE type='group_count' AND lable='count_type')) as count,td.configName FROM `group`  tt
+		LEFT JOIN config td
+		ON tt.configId=td.id
+		INNER JOIN user tc
+		ON tt.userId=tc.id
+		WHERE tt.phone=#{phone}
+ 	</select>
+ 	<!-- 更新入群人数 -->
+ 	<update id="updateCountGroup" parameterType="java.lang.Long">
+ 		UPDATE `group`  SET count=count+1  WHERE id=#{groupId}
+ 	</update>
+ 	<!-- 通过ID查询群信息 -->
+ 	<select id="queryGroupInfo" parameterType="java.lang.Long" resultType="com.sy.pojo.Group">
+ 		select * from `group` where id=#{groupId}
+ 	</select>
+ 	<!--删除群 -->
+ 	<delete id="deleteGroup" parameterType="java.util.HashMap">
+ 		delete from `group` where id=#{groupId}
+ 	</delete>
+</mapper>

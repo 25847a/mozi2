@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.PushRecordMapper" >
+
+  <resultMap id="BaseResultMap" type="com.sy.pojo.PushRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="heartUnusual" property="heartUnusual" jdbcType="INTEGER" />
+    <result column="highBloodUnusual" property="highBloodUnusual" jdbcType="INTEGER" />
+    <result column="lowBloodUnusual" property="lowBloodUnusual" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+	
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, heartUnusual,highBloodUnusual,lowBloodUnusual,createTime
+  </sql>
+  <insert id="insertPushRecord" parameterType="com.sy.pojo.PushRecord" >
+    insert into pushrecord<!-- (userId,highBloodUnusual,lowBloodUnusual,createTime)values(#{userId},#{heartUnusual},#{highBloodUnusual},#{lowBloodUnusual},NOW()) -->
+   <trim prefix="(" suffix=")" suffixOverrides="," >
+ 		userId,
+     <if test="heartUnusual!=null">
+ 		heartUnusual,
+ 		</if>
+ 		<if test="highBloodUnusual!=null">
+ 		highBloodUnusual,
+ 		</if>
+ 		<if test="lowBloodUnusual!=null">
+ 		lowBloodUnusual,
+ 		</if>
+ 		createTime
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+ 		#{userId},
+      <if test="heartUnusual!=null">
+ 		#{heartUnusual},
+ 		</if>
+ 		<if test="highBloodUnusual!=null">
+ 		#{highBloodUnusual},
+ 		</if>
+ 		<if test="lowBloodUnusual!=null">
+ 		#{lowBloodUnusual},
+ 		</if>
+ 		NOW()
+    </trim>
+  </insert>
+  <!-- 查询预警记录的各项总数 -->
+  <select id="queryPushRecordCount" parameterType="java.util.Map" resultType="java.util.HashMap">
+  		SELECT (SUM(CASE WHEN heartUnusual>0 THEN 1 ELSE 0 END)+SUM(CASE WHEN highBloodUnusual>0 THEN 1 ELSE 0 END)+SUM(CASE WHEN lowBloodUnusual>0 THEN 1 ELSE 0 END)) AS count,
+		SUM(CASE WHEN heartUnusual>0 THEN 1 ELSE 0 END) AS heartCount,SUM(CASE WHEN highBloodUnusual>0 THEN 1 ELSE 0 END) AS highCount,
+		SUM(CASE WHEN lowBloodUnusual>0 THEN 1 ELSE 0 END) AS lowCount FROM pushrecord WHERE userId=#{userId} AND DATE_FORMAT(createTime,'%Y-%m-%d')=#{createTime}
+  </select>
+  <!-- 查询预警记录的记录数 -->
+   <select id="queryPushRecordList" parameterType="java.util.Map" resultType="java.util.HashMap">
+  		SELECT heartUnusual,highBloodUnusual,lowBloodUnusual,DATE_FORMAT(createTime,'%H:%i') AS createTime FROM pushrecord
+  		WHERE userId =#{userId} AND DATE_FORMAT(createTime,'%Y-%m-%d')=#{createTime}
+  </select>
+</mapper>

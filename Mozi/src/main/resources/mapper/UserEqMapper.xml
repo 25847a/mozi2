@@ -8,87 +8,9 @@
 		<result column="typeof" property="typeof" jdbcType="INTEGER" />
 		<result column="authorized" property="authorized" jdbcType="VARCHAR" />
 	</resultMap>
-	<sql id="Example_Where_Clause">
-		<where>
-			<foreach collection="oredCriteria" item="criteria" separator="or">
-				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
-						<foreach collection="criteria.criteria" item="criterion">
-							<choose>
-								<when test="criterion.noValue">
-									and ${criterion.condition}
-								</when>
-								<when test="criterion.singleValue">
-									and ${criterion.condition} #{criterion.value}
-								</when>
-								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
-									#{criterion.secondValue}
-								</when>
-								<when test="criterion.listValue">
-									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
-										#{listItem}
-									</foreach>
-								</when>
-							</choose>
-						</foreach>
-					</trim>
-				</if>
-			</foreach>
-		</where>
-	</sql>
-	<sql id="Update_By_Example_Where_Clause">
-		<where>
-			<foreach collection="example.oredCriteria" item="criteria"
-				separator="or">
-				<if test="criteria.valid">
-					<trim prefix="(" suffix=")" prefixOverrides="and">
-						<foreach collection="criteria.criteria" item="criterion">
-							<choose>
-								<when test="criterion.noValue">
-									and ${criterion.condition}
-								</when>
-								<when test="criterion.singleValue">
-									and ${criterion.condition} #{criterion.value}
-								</when>
-								<when test="criterion.betweenValue">
-									and ${criterion.condition} #{criterion.value} and
-									#{criterion.secondValue}
-								</when>
-								<when test="criterion.listValue">
-									and ${criterion.condition}
-									<foreach collection="criterion.value" item="listItem"
-										open="(" close=")" separator=",">
-										#{listItem}
-									</foreach>
-								</when>
-							</choose>
-						</foreach>
-					</trim>
-				</if>
-			</foreach>
-		</where>
-	</sql>
 	<sql id="Base_Column_List">
 		id, user_id, eq_id, typeof, authorized
 	</sql>
-	<select id="selectByExample" resultMap="BaseResultMap"
-		parameterType="com.sy.pojo.UserEqExample">
-		select
-		<if test="distinct">
-			distinct
-		</if>
-		<include refid="Base_Column_List" />
-		from user_eq
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-		<if test="orderByClause != null">
-			order by ${orderByClause}
-		</if>
-	</select>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Integer">
 		select
@@ -99,12 +21,6 @@
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from user_eq
 		where id = #{id,jdbcType=INTEGER}
-	</delete>
-	<delete id="deleteByExample" parameterType="com.sy.pojo.UserEqExample">
-		delete from user_eq
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
 	</delete>
 	<insert id="insert" parameterType="com.sy.pojo.UserEq">
 		insert into user_eq (id, user_id, eq_id,
@@ -150,47 +66,6 @@
 			</if>
 		</trim>
 	</insert>
-	<select id="countByExample" parameterType="com.sy.pojo.UserEqExample"
-		resultType="java.lang.Integer">
-		select count(*) from user_eq
-		<if test="_parameter != null">
-			<include refid="Example_Where_Clause" />
-		</if>
-	</select>
-	<update id="updateByExampleSelective" parameterType="map">
-		update user_eq
-		<set>
-			<if test="record.id != null">
-				id = #{record.id,jdbcType=INTEGER},
-			</if>
-			<if test="record.userId != null">
-				user_id = #{record.userId,jdbcType=INTEGER},
-			</if>
-			<if test="record.eqId != null">
-				eq_id = #{record.eqId,jdbcType=INTEGER},
-			</if>
-			<if test="record.typeof != null">
-				typeof = #{record.typeof,jdbcType=INTEGER},
-			</if>
-			<if test="record.authorized != null">
-				authorized = #{record.authorized,jdbcType=VARCHAR},
-			</if>
-		</set>
-		<if test="_parameter != null">
-			<include refid="Update_By_Example_Where_Clause" />
-		</if>
-	</update>
-	<update id="updateByExample" parameterType="map">
-		update user_eq
-		set id = #{record.id,jdbcType=INTEGER},
-		user_id = #{record.userId,jdbcType=INTEGER},
-		eq_id = #{record.eqId,jdbcType=INTEGER},
-		typeof = #{record.typeof,jdbcType=INTEGER},
-		authorized = #{record.authorized,jdbcType=VARCHAR}
-		<if test="_parameter != null">
-			<include refid="Update_By_Example_Where_Clause" />
-		</if>
-	</update>
 	<update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.UserEq">
 		update user_eq
 		<set>
@@ -265,4 +140,45 @@
 	<delete id="deleteuserid"  parameterType="java.lang.Integer"   >
 	  delete from user_eq   where  user_id = #{userId}
 	</delete>
+	<!-- 通过监护者ID查询出使用者ID -->
+	<select id="queryUserIdUserEq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT tp.*,td.name,td.role  FROM user_eq tp
+		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId} AND typeof='0') tt
+		ON tp.eq_id=tt.eq_id AND tp.typeof='2'
+		INNER JOIN (select * from user where isDelete=0) td
+		ON tp.user_id=td.id
+	</select>
+	<!-- 通过监护者ID查询首页需要的数据-->
+	<select id="queryUserEq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,tv.positioning_data,td.avatar,tc.imei,td.age,tp.typeof as type_of FROM user_eq tp
+		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId} AND typeof='0') tt
+		ON tp.eq_id=tt.eq_id AND tp.typeof='2'
+		INNER JOIN user td
+		ON tp.user_id=td.id
+		INNER JOIN equipment tc
+		ON td.imei=tc.imei
+		LEFT JOIN (SELECT * FROM positionig ORDER BY cratetime DESC LIMIT 1) tv
+		ON tc.imei=tv.imei
+		WHERE td.follow=1 and isDelete=0
+	</select>
+	<!-- 查询关注人使用者列表-->
+	<select id="queryUserEqFollowUsersList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT tp.user_id,tc.name,tc.avatar,tc.follow,td.lordpower,td.eq_status,td.bluetooth_type,tp.typeof as type_of FROM user_eq tp
+		INNER JOIN (SELECT * FROM user_eq WHERE typeof=0 AND user_id=#{userId}) tt
+		ON tp.eq_id=tt.eq_id and tp.typeof=2
+		INNER JOIN equipment td
+		ON tp.eq_id=td.id
+		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tc
+		ON tp.user_id=tc.id
+	</select>
+	<!-- 查询关注人观察者列表-->
+	<select id="queryUserEqFollowObserverList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT tp.user_id,tc.name,tc.avatar,tc.follow,td.lordpower,td.eq_status,td.bluetooth_type,tt.typeof as type_of FROM user_eq tp
+		INNER JOIN (SELECT * FROM user_eq WHERE  typeof=1 AND user_id=#{userId}) tt
+		ON tp.eq_id=tt.eq_id and tp.typeof=2
+		INNER JOIN equipment td
+		ON tp.eq_id=td.id
+		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tc
+		ON tp.user_id=tc.id
+	</select>
 </mapper>

@@ -14,22 +14,19 @@
     <result column="calibration" property="calibration" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
-    <result column="wechat" property="wechat" jdbcType="VARCHAR" />
-    <result column="qq" property="qq" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="atlasttime" property="atlasttime" jdbcType="TIMESTAMP" />
     <result column="weight" property="weight" jdbcType="REAL" />
     <result column="height" property="height" jdbcType="REAL" />
     <result column="born" property="born" jdbcType="TIMESTAMP" />
     <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="imei" property="imei" jdbcType="VARCHAR" />
     <result column="walkCount" property="walkCount" jdbcType="VARCHAR" />
-    <result column="walkPushTime" property="walkPushTime" jdbcType="VARCHAR" />
     <result column="love" property="love" jdbcType="INTEGER" />
     <result column="bedId" property="bedId" jdbcType="BIGINT" />
     <result column="nurseId" property="nurseId" jdbcType="BIGINT" />
     <result column="liveTime" property="liveTime" jdbcType="TIMESTAMP" />
     <result column="illness" property="illness" jdbcType="VARCHAR" />
+    <result column="follow" property="follow" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -233,72 +230,6 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.User" >
-    update user
-    <set >
-      <if test="role != null" >
-        role = #{role,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        account = #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null" >
-        age = #{age,jdbcType=INTEGER},
-      </if>
-      <if test="gender != null" >
-        gender = #{gender,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null" >
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="avatar != null" >
-        avatar = #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="wechat != null" >
-        wechat = #{wechat,jdbcType=VARCHAR},
-      </if>
-      <if test="qq != null" >
-        qq = #{qq,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        createtime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="atlasttime != null" >
-        atlasttime = #{atlasttime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="weight != null" >
-        weight = #{weight,jdbcType=REAL},
-      </if>
-      <if test="height != null" >
-        height = #{height,jdbcType=REAL},
-      </if>
-      <if test="born != null" >
-        born = #{born,jdbcType=TIMESTAMP},
-      </if>
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="imei != null" >
-        imei = #{imei,jdbcType=VARCHAR},
-      </if>
-      <if test="walkCount != null" >
-        walkCount = #{walkCount,jdbcType=VARCHAR},
-      </if>
-      <if test="walkPushTime != null" >
-        walkPushTime = #{walkPushTime,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
   <update id="updateByPrimaryKey" parameterType="com.sy.pojo.User" >
     update user
     set role = #{role,jdbcType=VARCHAR},
@@ -310,10 +241,7 @@
       phone = #{phone,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       avatar = #{avatar,jdbcType=VARCHAR},
-      wechat = #{wechat,jdbcType=VARCHAR},
-      qq = #{qq,jdbcType=VARCHAR},
       createtime = #{createtime,jdbcType=TIMESTAMP},
-      atlasttime = #{atlasttime,jdbcType=TIMESTAMP},
       weight = #{weight,jdbcType=REAL},
       height = #{height,jdbcType=REAL},
       born = #{born,jdbcType=TIMESTAMP},
@@ -360,144 +288,16 @@
   <select id="selectaccount" parameterType="java.lang.String" resultMap="BaseResultMap">
   		select * from user where account = #{account} and isDelete=0
   </select>
-  <insert id="adduserkey" parameterType="com.sy.pojo.User"  useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
-   insert into user
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="role != null" >
-        role,
-      </if>
-      <if test="account != null" >
-        account,
-      </if>
-      <if test="password != null" >
-        password,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="age != null" >
-        age,
-      </if>
-      <if test="gender != null" >
-        gender,
-      </if>
-      <if test="phone != null" >
-        phone,
-      </if>
-      <if test="address != null" >
-        address,
-      </if>
-      <if test="avatar != null" >
-        avatar,
-      </if>
-      <if test="wechat != null" >
-        wechat,
-      </if>
-      <if test="qq != null" >
-        qq,
-      </if>
-      <if test="createtime != null" >
-        createtime,
-      </if>
-      <if test="atlasttime != null" >
-        atlasttime,
-      </if>
-      <if test="weight != null" >
-        weight,
-      </if>
-      <if test="height != null" >
-        height,
-      </if>
-      <if test="born != null" >
-        born,
-      </if>
-      <if test="code != null" >
-        code,
-      </if>
-       <if test="calibration != null" >
-        calibration,
-      </if>
-       <if test="imei != null" >
-        imei,
-      </if>
-       <if test="jfdataUpdateTime != null" >
-        jfdataUpdateTime,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="role != null" >
-        #{role,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null" >
-        #{age,jdbcType=INTEGER},
-      </if>
-      <if test="gender != null" >
-        #{gender,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="avatar != null" >
-        #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="wechat != null" >
-        #{wechat,jdbcType=VARCHAR},
-      </if>
-      <if test="qq != null" >
-        #{qq,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="atlasttime != null" >
-        #{atlasttime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="weight != null" >
-        #{weight,jdbcType=REAL},
-      </if>
-      <if test="height != null" >
-        #{height,jdbcType=REAL},
-      </if>
-      <if test="born != null" >
-        #{born,jdbcType=TIMESTAMP},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="calibration != null" >
-        #{calibration,jdbcType=INTEGER},
-      </if>
-      <if test="imei != null" >
-        #{imei,jdbcType=VARCHAR},
-      </if>
-      <if test="jfdataUpdateTime != null" >
-        #{jfdataUpdateTime,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
   <!-- 查询个人主页使用者的个人信息-啊健 -->
   <select id="queryHomepageUserInfo" resultMap="BaseResultMap"  parameterType="java.util.Map">
   SELECT * from user  WHERE id=#{userid} and isDelete=0
   </select>
   <select id="getUser"  parameterType="java.lang.String" resultMap="BaseResultMap">
 	 SELECT * from user  WHERE imei = #{imei} and isDelete=0 limit 0,1
+  </select>
+  <!-- 个人中心页面数据 -->
+  <select id="queryPersonalCenter" parameterType="java.lang.Integer" resultType="com.sy.vo.LoginReturn">
+ 	SELECT id,name,avatar,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=0) as aliasCount,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=1) as observerCount,
+	(SELECT COUNT(*) FROM group_relation WHERE relationUserId=#{userId}) as groupCount FROM user WHERE id=#{userId}
   </select>
 </mapper>
