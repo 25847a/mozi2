@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/mzx.css">
+    <script src="../js/vue.js"></script>
+    <script src="../js/axion.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+        <div v-for="(tab,index) in data" :key="index" class="new">
+            <div class="list-cell" @click="bindClick(index)">
+                <div class="media-list" v-if="tab.title">
+                    <div
+                        :class="{'media-image-right': tab.article_type === 2, 'media-image-left': tab.article_type === 1}">
+                        <p class="media-title"
+                            :class="{'media-title2': tab.article_type === 1 || tab.article_type === 2}">{{tab.title}}
+                        </p>
+                        <div v-if="tab.image_list || tab.image_url" class="image-section"
+                            :class="{'image-section-right': tab.article_type === 2, 'image-section-left': tab.article_type === 1}">
+                            <img class="image-list1"
+                                :class="{'image-list2': tab.article_type === 1 || tab.article_type === 2}"
+                                v-if="tab.image_url" :src="tab.image_url" />
+                            <img class="image-list3" v-if="tab.image_list" :src="source.url"
+                                v-for="(source, i) in tab.image_list" :key="i" />
+                        </div>
+                    </div>
+                    <div class="media-foot">
+                        <div class="media-info">
+                            <span class="info-text info">{{tab.source}}</span>
+                            <span class="info-text">{{tab.comment_count}}条评论</span>
+                            <span class="info-text">{{tab.datetime}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    data: [
+                        {
+                            "datetime": "一天前",
+                            "article_type": 0,
+                            "title": "人民日报头版刊文：劈波斩浪驶向光明未来",
+                            "image_url": "https://z5.sinaimg.cn/auto/crop?size=200_134&img=http%3A%2F%2Fn.sinaimg.cn%2Fsinanews%2F334%2Fw200h134%2F20190517%2F5968-hwzkfpu7781679.jpg",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "40分钟前",
+                            "article_type": 1,
+                            "title": "人民日报钟声：以和平合作守护世界安全",
+                            "image_url": "https://z0.sinaimg.cn/auto/crop?size=200_134&img=https%3A%2F%2Fn.sinaimg.cn%2Ffinance%2F334%2Fw200h134%2F20190123%2FS0aP-hryfqhm2770947.jpg",
+                            "source": "专题",
+                            "comment_count": 639
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "光明日报：破除迷思 昂首前行",
+                            "image_url": "https://z2.sinaimg.cn/auto/crop?size=200_134&img=https%3A%2F%2Fn.sinaimg.cn%2Ffinance%2F334%2Fw200h134%2F20180410%2FB3UD-fyvtmxe9017095.jpg",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/4x7Nwkpeia6KYcib9IRuM0PBFacMmKmQGNMWbylw9XHEdNhySh0IqzDicyyibL4gmLCCLVq2bmgicqoPAdzRsm3MWEQ/0",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/GWRENS6TxLianqQerYDlGgqvOb3OgDb0uhWdVtyfI9uEkMXukyicEA3QZKNJadRXQQJnMNvjw3nEo7yUIeJFM0mw/0",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/GWRENS6TxLianqQerYDlGgqvOb3OgDb0uuLZo51XWWlyqQEDOEibEygnLbXpwXzF1dZ61tQIMREof8V1agLA2hWg/0",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "启航·大湾区｜提升核心引擎作用 勇当大湾区建设排头兵",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 4,
+                            "title": "美媒：多家美国企业跨过政府制裁 已恢复对华为供货",
+                            "image_url": "https://z9.sinaimg.cn/auto/crop?size=200_134&img=https%3A%2F%2Fn.sinaimg.cn%2Fclient%2F334%2Fw200h134%2F20190521%2Fc24a-hxhyium6996800.jpg",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "为反对美国对中国加税 游戏界三巨头居然团结起来了",
+                            "image_url": "https://z0.sinaimg.cn/auto/crop?size=200_134&img=https%3A%2F%2Fn.sinaimg.cn%2Ffinance%2Ftransform%2F334%2Fw200h134%2F20190627%2Fb73f-hyzpvir3568549.jpg",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "10大机构展望A股下半年：三变三不变 看好2大板块",
+                            "image_url": "https://z3.sinaimg.cn/auto/crop?size=200_134&img=https%3A%2F%2Fn.sinaimg.cn%2Fclient%2F334%2Fw200h134%2F20180613%2F0yaE-fzrwiaz6916213.jpg",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/FMuqBDd2WEurW0Ex1NRBuI7RoWlYR4ZxBa34r5Licve3ibt0v74U1qEaRAEvbXzmNv7MiaJWPMmsZbZsrKrzEFYrg/0",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/FMuqBDd2WEtSFFl4icbuZwkpaCpGkGeHSEEL0ibjncrGDP67bLkAH5kmSF0kXdF7Caia2hoL09ZfUvwcy7LuiaP3mg/0",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "https://k.sinaimg.cn/n/ent/4_img/upload/0b3147ad/107/w683h1024/20190626/f247-hyzpvir1948042.jpg/w230h154f1t10l50q90c55.jpg",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "堵哭了！开通后第一个小长假，南沙大桥塞成新“景点”",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 4,
+                            "title": "美国存储芯片生产商美光科技已恢复向华为供货",
+                            "image_url": "https://n.sinaimg.cn/finance/crawl/116/w550h366/20190626/fc94-hyzpvir1691990.jpg",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        }
+                    ],
+                }
+            },
+            // watch:{
+            //     $route(to,from){
+            //         console.log(to.path);
+            //     }
+            // },
+            methods: {
+                getdata() {
+                    //console.log(this.data)
+                    //     axios.get("https://api.apiopen.top/musicRankingsDetails?type=1").then(this.getdate)
+                },
+                // getdate(res) {
+                //     let date = res.data.result
+                //     console.log(date)
+                //     this.data = date
+                // },
+                bindClick(index) {
+                    //console.log(index)
+                    if(index == "8"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.com.cn%2Fworld%2F2019-06-26%2Fdoc-ihytcitk7882812.shtml&recommend=cj2&cre=tianyi&mod=wfin&t=1561626075909")
+                    }else if(index == "7"){
+                        window.open("https://mp.weixin.qq.com/s?__biz=MjM5ODA0NzY0MA==&mid=2651332950&idx=2&sn=f3b8bb32b3e9741c8e73c465ef9bc40b&scene=19#wechat_redirect")
+                    }else if(index == "6"){
+                        window.open("https://mp.weixin.qq.com/s?__biz=MjM5ODA0NzY0MA==&mid=2651331934&idx=2&sn=3e3a5896092cffc607065d534579cd7c&scene=19#wechat_redirect")
+                    }else if(index == "5"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.com.cn%2Fstock%2Freport%2F2019-06-27%2Fdoc-ihytcerk9573794.shtml&recommend=cj2&cre=tianyi&mod=wfin&t=1561625982011")
+                    }else if(index == "4"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.com.cn%2Fworld%2Fgjcj%2F2019-06-27%2Fdoc-ihytcerk9628769.shtml&recommend=cj2&cre=tianyi&mod=wfin&t=1561625878876")
+                    } else if(index == "3"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.com.cn%2Fworld%2Fgjcj%2F2019-06-27%2Fdoc-ihytcerk9577350.shtml&recommend=cj2&cre=tianyi&mod=wfin&t=1561625730948")
+                    }else if(index == "2"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.com.cn%2Freview%2Fhgds%2F2019-06-27%2Fdoc-ihytcerk9601599.shtml&recommend=cj2&cre=tianyi&mod=wfin&t=1561625590696")
+                    }else if(index == "1"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.com.cn%2Froll%2F2019-06-27%2Fdoc-ihytcitk7921321.shtml&recommend=cj2&cre=tianyi&mod=wfin&t=1561625562645")
+                    }else if(index == "0"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.cn%2F2019-06-27%2Fdetail-ihytcerk9559910.d.html&recommend=cj2&cre=tianyi&mod=wfin&t=1561625319475")
+                    }
+                    
+                },
+                returns() {
+
+                    //alert('确定退出？')
+
+                }
+                //this.$router.replace({path: '/'});
+                //replace替换原路由，作用是避免回退死循环
+            },
+            mounted() {
+                this.getdata();
+                if (window.history && window.history.pushState) {
+                    history.pushState(null, null, document.URL);
+                    window.addEventListener('popstate', this.returns, false);
+                }
+            },
+            destroyed() {
+                window.removeEventListener('popstate', this.returns, false);
+            },
+        })
+
+    </script>
+</body>
+
+</html>

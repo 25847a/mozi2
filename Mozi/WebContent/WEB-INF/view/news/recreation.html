@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/mzx.css">
+    <script src="../js/vue.js"></script>
+    <script src="../js/axion.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+        <div v-for="(tab,index) in data" :key="index" class="new">
+            <div class="list-cell" @click="bindClick(index)">
+                <div class="media-list" v-if="tab.title">
+                    <div
+                        :class="{'media-image-right': tab.article_type === 2, 'media-image-left': tab.article_type === 1}">
+                        <p class="media-title"
+                            :class="{'media-title2': tab.article_type === 1 || tab.article_type === 2}">{{tab.title}}
+                        </p>
+                        <div v-if="tab.image_list || tab.image_url" class="image-section"
+                            :class="{'image-section-right': tab.article_type === 2, 'image-section-left': tab.article_type === 1}">
+                            <img class="image-list1"
+                                :class="{'image-list2': tab.article_type === 1 || tab.article_type === 2}"
+                                v-if="tab.image_url" :src="tab.image_url" />
+                            <img class="image-list3" v-if="tab.image_list" :src="source.url"
+                                v-for="(source, i) in tab.image_list" :key="i" />
+                        </div>
+                    </div>
+                    <div class="media-foot">
+                        <div class="media-info">
+                            <span class="info-text info">{{tab.source}}</span>
+                            <span class="info-text">{{tab.comment_count}}条评论</span>
+                            <span class="info-text">{{tab.datetime}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    data: [
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "张若昀唐艺昕晒婚纱照宣布结婚:就这样笑一辈子吧",
+                            "image_url": "https://z6.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fdefault%2Ftransform%2F266%2Fw640h426%2F20190627%2F0442-hyzpvir5086513.jpg&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "40分钟前",
+                            "article_type": 1,
+                            "title": "具荷拉复出登台跳舞上衣滑落 回应:已尽最大努力",
+                            "image_url": "https://z1.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F126%2Fw421h505%2F20190627%2Fb6dc-hyzpvir4289729.jpg&size=200_134",
+                            "source": "专题",
+                            "comment_count": 639
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "宋慧乔有望出演新片《安娜》 经纪公司称正在考虑",
+                            "image_url": "https://z6.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F224%2Fw450h574%2F20190627%2F3039-hyzpvir4639608.jpg&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "https://z2.sinaimg.cn/auto/crop?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F4_img%2Fupload%2F0b3147ad%2F249%2Fw613h436%2F20190626%2F6d61-hyzpvir1761443.png&size=230_154",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "https://z6.sinaimg.cn/auto/crop?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F4_img%2Fupload%2F0b3147ad%2F559%2Fw811h548%2F20190626%2Fa2f8-hyzpvir1761376.png&size=230_154",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "https://z0.sinaimg.cn/auto/crop?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F4_img%2Fupload%2F0b3147ad%2F512%2Fw756h556%2F20190626%2F6a89-hyzpvir1761369.png&size=230_154",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "姚晨与老公曹郁现身医院门口 煲电话粥来回踱步神情焦急",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 1,
+                            "title": "柳岩不介意为喜剧恶搞形象 朱孝天称当今偶像很累",
+                            "image_url": "https://z1.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F633%2Fw1536h2297%2F20190627%2Febc6-hyzpvir4107119.jpg&size=200_134",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "宋仲基方称不会与宋慧乔进行诉讼 调停或超一个月",
+                            "image_url": "https://z1.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F20171103%2Fb5dB-fynmzuk3375300.png&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "姚晨就儿童收养机构事件发声 孙怡怒斥性侵儿童者",
+                            "image_url": "https://z2.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F160%2Fw1024h1536%2F20190627%2F8794-hyzpvir3609049.jpg&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "https://z9.sinaimg.cn/auto/crop?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F4_img%2Fupload%2Fabfedd8e%2F174%2Fw542h432%2F20190626%2F6bac-hyzpvir0092546.jpg&size=230_154",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "https://z1.sinaimg.cn/auto/crop?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F4_img%2Fupload%2Fabfedd8e%2F771%2Fw1065h1306%2F20190626%2F0dff-hyzpvir0093579.jpg&size=230_154",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "https://z5.sinaimg.cn/auto/crop?img=https%3A%2F%2Fn.sinaimg.cn%2Fent%2F4_img%2Fupload%2Fabfedd8e%2F357%2Fw532h625%2F20190626%2Fa0ea-hyzpvir0096496.png&size=230_154",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "宋丹丹画风突变满头白发现身街头 请路人吃冰棍十分亲和",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 2,
+                            "title": "有一种“整容”叫胖了的吴亦凡，近照曝光后，网友：高攀不起！",
+                            "image_url": "https://z0.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fsinacn20190626s%2F776%2Fw472h304%2F20190626%2Fa063-hyvnhqr1513033.jpg&size=200_134",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        }
+                    ],
+                }
+            },
+            // watch:{
+            //     $route(to,from){
+            //         console.log(to.path);
+            //     }
+            // },
+            methods: {
+                getdata() {
+                    //console.log(this.data)
+                    //     axios.get("https://api.apiopen.top/musicRankingsDetails?type=1").then(this.getdate)
+                },
+                // getdate(res) {
+                //     let date = res.data.result
+                //     console.log(date)
+                //     this.data = date
+                // },
+                bindClick(index) {
+                    //console.log(index)
+                    if(index == "8"){
+                        window.open("https://k.sina.cn/article_6421751609_17ec4273900100pbzx.html?cre=tianyi&mod=went&loc=13&r=0&rfunc=100&tj=none&tr=63&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article&http=fromhttp")
+                    }else if(index == "7"){
+                        window.open("https://photo.sina.cn/album_4_704_316341.htm?cre=tianyi&mod=went&loc=11&r=0&rfunc=100&tj=none&tr=63&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article&hd=1")
+                    }else if(index == "6"){
+                        window.open("https://ent.sina.cn/star/tv/2019-06-27/detail-ihytcitk7973792.d.html?cre=tianyi&mod=went&loc=9&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article")
+                    }else if(index == "5"){
+                        window.open("https://ent.sina.cn/star/jp_kr/2019-06-27/detail-ihytcitk7998107.d.html?cre=tianyi&mod=went&loc=7&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article")
+                    }else if(index == "4"){
+                        window.open("https://ent.sina.cn/zy/2019-06-27/detail-ihytcitk8025686.d.html?cre=tianyi&mod=went&loc=4&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article")
+                    } else if(index == "3"){
+                        window.open("https://photo.sina.cn/album_4_704_316365.htm?cre=tianyi&mod=went&loc=1&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article&hd=1")
+                    }else if(index == "2"){
+                        window.open("https://ent.sina.cn/film/foreign/2019-06-27/detail-ihytcitk8053514.d.html?cre=tianyi&mod=went&loc=1&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article")
+                    }else if(index == "1"){
+                        window.open("https://ent.sina.cn/xglm/k/2019-06-27/detail-ihytcerk9673848.d.html?cre=tianyi&mod=went&loc=1&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=12&cu_pos=0000&cu_domain=ent&cu_type=article")
+                    }else if(index == "0"){
+                        window.open("https://ent.sina.cn/zt_d/zrytyxjh/?cre=tianyi&mod=went&loc=0&r=-1&rfunc=100&tj=none&tr=73&vt=4&pos=12")
+                    }
+                    
+                },
+                returns() {
+
+                    //alert('确定退出？')
+
+                }
+                //this.$router.replace({path: '/'});
+                //replace替换原路由，作用是避免回退死循环
+            },
+            mounted() {
+                this.getdata();
+                if (window.history && window.history.pushState) {
+                    history.pushState(null, null, document.URL);
+                    window.addEventListener('popstate', this.returns, false);
+                }
+            },
+            destroyed() {
+                window.removeEventListener('popstate', this.returns, false);
+            },
+        })
+
+    </script>
+</body>
+
+</html>

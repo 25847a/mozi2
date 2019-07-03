@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/mzx.css">
+    <script src="../js/vue.js"></script>
+    <script src="../js/axion.js"></script>
+</head>
+
+<body>
+    <div id="app">
+
+        <div v-for="(tab,index) in data" :key="index" class="new">
+            <div class="list-cell" @click="bindClick(index)">
+                <div class="media-list" v-if="tab.title">
+                    <div
+                        :class="{'media-image-right': tab.article_type === 2, 'media-image-left': tab.article_type === 1}">
+                        <p class="media-title"
+                            :class="{'media-title2': tab.article_type === 1 || tab.article_type === 2}">{{tab.title}}
+                        </p>
+                        <div v-if="tab.image_list || tab.image_url" class="image-section"
+                            :class="{'image-section-right': tab.article_type === 2, 'image-section-left': tab.article_type === 1}">
+                            <img class="image-list1"
+                                :class="{'image-list2': tab.article_type === 1 || tab.article_type === 2}"
+                                v-if="tab.image_url" :src="tab.image_url" />
+                            <img class="image-list3" v-if="tab.image_list" :src="source.url"
+                                v-for="(source, i) in tab.image_list" :key="i" />
+                        </div>
+                    </div>
+                    <div class="media-foot">
+                        <div class="media-info">
+                            <span class="info-text info">{{tab.source}}</span>
+                            <span class="info-text">{{tab.comment_count}}条评论</span>
+                            <span class="info-text">{{tab.datetime}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    data: [
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "你的硬盘是如何储存数据的？",
+                            "image_url": "https://z4.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fwww%2Ftransform%2F667%2Fw400h267%2F20190627%2Fe2b4-hyzpvir5075430.jpg&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "40分钟前",
+                            "article_type": 1,
+                            "title": "十年关口 陈睿怎么讲B站",
+                            "image_url": "https://z1.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Ftech%2Ftransform%2F667%2Fw400h267%2F20190627%2Fba2e-hyzpvir4962649.png&size=200_134",
+                            "source": "专题",
+                            "comment_count": 639
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "如何及时获得AI顶尖科研团队的最新论文与进展？只需要一份AI内参！",
+                            "image_url": "https://z4.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Ftech%2Ftransform%2F667%2Fw400h267%2F20190627%2F4c50-hyzpvir4684533.jpg&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/4x7Nwkpeia6KYcib9IRuM0PBFacMmKmQGNMWbylw9XHEdNhySh0IqzDicyyibL4gmLCCLVq2bmgicqoPAdzRsm3MWEQ/0",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/GWRENS6TxLianqQerYDlGgqvOb3OgDb0uhWdVtyfI9uEkMXukyicEA3QZKNJadRXQQJnMNvjw3nEo7yUIeJFM0mw/0",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/GWRENS6TxLianqQerYDlGgqvOb3OgDb0uuLZo51XWWlyqQEDOEibEygnLbXpwXzF1dZ61tQIMREof8V1agLA2hWg/0",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "美媒：多家美国企业跨过政府制裁 恢复对华为供货",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 1,
+                            "title": "河南省：2020年启动全省5G规模化商用",
+                            "image_url": "https://z4.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Ftech%2Ftransform%2F667%2Fw400h267%2F20190627%2Fac54-hyzpvir3509420.jpg&size=200_134",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "华为5G再现优势！“白宫”突然醒悟，网友：为时不晚",
+                            "image_url": "https://z1.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Fsinacn20190626s%2F40%2Fw480h360%2F20190626%2Fca66-hyvnhqq9542082.jpg&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "三星欲借5G先锋计划重夺中国市场",
+                            "image_url": "https://z4.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Ftech%2Fcrawl%2F45%2Fw526h319%2F20190627%2F17f5-hyzpvir5235383.jpg&size=200_134",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/FMuqBDd2WEurW0Ex1NRBuI7RoWlYR4ZxBa34r5Licve3ibt0v74U1qEaRAEvbXzmNv7MiaJWPMmsZbZsrKrzEFYrg/0",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "http://mmbiz.qpic.cn/mmbiz_jpg/FMuqBDd2WEtSFFl4icbuZwkpaCpGkGeHSEEL0ibjncrGDP67bLkAH5kmSF0kXdF7Caia2hoL09ZfUvwcy7LuiaP3mg/0",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "https://k.sinaimg.cn/n/ent/4_img/upload/0b3147ad/107/w683h1024/20190626/f247-hyzpvir1948042.jpg/w230h154f1t10l50q90c55.jpg",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "堵哭了！开通后第一个小长假，南沙大桥塞成新“景点”",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 2,
+                            "title": "经济日报：5G将成经济增长新引擎",
+                            "image_url": "https://z0.sinaimg.cn/auto/resize?img=https%3A%2F%2Fn.sinaimg.cn%2Ftech%2Ftransform%2F667%2Fw400h267%2F20190606%2F58fc-hxyuaph8769560.jpg&size=200_134",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        }
+                    ],
+                }
+            },
+            // watch:{
+            //     $route(to,from){
+            //         console.log(to.path);
+            //     }
+            // },
+            methods: {
+                getdata() {
+                    //console.log(this.data)
+                    //     axios.get("https://api.apiopen.top/musicRankingsDetails?type=1").then(this.getdate)
+                },
+                // getdate(res) {
+                //     let date = res.data.result
+                //     console.log(date)
+                //     this.data = date
+                // },
+                bindClick(index) {
+                    //console.log(index)
+                    if(index == "8"){
+                        window.open("https://tech.sina.cn/5g/2019-06-27/detail-ihytcerk9592756.d.html?cre=tianyi&mod=wtech&loc=3&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=18")
+                    }else if(index == "7"){
+                        window.open("https://mp.weixin.qq.com/s?__biz=MjM5ODA0NzY0MA==&mid=2651332950&idx=2&sn=f3b8bb32b3e9741c8e73c465ef9bc40b&scene=19#wechat_redirect")
+                    }else if(index == "6"){
+                        window.open("https://tech.sina.cn/5g/2019-06-27/detail-ihytcerk9720672.d.html?cre=tianyi&mod=wtech&loc=1&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=18")
+                    }else if(index == "5"){
+                        window.open("https://t.cj.sina.cn/articles/view/6648802042/18c4caafa00100jooh")
+                    }else if(index == "4"){
+                        window.open("https://tech.sina.cn/t/2019-06-27/detail-ihytcerk9633540.d.html?cre=tianyi&mod=wtech&loc=7&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=18")
+                    } else if(index == "3"){
+                        window.open("https://cj.sina.cn/article/norm_detail?url=http%3A%2F%2Ffinance.sina.com.cn%2Fworld%2Fgjcj%2F2019-06-27%2Fdoc-ihytcerk9577350.shtml&recommend=cj2&cre=tianyi&mod=wfin&t=1561625730948")
+                    }else if(index == "2"){
+                        window.open("https://tech.sina.cn/csj/2019-06-27/doc-ihytcitk8051198.d.html?cre=tianyi&mod=wtech&loc=4&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=18")
+                    }else if(index == "1"){
+                        window.open("https://tech.sina.cn/i/gn/2019-06-27/detail-ihytcerk9705413.d.html?cre=tianyi&mod=wtech&loc=3&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=18")
+                    }else if(index == "0"){
+                        window.open("https://tech.sina.cn/d/qy/2019-06-27/detail-ihytcerk9711573.d.html?cre=tianyi&mod=wtech&loc=1&r=25&rfunc=100&tj=none&tr=25&vt=4&pos=18")
+                    }
+                    
+                },
+                returns() {
+
+                    //alert('确定退出？')
+
+                }
+                //this.$router.replace({path: '/'});
+                //replace替换原路由，作用是避免回退死循环
+            },
+            mounted() {
+                this.getdata();
+                if (window.history && window.history.pushState) {
+                    history.pushState(null, null, document.URL);
+                    window.addEventListener('popstate', this.returns, false);
+                }
+            },
+            destroyed() {
+                window.removeEventListener('popstate', this.returns, false);
+            },
+        })
+
+    </script>
+</body>
+
+</html>

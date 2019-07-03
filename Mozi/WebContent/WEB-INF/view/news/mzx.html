@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/mzx.css">
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-router.js"></script>
+    <script src="../js/axion.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <router-view></router-view>
+
+        <div v-for="(tab,index) in data" :key="index" class="new" v-if="show">
+            <div class="list-cell" @click="bindClick(index)">
+                <div class="media-list" v-if="tab.title">
+                    <div
+                        :class="{'media-image-right': tab.article_type === 2, 'media-image-left': tab.article_type === 1}">
+                        <p class="media-title"
+                            :class="{'media-title2': tab.article_type === 1 || tab.article_type === 2}">{{tab.title}}
+                        </p>
+                        <div v-if="tab.image_list || tab.image_url" class="image-section"
+                            :class="{'image-section-right': tab.article_type === 2, 'image-section-left': tab.article_type === 1}">
+                            <img class="image-list1"
+                                :class="{'image-list2': tab.article_type === 1 || tab.article_type === 2}"
+                                v-if="tab.image_url" :src="tab.image_url" />
+                            <img class="image-list3" v-if="tab.image_list" :src="source.url"
+                                v-for="(source, i) in tab.image_list" :key="i" />
+                        </div>
+                    </div>
+                    <div class="media-foot">
+                        <div class="media-info">
+                            <span class="info-text info">{{tab.source}}</span>
+                            <span class="info-text">{{tab.comment_count}}条评论</span>
+                            <span class="info-text">{{tab.datetime}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template id="new">
+        <div>
+            <div class="banner">
+                <img class="banner-img" :src="this.newdata.image" />
+                <div class="banner-title">{{this.newdata.title}}</div>
+            </div>
+            <div class="article-meta">
+                <span class="article-author">{{this.newdata.source}}</span>
+                <span class="article-text">发表于</span>
+                <span class="article-time">{{this.newdata.datetime}}</span>
+            </div>
+            <div class="article-content">
+                <p>{{this.newdata.deta}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img" alt="">
+                </div>
+                <p class="title">{{this.newdata.tit2}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img1" alt="">
+                </div>
+                <p class="title">{{this.newdata.tit}}</p>
+                <h2 class="head">{{this.newdata.coo}}</h2>
+                <p>{{this.newdata.tit1}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img2" alt="">
+                </div>
+                <p>{{this.newdata.tit3}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img3" alt="">
+                </div>
+                <p>{{this.newdata.tit4}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img4" alt="">
+                </div>
+                <div class="image">
+                    <img :src="this.newdata.img5" alt="">
+                </div>
+                <p class="title">{{this.newdata.coo1}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img6" alt="">
+                </div>
+                <p class="title">{{this.newdata.coo2}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img7" alt="">
+                </div>
+                <p class="title">{{this.newdata.coo3}}</p>
+                <h2 class="head">{{this.newdata.coo4}}</h2>
+                <p>{{this.newdata.tit5}}</p>
+                <div class="image">
+                    <img :src="this.newdata.img8" alt="">
+                </div>
+                <p>{{this.newdata.tit6}}</p>
+            </div>
+            
+        </div>
+    </template>
+    <script>
+        var news = {
+            template: "#new",
+            data() {
+                return {
+                    newdata:[],
+                    //接收点击跳转的id
+                    uid: this.$route.params.id,
+                    newlist: [
+                        {
+                            "datetime": "40分钟前",
+                            "article_type": 0,
+                            "title": "恭贺墨子星获颁“中国民营经济国际合作商会第二届理事会主席团主席单位”",
+                            "image":"../img/1.01.png",
+                            "source": "墨子星",
+                            "deta":"2018年11月，我司广州墨子星智能科技集团有限公司获颁「中国民营经济国际合作商会第二届理事会主席团主席单位」，我司董事长谢虎获颁「中国民营经济国际合作商会第二届理事会主席」，颁发机构为“中国民营经济国际合作商会（CICCPS）”；与此同时，我司还获颁「中国民营科技促进会常务理事单位」，颁发机构为“中国民营科技促进会（CAPPSE）”",
+                            "tit":"「中国民营科技促进会常务理事单位」",
+                            "tit2":"「中国民营经济国际合作商会第二届理事会主席团主席单位」",
+                            "comment_count": 639,
+                            "img":"../img/1.02.png",
+                            "coo":"中国民营经济国际合作商会",
+                            "tit1":"中国民营经济国际合作商会，是经国务院同意批准于 2011 年 11 月 24 日成立的我国唯一一家专门服务民营企业走出去， 开展国际经济合作与交流的全国性大型商会组织。商会已被国家商务部批准成为《中国民营企业走出去信息报送主体单位》 ， 承担走出去信息报送， 调研和提供政策建议等相关任务。",
+                            "img1":"../img/1.03.png",
+                            "img2":"../img/1.04.png",
+                            "tit3":"商会会员既有各行业中民营经济的领军企业，也有实力较强，已经或者正在走出去的名营企业。其会员企业覆盖20多个细分产业，投项目遍及国内各省区、行业及全球100多个国家地区。",
+                            "img3":"../img/1.05.png",
+                            "tit4":"商会连续五年被评为全国工商联优秀直属商会和先进党组织，2015年又被民政部授予全国先进社会组织荣誉称号，在《中国经济论坛》上被评为全国唯一社会组织中的“中国创新榜样”。",
+                            "img4":"../img/1.06.png",
+                            "img5":"../img/1.07.png",
+                            "coo1":"商会部分成员",
+                            "img6":"../img/1.08.png",
+                            "coo2":"商会主席团部分成员",
+                            "img7":"../img/1.09.png",
+                            "coo3":"谢虎先生",
+                            "coo4":"中国民营科技促进会",
+                            "tit5":"中国民营科技促进会是“官民产学研金”和社会各界组成的全国性一级社会团体，在中华人民共和国科学技术部领导下和国家有关部委指导下开展工作。",
+                            "img8":"../img/1.10.png",
+                            "tit6":"民营科技企业是民营企业中依靠科技进步求发展、产品（工艺）科技含量较高、拥有自主知识产权、最富有生机和活力的优秀群体，是我国自主创新和发展高技术产业的生力军。作为沟通政府与民营科技企业、社会各界与民营科技企业、民营科技企业与民营科技企业、民营科技企业与国际市场之间的桥梁和纽带。",
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "墨子星谢虎先生被评为“改革开放40年行业突出贡献人物”",
+                            "image": "../img/2.01.png",
+                            "source": "墨子星",
+                             "comment_count": 11395,
+                            "deta":"2018年12月23日，“领航时代-纪念改革开放40周年行业领军人物盛典暨信用与品牌建设成就巡礼”在中国科技会堂隆重举行，本次活动以“改革引领时代，诚信铸就品牌”为主题，向社会发出新时代中国品牌的声音。我司董事长谢虎先生获邀参与本次活动并发表讲话。",
+                            "tit":"与原国资委监事会主席 韩修国合影留念",
+                            "tit2":"与国家民委原副主任 李晋有合影留念",
+                            "img":"../img/2.02.png",
+                            "coo":"中国民营经济国际合作商会",
+                            "tit1":"本次活动由中国管理科学研究院区域改革发展研究所、《商业观察》杂志社、中国电子商务协会品牌案例研究所联合举办，国务院国资委监事会原主席，甘肃省原副省长韩修国、科技部火炬中心原党委书记张序国、铁道部副部长国林、国家民委原副主任李晋有等领导出席参加本次活动。",
+                            "img1":"../img/2.03.png",
+                            "img2":"../img/2.04.png",
+                            "tit3":"商会会员既有各行业中民营经济的领军企业，也有实力较强，已经或者正在走出去的名营企业。其会员企业覆盖20多个细分产业，投项目遍及国内各省区、行业及全球100多个国家地区。",
+                            "img3":"../img/2.05.png",
+                            "tit4":"商会连续五年被评为全国工商联优秀直属商会和先进党组织，2015年又被民政部授予全国先进社会组织荣誉称号，在《中国经济论坛》上被评为全国唯一社会组织中的“中国创新榜样”。",
+                            "img4":"../img/2.06.png",
+                            "img5":"../img/2.07.png",
+                            "coo1":"商会部分成员",
+                            "img6":"../img/2.08.png",
+                            "coo2":"商会主席团部分成员",
+                            "img7":"../img/2.09.png",
+                            "coo3":"谢虎先生",
+                            
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "华南师范大学校企交流会圆满结束",
+                            "image": "../img/3.01.png",
+                            "source": "墨子星",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "../img/4.01.png",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "../img/4.02.png",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "../img/4.03.png",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "image": "../img/4.03.png",
+                            "datetime": "5分钟前",
+                            "title": "南宁代表团莅临墨子星参观调研",
+                            "source": "墨子星",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 4,
+                            "title": "墨子星集团2019年首次团建活动圆满结束！",
+                            "image": "../img/5.01.png",
+                            "source": "墨子星",
+                            "comment_count": 69
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "2019年全国代理商培训大会圆满结束",
+                            "image": "../img/6.01.png",
+                            "source": "墨子星",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "广东省民政厅原副厅长方炎松莅临墨子星调研指导",
+                            "image": "../img/7.01.png",
+                            "source": "墨子星",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "../img/8.01.png",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "../img/8.02.png",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "../img/8.03.png",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "image": "../img/8.03.png",
+                            "datetime": "5分钟前",
+                            "title": "墨子星首次多方调研座谈圆满举办",
+                            "source": "墨子星",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 4,
+                            "title": "中大新华学院与我司达成战略合作",
+                            "image": "../img/9.01.png",
+                            "source": "墨子星",
+                            "comment_count": 69
+                        }
+
+                    ]
+                }
+            },
+            methods:{
+                fo(){
+                    var cars = this.newlist
+                    var id = this.uid
+                    for (i = 0; i < cars.length; i++) { 
+                        
+                    }
+                    //console.log(cars[id])
+                    this.newdata = cars[id]
+                    console.log(this.newdata)
+                }
+            },
+            mounted(){
+                this.fo();
+            }
+        }
+        var routes = [
+            {
+                path: "/new/:id",
+                name: "new",
+                component: news
+            }
+        ]
+
+        var router = new VueRouter({
+            routes: routes
+        })
+        new Vue({
+            el: "#app",
+            router: router,
+            data() {
+                return {
+                    data: [
+                        {
+                            "datetime": "40分钟前",
+                            "article_type": 0,
+                            "title": "恭贺墨子星获颁“中国民营经济国际合作商会第二届理事会主席团主席单位”",
+                            "source": "置顶",
+                            "comment_count": 639
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "墨子星谢虎先生被评为“改革开放40年行业突出贡献人物”",
+                            "image_url": "../img/2.01.png",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "华南师范大学校企交流会圆满结束",
+                            "image_url": "../img/3.01.png",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "../img/4.01.png",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "../img/4.02.png",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "../img/4.03.png",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "南宁代表团莅临墨子星参观调研",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 4,
+                            "title": "墨子星集团2019年首次团建活动圆满结束！",
+                            "image_url": "../img/5.01.png",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 1,
+                            "title": "2019年全国代理商培训大会圆满结束",
+                            "image_url": "../img/6.01.png",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "datetime": "一天前",
+                            "article_type": 2,
+                            "title": "广东省民政厅原副厅长方炎松莅临墨子星调研指导",
+                            "image_url": "../img/7.01.png",
+                            "source": "推荐",
+                            "comment_count": 11395
+                        },
+                        {
+                            "article_type": 3,
+                            "image_list": [{
+                                "url": "../img/8.01.png",
+                                "width": 563,
+                                "height": 316
+                            }, {
+                                "url": "../img/8.02.png",
+                                "width": 641,
+                                "height": 360
+                            }, {
+                                "url": "../img/8.03.png",
+                                "width": 640,
+                                "height": 360
+                            }],
+                            "datetime": "5分钟前",
+                            "title": "墨子星首次多方调研座谈圆满举办",
+                            "source": "DCloud",
+                            "comment_count": 11
+                        },
+                        {
+                            "datetime": "2小时前",
+                            "article_type": 4,
+                            "title": "中大新华学院与我司达成战略合作",
+                            "image_url": "../img/9.01.png",
+                            "source": "DCloud",
+                            "comment_count": 69
+                        }
+                    ],
+
+                    show: true,
+                }
+            },
+            // watch:{
+            //     $route(to,from){
+            //         console.log(to.path);
+            //     }
+            // },
+            methods: {
+                getdata() {
+                    //console.log(this.data)
+                    //     axios.get("https://api.apiopen.top/musicRankingsDetails?type=1").then(this.getdate)
+                },
+                // getdate(res) {
+                //     let date = res.data.result
+                //     console.log(date)
+                //     this.data = date
+                // },
+                bindClick(index) {
+                    //console.log(index)
+                    // router.push({ name: "new", params: { id: index } });
+                    // this.show = false;
+                    if(index == "8"){
+                        window.open("https://mp.weixin.qq.com/s/GcuQKm-7RrdgutwEfEQhDg")
+                    }else if(index == "7"){
+                        window.open("https://mp.weixin.qq.com/s/i7Fu0ubOorbJtHz04jLn_w")
+                    }else if(index == "6"){
+                        window.open("https://mp.weixin.qq.com/s/MPvY3oLgYQZAd26dbDbleg")
+                    }else if(index == "2"){
+                        window.open("https://mp.weixin.qq.com/s/g_XM4XGHODmJlB7DvqUgqA")
+                    }else if(index == "1"){
+                        window.open("https://mp.weixin.qq.com/s/yrSGdSHUOpYg0xTAFT0fzg")
+                    }else if(index == "0"){
+                        window.open("https://mp.weixin.qq.com/s/zulTwY99mArKG2hlR3ukOQ")
+                    }else if(index == "4"){
+                        window.open("https://mp.weixin.qq.com/s/M1C_jBopHdCNgvVit170fA")
+                    }else if(index == "3"){
+                        window.open("https://mp.weixin.qq.com/s/LyjGo2agzfafq3gi5GOWig")
+                    }else if(index == "5"){
+                        window.open("https://mp.weixin.qq.com/s/jMM2p93Gj5ohnhSnZFkKug")
+                    }
+                    
+                },
+                returns() {
+
+                    //alert('确定退出？')
+                    this.show = true;
+
+                }
+                //this.$router.replace({path: '/'});
+                //replace替换原路由，作用是避免回退死循环
+            },
+            mounted() {
+                this.getdata();
+                if (window.history && window.history.pushState) {
+                    history.pushState(null, null, document.URL);
+                    window.addEventListener('popstate', this.returns, false);
+                }
+            },
+            destroyed() {
+                window.removeEventListener('popstate', this.returns, false);
+            },
+        })
+
+    </script>
+</body>
+
+</html>
