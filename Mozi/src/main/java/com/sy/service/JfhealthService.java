@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.service.IService;
 import com.sy.common.ResultData;
 import com.sy.pojo.Jfhealth;
 import com.sy.utils.DataRow;
-import com.sy.utils.PageModel;
 import com.sy.vo.Chart;
 import com.sy.vo.SHChart;
 
@@ -57,14 +56,6 @@ public interface JfhealthService extends IService<Jfhealth>{
      * @return
      */
     public List<SHChart> selectSHChart(Map map);
-    
-    /**分页获取数据
-	 * @param pageNo
-	 * @param keyword
-	 * @return
-	 */
-	public PageModel<Jfhealth>  getusersone(Integer pageNo,String keyword);
-	
 	/**获取惊凡最新一条数据
 	 * @param imei
 	 * @return
@@ -76,7 +67,4 @@ public interface JfhealthService extends IService<Jfhealth>{
    	 * @return
    	 */
 	public Jfhealth pushJfhealth(String alias)throws SQLException;
-	
-	public PageModel<Jfhealth> getJfhealthVoLsit(Integer pageNo, Map map);
-
 }

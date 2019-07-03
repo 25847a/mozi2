@@ -1,14 +1,13 @@
 package com.sy.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import com.aliyuncs.DefaultAcsClient;
@@ -22,12 +21,14 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.EquipmentDataMapper;
 import com.sy.mapper.EquipmentMapper;
 import com.sy.mapper.JfhealthMapper;
 import com.sy.mapper.JfhealthNewMapper;
 import com.sy.mapper.JfhealthdaoMapper;
+import com.sy.mapper.MemberMapper;
 import com.sy.mapper.PushMapper;
 import com.sy.mapper.UserMapper;
 import com.sy.nettyulit.NettyChannelMap;
@@ -36,6 +37,7 @@ import com.sy.pojo.EquipmentData;
 import com.sy.pojo.Jfhealth;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Jfhealthdao;
+import com.sy.pojo.Member;
 import com.sy.pojo.Push;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
@@ -48,10 +50,10 @@ import com.sy.utils.DateUtil;
 import com.sy.utils.GB2312Utils;
 import com.sy.utils.MD5Util;
 import com.sy.utils.Managementconstant;
-import com.sy.utils.PageModel;
 import com.sy.vo.LoginReturn;
-import com.sy.vo.Loginuser;
 import com.sy.vo.Usermanagement;
+
+import io.netty.channel.Channel;
 import io.netty.channel.socket.SocketChannel;
 import net.sf.json.JSONObject;
 @Service
@@ -70,23 +72,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	UseravatarService useravatarService;
 	@Autowired
 	EquipmentDataMapper equipmentDataMapper;
+	@Autowired
 	JfhealthMapper jfhealthMapper;
+	@Autowired
 	JfhealthNewMapper jfhealthNewMapper;
+	@Autowired
 	JfhealthdaoMapper jfhealthdaoMapper;
-	
+	@Autowired
 	PushMapper pushMapper;
-	@Override
-	public boolean addUser(User u) {
-		u.setCreatetime(new Date());
-		String p=u.getPassword();
-		u.setPassword(MD5Util.MD5(p));
-		int num = userMapper.insertSelective(u);
-		 if (num != 0) {
-				return true;
-			} else {
-				return false;
-			}
-	}
+	@Autowired
+	EquipmentMapper equipmentMapper;
+	@Autowired
+	MemberMapper memberMapper;
 
 	@Override
 	public boolean ifUser(String account) {
@@ -169,15 +166,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		User user = userMapper.getUser(imei);
 		return user;
 	}
-
+	/**
+	 * 更新用户信息
+	 * 
+	 * @param u
+	 * @return
+	 */
 	@Override
-	public boolean updateUser(User u) {
-		Integer num =userMapper.updateById(u);
+	public ResultBase updateUser(User u,ResultBase re) throws Exception{
+		int num =userMapper.updateById(u);
 		if (num != 0) {
-			return true;
+			if(u.getAddress()!=null||u.getName()!=null){
+				Channel c =	NettyChannelMap.get(u.getImei());
+					String R06 = "$R06|";
+					R06 += GB2312Utils.gb2312eecode(u.getName()) + ":";
+					R06 += GB2312Utils.gb2312eecode(u.getCity()+u.getAddress()) + "\r\n";
+					if(c!=null){
+						c.writeAndFlush(R06);
+					}
+			}
+			re.setCode(200);
+			re.setMessage("修改成功");
 		} else {
-			return false;
+			re.setCode(400);
+			re.setMessage("修改失败");
 		}
+		return re;
 	}
 
 	@Override
@@ -185,7 +199,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	
 		password = MD5Util.MD5(password);
 		newpassword= MD5Util.MD5(newpassword);
-		Map m= new HashMap();
+		Map<String,Object> m= new HashMap<String,Object>();
 		m.put("password", password);
 		m.put("id", id);
 		User olp = userMapper.getpassword(m);
@@ -198,36 +212,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}
 		
 	}
-
-	@Override
-	public PageModel<User> getusersone(Integer pageNo, String keyWord) {
-		if(pageNo == null ||  pageNo.intValue() == 0){
-			pageNo=1;
-		}
-		 //获取数据总数
-		    Integer count=userMapper.getcount(keyWord);
-		    Integer pageSize=10;
-		    List<User>Feedbacks = new ArrayList<User>();
-		    Integer pageNo1 = ( pageNo - 1) * pageSize;
-		    //获取页数
-		    HashMap<String, Object> map = new HashMap<>();
-		    map.put("pageNo", pageNo1);
-		    map.put("keyWord", keyWord);
-		    map.put("pageSize", pageSize);
-		    List<Object> objs  = userMapper.list(map);
-		    for (Object obj :objs){
-		    	String  userid = obj.toString();
-		    	Feedbacks.add(userMapper.selectByPrimaryKey(Integer.parseInt(userid)));
-		    }
-		    PageModel<User> pageModel = new PageModel<User>(pageNo, pageSize,count, Feedbacks,"user/list");
-		if(pageModel.getCount() !=0){
-			pageModel.init();
-		}
-		return pageModel;
-	}
-	private final String url = "http://gw.api.taobao.com/router/rest";
+	/*private final String url = "http://gw.api.taobao.com/router/rest";
 	private final String appkey = "23573164";
-	private final String secret = "a81e2de9bc2ed29d394e212314a37226";
+	private final String secret = "a81e2de9bc2ed29d394e212314a37226";*/
 	@Override
 	public  Integer sendSMS(String phone) {
 
@@ -347,9 +334,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}
 			return smsMsg;
 	}
- public static void main(String[] args) {
-	 sendSMS1(null);
-}
 	public static int getRandNum(int min, int max) {
 		int randNum = min + (int) (Math.random() * ((max - min) + 1));
 		return randNum;
@@ -360,33 +344,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		 List<User>  us =userMapper.phoenselectuser(phone);
 		return us.get(0);
 	}
-	/**
-	 * 啊健写的 查询使用者的详情信息
-	 * @param map
-	 * @return
-	 */
-	@Override
-	public User queryUserInfo(Map map) {
-		User user = userMapper.queryUserInfo(map);
-		return user;
-	}
-
 	@Override
 	public User selectaccount(String account) {
 		User  us =userMapper.selectaccount(account);
 		return us;
 	}
-	/**
-	 * 啊健写的 查询使用者的详情信息
-	 * @param map
-	 * @return
-	 */
-	@Override
-	public User queryHomepageUserInfo(Map<String, Object> map)throws Exception {
-		User user =userMapper.queryHomepageUserInfo(map);
-		return user;
-	}
-
 	@Override
 	public Integer deleteUser(Integer userId) {
 		int deleteByPrimaryKey = userMapper.deleteUser(userId);
@@ -410,8 +372,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	 * @return
 	 * @throws Exception 
 	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	@Override
-	public ResultData<Loginuser> addUsermanagement(Usermanagement u, ResultData<Loginuser> re) throws Exception {
+	public ResultBase addUsermanagement(Usermanagement u, ResultBase re) throws Exception {
 		SocketChannel c = (SocketChannel) NettyChannelMap.get(u.getImei());
 		Equipment e =  equipmentService.selectquipmentimei(u.getImei());
 			if (e == null){
@@ -437,7 +400,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			user.setAccount(u.getAccount());
 			user.setName(u.getName());
 			user.setPhone(u.getAccount());
-			user.setCreatetime(new Date());
 			user.setPassword(MD5Util.MD5(u.getPassword()));
 			user.setAge(DateUtil.getAgeByBirth(u.getBorn()));
 			user.setAvatar(useravatarService.selectavartar().getAvatar());
@@ -446,73 +408,110 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			user.setWeight(u.getWeight());
 			user.setHeight(u.getHeight());
 			user.setBorn(u.getBorn());
-			EntityWrapper<UserEq> ew = new EntityWrapper<UserEq>();
-			ew.eq("user_id", u.getMid());
-			UserEq eq =userEqService.selectOne(ew);
-			if(eq!=null){
-				user.setFollow(1);
-			}else{
-				user.setFollow(0);
-			}
-			boolean key = userService.insert(user);
+			user.setCity(u.getCity());
+			user.setIllness(u.getIllness());
+			userService.insert(user);
+			//插入会员表
+			Member me = new Member();
+			me.setUserId(user.getId());
+			me.setEndTime(DateUtil.getNextDay(20));
+			memberMapper.insert(me);
 			boolean jfstatus = HealthtoolServiceImpl.registered(Managementconstant.channel_id + String.valueOf(user.getId()),"12345", "123456");
 			//在惊凡注册成功
 			if (jfstatus) {
-			//设备与监护人的关联关系
+			EntityWrapper<UserEq> ew = new EntityWrapper<UserEq>();
+			ew.eq("user_id", u.getMid());
+			UserEq eq =userEqService.selectOne(ew);
 			UserEq ue = new UserEq();
-			//就是mid
-			ue.setUserId(u.getMid());
-			ue.setEqId(e.getId());
-			ue.setTypeof(0);
-			//设备与使用者的关联关系
-			UserEq uue = new UserEq();
-			uue.setUserId(user.getId());
-			uue.setEqId(e.getId());
-			uue.setTypeof(2);
+			if(eq==null){
+				//设备与监护人的关联关系
+				//就是mid
+				ue.setUserId(u.getMid());
+				ue.setEqId(e.getId());
+				ue.setTypeof(0);
+				ue.setFollow(1);
+			}
 			userEqService.addUserEq(ue);
-			userEqService.addUserEq(uue);
+			//设备与使用者的关联关系
+			ue.setUserId(user.getId());
+			ue.setEqId(e.getId());
+			ue.setTypeof(2);
+			ue.setFollow(0);
+			userEqService.addUserEq(ue);
 			EquipmentData data = new EquipmentData();
 			data.setUserId(user.getId());
-			data.setCreatetime(new Date());
 			equipmentDataMapper.insert(data);
 			Jfhealth bean = new Jfhealth();
 			bean.setPhone("mozistar"+user.getId());
 			bean.setImei(e.getImei());
-			bean.setCreatetime(new Date());
 			jfhealthMapper.insert(bean);
-			 Push push = new Push();
-			    push.setUserId(user.getId());
-			    push.setAlias(u.getMid());
-			    push.setAllNotifyOn(true);
-			    pushMapper.insert(push);
-				JfhealthNew jfhealthnew = new JfhealthNew();
-				jfhealthnew.setCreatetime(new Date());
-				jfhealthnew.setPhone("mozistar"+user.getId());
-				jfhealthnew.setImei(e.getImei());
-				jfhealthNewMapper.insert(jfhealthnew);
-				Jfhealthdao jfhealthdao = new Jfhealthdao();
-				jfhealthdao.setCreatetime(new Date());
-				jfhealthdao.setPhone("mozistar"+user.getId());
-				jfhealthdao.setImei(e.getImei());
-				jfhealthdaoMapper.insert(jfhealthdao);
-			Loginuser luser = new Loginuser(user.getId(),
-						u.getRole(), u.getName(), u.getAge(),
-						u.getGender(), user.getPhone(),
-						u.getAddress(), user.getAvatar(),
-						u.getCreatetime(),
-						u.getWeight(), u.getHeight(), u.getBorn());
-						re.setData(luser);
+			Push push = new Push();
+			push.setUserId(user.getId());
+			push.setAlias(u.getMid());
+			pushMapper.insert(push);
+			JfhealthNew jfhealthnew = new JfhealthNew();
+			jfhealthnew.setPhone("mozistar"+user.getId());
+			jfhealthnew.setImei(e.getImei());
+			jfhealthNewMapper.insert(jfhealthnew);
+			Jfhealthdao jfhealthdao = new Jfhealthdao();
+			jfhealthdao.setPhone("mozistar"+user.getId());
+			jfhealthdao.setImei(e.getImei());
+			jfhealthdaoMapper.insert(jfhealthdao);
 						re.setCode(200);
 						re.setMessage("添加设备使用者成功！！！");
-					
 						if(c!=null){
 							c.writeAndFlush("$R06|"+GB2312Utils.gb2312eecode(user.getName())+":"+GB2312Utils.gb2312eecode(user.getAddress())+"\r\n");
 						}
-						
 					}else {
 						re.setCode(350);
 						re.setMessage("添加失败,JG！！！");
 					}
 		return re;
 	}
+	/**
+	 * 点击卡片接口
+	 * @return
+	 */
+	@Override
+	public ResultData<DataRow> userdata(DataRow map,ResultData<DataRow> re) throws Exception{
+		DataRow data = userMapper.queryUserData(map);
+		if(data!=null){
+			data.put("type_of", data.getInt("type_of")==1?1:2);
+			data.put("jfdataUpdateTime", data.getString("jfdataUpdateTime")+"分钟");
+			data.put("avatar",data.getString("avatar")==null? useravatarService.selectavartar().getAvatar():data.getString("avatar"));
+			DataRow row =equipmentMapper.queryEquipmentMember(data.getString("imei"));
+			if(row!=null){
+				row.put("eq_status", row.getString("eq_status").equals("H:0")?false:true);
+				row.put("bluetooth_type", row.getInt("bluetooth_type")==0?false:true);
+			}
+			data.put("equipment", row);
+			re.setCode(200);
+			re.setMessage("获取设备使用者信息成功！！！");
+			re.setData(data);
+			
+		}else{
+			re.setCode(400);
+			re.setMessage("查询不到用户,多次查询无效请联系管理员");
+		}
+		return re;
+	}
+	/**
+	 * 查看个人资料
+	 * @return
+	 */
+	@Override
+	public ResultData<DataRow> queryUserInfo(DataRow map, ResultData<DataRow> re) throws Exception {
+		map=userMapper.queryUserInfo(map);
+		if(map!=null){
+			re.setData(map);
+			re.setCode(200);
+			re.setMessage("获取个人信息成功");
+		}else{
+			re.setCode(400);
+			re.setMessage("获取个人信息失败");
+		}
+		return re;
+	}
+
+	
 }

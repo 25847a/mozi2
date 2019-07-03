@@ -3,6 +3,7 @@ package com.sy.service;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.service.IService;
+import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
@@ -17,7 +18,14 @@ public interface UserEqService extends IService<UserEq>{
 	 * @param u
 	 * @return
 	 */
-	public ResultData<List<Map<String,Object>>> queryUserEqFollowList(Map<String,Object> map,ResultData<List<Map<String,Object>>> re)throws Exception;
+	public ResultData<List<DataRow>> queryUserEqFollowList(DataRow map,ResultData<List<DataRow>> re)throws Exception;
+	/**
+	 *  更改默认使用者
+	 * @param map
+	 * @return
+	 * @throws Exception 
+	 */
+	public ResultBase updateUserFollow(DataRow map,ResultBase re)throws Exception;
 
 	/**
 	 * 根据设备（eq_id）id获取监护者
@@ -84,12 +92,11 @@ public interface UserEqService extends IService<UserEq>{
 
 	/**
 	 * 取消观察者
-	 * 
 	 * @param imei
 	 * @param userId
 	 * @return
 	 */
-	public boolean deleteequse(Integer eqId, Integer userId, Integer typeof,Integer alisa);
+	public boolean deleteequse(Integer eqId, Integer userId, Integer typeof,Integer alisa)throws Exception;
 
 	/**
 	 * 根据用户id获取用户所有相关联设备信息
@@ -113,16 +120,17 @@ public interface UserEqService extends IService<UserEq>{
 	 */
 	public ResultData<List<Userdata>> selectuserdata1(DataRow map,ResultData<List<Userdata>> re)throws Exception;
 	/**
-	 * 获取单独一个使用者数据
-	 * 
+	 * 取消使用者
+	 */
+	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer alias)throws Exception;
+	/**
+	 * 删除设备操作者
+	 * @param map
 	 * @return
 	 */
-	public Map<String, Object> userdata(String imei);
+	public ResultBase deleteguardian111111(DataRow map,ResultBase re)throws Exception;
 	
-	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer alias)throws Exception;
-	
-	
-	public boolean deleteequsetype(Integer eqId, Integer userId,Integer typeof);
+	public boolean deleteequsetype(Integer eqId, Integer userId,Integer typeof)throws Exception;
 	
 	public boolean deleteEqUser(Integer id);
 

@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.SensorstatusMapper;
@@ -26,17 +22,13 @@ import com.sy.mapper.UserMapper;
 import com.sy.nettyulit.BluetoothMap;
 import com.sy.nettyulit.NettyChannelMap;
 import com.sy.pojo.Equipment;
-import com.sy.pojo.Management;
 import com.sy.pojo.Sensorstatus;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.service.EquipmentService;
-import com.sy.utils.PageModel;
 import com.sy.vo.EquipmentManagement;
 import com.sy.vo.EquipmentVo;
 import com.sy.vo.Equipmentbluetooth;
-import com.sy.vo.Equipmentstatus;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -252,30 +244,6 @@ public class EquipmentController {
 		return re;
 	}
 
-	@RequestMapping(value = "list")
-	public ModelAndView list(Integer pageNo, String keyWord, String eqStatus, String time, HttpSession session) {
-		ModelAndView mo = new ModelAndView();
-
-		Map<String, Object> map = new HashMap<>();
-
-		Management m = (Management) session.getAttribute("USER");
-		String role = m.getRole();
-		if ("代理商".equals(role)) {
-			map.put("agentid", m.getId());
-		}
-
-		map.put("keyWord", keyWord);
-		map.put("eqStatus", eqStatus);
-		map.put("time", time);
-
-		PageModel<Equipment> pagemodel = equipmentservice.getusersone(pageNo, map);
-		mo.setViewName("equipment");
-		mo.addObject("pagemodel", pagemodel);
-		mo.addObject("keyWord", keyWord);
-		mo.addObject("eqStatus", eqStatus);
-		mo.addObject("time", time);
-		return mo;
-	}
 
 	public static String getCode(String content) throws UnsupportedEncodingException {
 		byte[] bytes = content.getBytes("gb2312");
@@ -478,7 +446,7 @@ public class EquipmentController {
 						boolean st = taskhealthcali(imei);
 						if (st) {
 							User user = userMapper.getUser(imei);
-							user.setCalibration("1");
+							user.setCalibration(1);
 							userMapper.updateCalibration(user);
 							re.setCode(200);
 							re.setMessage("学习完成！！！");

@@ -1,5 +1,6 @@
 package com.sy.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Param;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.Equipment;
 import com.sy.pojo.EquipmentExample;
+import com.sy.utils.DataRow;
 
 public interface EquipmentMapper extends BaseMapper<Equipment>{
 	int countByExample(EquipmentExample example);
@@ -54,5 +56,11 @@ public interface EquipmentMapper extends BaseMapper<Equipment>{
 	
     @Select("select imei from equipment where agentid = #{agentid}" )
     List<String> selectImeiList(Integer agentid);
-	
+    /**
+     * 点击卡片查询设备信息
+     * @param imei
+     * @return
+     * @throws SQLException
+     */
+	public DataRow queryEquipmentMember(String imei)throws SQLException;
 }

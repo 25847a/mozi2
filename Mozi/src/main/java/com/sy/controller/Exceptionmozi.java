@@ -19,10 +19,7 @@ public class Exceptionmozi {
     @ResponseBody  
     public ModelAndView error_404(HttpServletResponse response) throws Exception {   
     	ModelAndView mo = new ModelAndView();
-    	
-    //	response.sendRedirect("/WEB-INF/view/login.jsp");
-       //  return "{\"msg\":\"找不到页面\",\"code\":\"1000001\"}";  
-    	mo.setViewName("login");
+    	mo.setViewName("agreement");
     	return mo ;
     }  
     /** 

@@ -21,13 +21,8 @@ public interface UserMapper extends BaseMapper<User>{
      */
     int deleteUser(Integer id);
 
-    Integer insert(User record);
-
-    int insertSelective(User record);
 
     User selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKey(User record);
 
     /**
      * 查询app账号
@@ -40,19 +35,18 @@ public interface UserMapper extends BaseMapper<User>{
 
 	public User getpassword(Map m);
 
-	public Integer getcount(String keyWord);
-
 	public List<Object> list(Map map);
 
 	public List<User> phoenselectuser(String phone);
 	
 	public User  selectaccount( String account);
 	/**
-	 * 啊健写的 查询使用者的详情信息
+	 * 查询个人资料
 	 * @param map
 	 * @return
+	 * @throws SQLException
 	 */
-	public User queryUserInfo(Map map);
+	public DataRow queryUserInfo(DataRow map)throws SQLException;
 	/**
 	 *  查询个人主页使用者的个人信息-啊健 
 	 * @param map
@@ -80,14 +74,6 @@ public interface UserMapper extends BaseMapper<User>{
 	@Update("update user set  calibration = #{calibration} where id = #{id}")
 	public Integer updateCalibration(User user);
 	
-	/**
-	 * 设置用户的围栏范围
-	 * @param User.radius User.midpoint User.id
-	 * 
-	 */
-	@Update(  "update user  set  radius = #{radius}, midpoint = #{midpoint} where id = #{id}")
-	public void setRodiusAndMidpoint(User user);
-
 	/**
 	 * 设置手机号码
 	 * @param User.phone User.id
@@ -124,4 +110,17 @@ public interface UserMapper extends BaseMapper<User>{
 	 * @throws SQLException
 	 */
 	public LoginReturn queryPersonalCenter(Integer userId)throws SQLException;
+	/**
+	 * 点击卡片查询
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public DataRow queryUserData(DataRow map)throws SQLException;
+	/**
+	 * 通过使用者ID查询首页需要的数据
+	 * @param map
+	 * @return
+	 */
+	public DataRow queryUsersInfo(DataRow map);
 }

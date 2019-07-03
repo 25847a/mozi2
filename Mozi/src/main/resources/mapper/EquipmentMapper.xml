@@ -503,4 +503,13 @@
   <select id="selectequipment"  resultMap="BaseResultMap">
              select * from equipment where imei like "86%"
   </select>
+  <!-- 点击卡片查询设备信息 -->
+  <select id="queryEquipmentMember" parameterType="java.lang.String" resultType="com.sy.utils.DataRow">
+  	SELECT  tp.id,tp.lordpower,tp.eq_status,tp.bluetooth_type,tp.bluetooth_name,DATE_FORMAT(td.endTime,'%Y-%m-%d %H:%m:%s') as endTime FROM equipment tp
+	INNER JOIN (SELECT * FROM user WHERE isDelete=0) tt
+	ON tp.imei=tt.imei
+	INNER JOIN member td
+	ON tt.id=td.userId
+	WHERE tp.imei=#{imei}
+  </select>
 </mapper>

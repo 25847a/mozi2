@@ -6,12 +6,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.ChatMapper;
 import com.sy.mapper.EquipmentDataMapper;
@@ -25,14 +26,14 @@ import com.sy.mapper.UserEqMapper;
 import com.sy.mapper.UserMapper;
 import com.sy.mapper.UsercodeMapper;
 import com.sy.mapper.WaveformMapper;
+import com.sy.nettyulit.NettyChannelMap;
 import com.sy.pojo.Equipment;
 import com.sy.pojo.EquipmentData;
-import com.sy.pojo.GroupPhone;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.pojo.Waveform;
-import com.sy.service.GroupPhoneService;
+import com.sy.service.EquipmentService;
 import com.sy.service.JfhealthdaoService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
@@ -40,6 +41,8 @@ import com.sy.service.UseravatarService;
 import com.sy.utils.DataRow;
 import com.sy.utils.DataUtil;
 import com.sy.vo.Userdata;
+
+import io.netty.channel.Channel;
 
 @Service
 public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> implements UserEqService {
@@ -58,6 +61,8 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	@Autowired
 	private EquipmentDataMapper equipmentDataMapper;
 	@Autowired
+	private EquipmentService equipmentService;
+	@Autowired
 	private UserEqService userEqservice;
 	@Autowired
 	private UserMapper usermapper;
@@ -65,8 +70,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	private PushMapper pushMapper;
 	@Autowired
 	private UserEqService usereqservice;
-	@Autowired
-	private GroupPhoneService groupPhoneMapper;
 	@Autowired
 	ChatMapper chatMapper;
 	@Autowired
@@ -89,18 +92,18 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 * @return
 	 */
 	@Override
-	public ResultData<List<Map<String, Object>>> queryUserEqFollowList(Map<String, Object> map,ResultData<List<Map<String, Object>>> re) throws Exception {
-		List<Map<String, Object>> users=userEqMapper.queryUserEqFollowUsersList(map);
-		List<Map<String, Object>> observer=userEqMapper.queryUserEqFollowObserverList(map);
+	public ResultData<List<DataRow>> queryUserEqFollowList(DataRow map,ResultData<List<DataRow>> re) throws Exception {
+		List<DataRow> users=userEqMapper.queryUserEqFollowUsersList(map);
+		List<DataRow> observer=userEqMapper.queryUserEqFollowObserverList(map);
 		for(int i=0;i<users.size();i++){
-			if(users.get(i).get("avatar")==null){
+			if(users.get(i).getString("avatar")==null){
 				users.get(i).put("avatar", useravatarService.selectavartar().getAvatar());
 			}
 			users.get(i).put("eq_status", String.valueOf(users.get(i).get("eq_status")).equals("H:0")?false:true);
 			users.get(i).put("bluetooth_type", String.valueOf(users.get(i).get("bluetooth_type")).equals("0")?false:true);
 		}
 		for(int i=0;i<observer.size();i++){
-			if(observer.get(i).get("avatar")==null){
+			if(observer.get(i).getString("avatar")==null){
 				observer.get(i).put("avatar", useravatarService.selectavartar().getAvatar());
 			}
 			observer.get(i).put("eq_status", String.valueOf(observer.get(i).get("eq_status")).equals("H:0")?false:true);
@@ -114,7 +117,42 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		re.setData(dd);
 		return re;
 	}
-	
+	/**
+	 *  更改默认使用者
+	 * @param map
+	 * @return
+	 * @throws Exception 
+	 */
+	@Override
+	public ResultBase updateUserFollow(DataRow map, ResultBase re) throws Exception {
+		User user =userservice.selectById(map.getInt("userId"));
+		if(user!=null){
+			EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
+			ew.eq("imei", user.getImei());
+			Equipment e = equipmentService.selectOne(ew);
+			if(e!=null){
+				map.put("id", e.getId());
+				int row=userEqMapper.updateUserEqFollow(map);
+				if(row>0){
+					row=userEqMapper.updateUserEqFollowInfo(map);
+					if(row>0){
+						re.setCode(200);
+						re.setMessage("更改成功");
+					}else{
+						re.setCode(400);
+						re.setMessage("更改失败,请退出重新更改");
+					}
+				}else{
+					re.setCode(400);
+					re.setMessage("更改失败,请退出重新更改");
+				}
+			}else{
+				re.setCode(400);
+				re.setMessage("查询不到设备IMEI号");
+			}
+			}
+		return re;
+	}
 	@Override
 	public User getuserimei0(Integer eqId) {
 		WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
@@ -158,7 +196,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		if (eqMapper == null) {
 			eqMapper = (UserEqMapper) webApplicationContext.getBean("userEqMapper");
 		}
-		return eqMapper.geteqid(userid);
+		return eqMapper.geteqiduse(userid);
 	}
 
 	@Override
@@ -263,7 +301,14 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 */
 	@Override
 	public ResultData<List<Userdata>> selectuserdata1(DataRow map,ResultData<List<Userdata>> re) throws Exception {
-		Map<String, Object> detail =eqMapper.queryUserEq(map);
+		User user = userservice.selectById(map.getInt("userId"));
+		DataRow detail = new DataRow();
+		if(user.getRole().equals("使用者")){
+			detail=usermapper.queryUsersInfo(map);
+		}else{
+			 detail =eqMapper.queryUserEq(map);
+		}
+		
 		if(detail!=null){
 			JfhealthNew jfhealth = jMapperNew.newJfhealthNew(String.valueOf(detail.get("imei")));
 			if(jfhealth!=null){
@@ -430,8 +475,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 						}
 
 						JfhealthNew jfhealth = jMapperNew.newJfhealthNew(e.getImei());
-						//Jfhealthdao jfhealthdao = jfhealthFdaoservice.selelctJfhealthdao(e.getImei());
-						// System.out.println("惊凡最新数据" + jfhealth);
 						if (eqdata != null && jfhealth != null) {
 							try {
 							} catch (Exception e2) {
@@ -548,113 +591,25 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		}
 
 	}
-
-	@Override
-	public Map<String, Object> userdata(String imei) {
-		Map<String, Object> m = new HashMap<String, Object>();
-		// 用户基本信息map
-		Map<String, Object> user = new HashMap<String, Object>();
-		Map<String, Object> equipment = new HashMap<String, Object>();
-		Map<String, Object> guardian = new HashMap<String, Object>();
-
-		Integer userid = usereqservice.getimei(imei);
-		// 基本资料
-		User u = userservice.getUser(userid);
-		// 设备信息
-		Equipment e = equipmentMapper.getequipment(imei);
-
-		// 监护者列表
-		List<User> us = usereqservice.selelctequser(e.getId());
-		m.put("jfdataUpdateTime", u.getJfdataUpdateTime()==null?2:u.getJfdataUpdateTime());
-		m.put("iconPath", u.getAvatar());
-		m.put("username", u.getName());
-		m.put("address", u.getAddress());
-		m.put("userStatus", "跑步");
-		m.put("deviceEnergy", e.getBluetoothElectricity());
-		m.put("userid", userid);
-		m.put("imei", e.getImei());
-		boolean status = false;
-		if (e.getBluetoothStatus().equals("1")) {
-			status = true;
-		}
-		m.put("bluetoothStatus", status);
-		boolean stas = false;
-		if (e.getEqStatus().equals("H:1")) {
-			stas = true;
-		}
-		m.put("loactionStatus", stas);
-		m.put("messageStatus", stas);
-		m.put("aclokStatus", stas);
-		user.put("age", u.getAge());
-		user.put("phone", u.getPhone());
-//		user.put("highpressure", u.getHighpressure());
-//		user.put("lowpressure", u.getLowpressure());
-		// 出生
-		user.put("born", u.getBorn());
-		// 性别
-		user.put("gender", u.getGender());
-		// 身高
-		user.put("height", u.getHeight());
-		// 体重
-		user.put("weight", u.getWeight());
-		// 校准结果0未校准,1已校准
-		if (u.getCalibration() == null) {
-			user.put("calibration", 0);
-		} else {
-			user.put("calibration", u.getCalibration());
-		}
-
-		m.put("user", user);
-		
-		//手机数据
-		GroupPhone groupPhone = null;
-		if(StringUtils.isNotBlank(u.getPhone())){
-			groupPhone = groupPhoneMapper.selectOne(u.getPhone());
-		}
-		m.put("groupPhone", groupPhone);
-		
-		
-		// 设备名称
-		equipment.put("ename", e.getName());
-		// 设备连接状态
-		equipment.put("estatus", stas);
-		// 设备电量
-		equipment.put("eElectricity", e.getBluetoothElectricity());
-
-		// 蓝牙设备名称
-		equipment.put("bname", e.getBluetoothName());
-		boolean bstas = false;
-
-		if (e.getBluetoothStatus().equals("1")) {
-			bstas = true;
-		}
-		// 蓝牙设备连接状态
-		equipment.put("bstatus", bstas);
-		// 蓝牙设备电量
-		equipment.put("bElectricity", e.getBluetoothElectricity());
-		m.put("equipment", equipment);
-		// 管理员人员
-		for (User udom : us) {
-			if (udom.getName() == null || udom.getName() == "" || udom.getName() == "null") {
-				guardian.put("昵称", udom.getRole());
-			} else {
-				guardian.put(udom.getName(), udom.getRole());
-			}
-		}
-		m.put("guardian", guardian);
-		return m;
-	}
 	/**
 	 * 取消观察者
 	 */
-	public boolean deleteequse(Integer eqId, Integer userId, Integer typeof,Integer mid) {
+	public boolean deleteequse(Integer eqId, Integer userId, Integer typeof,Integer mid)throws Exception{
 		UserEq u = new UserEq();
 		u.setEqId(eqId);
 		u.setUserId(mid);
 		try {
-			eqMapper.deleteequse(u);
-			//删除通知数据
-			pushMapper.removePush(userId,mid);
+			UserEq eq =eqMapper.selectOne(u);
+			if(eq.getFollow()==1){//  是默认者
+				eqMapper.deleteequse(u);//删除关系表数据
+				pushMapper.removePush(userId,mid);//删除通知数据
+				eq=eqMapper.queryUserEqLimit(mid);
+				eq.setFollow(1);
+				eqMapper.updateById(eq);
+			}else{
+				eqMapper.deleteequse(u);//删除关系表数据
+				pushMapper.removePush(userId,mid);//删除通知数据
+			}
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -665,24 +620,34 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	/**
 	 * 取消关注的
 	 */
-	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer mid)throws Exception {
-		try {
-			positionigMapper.deletePositionigInfo(imei);
-			pushMapper.deletePushInfo(userId);
-			eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
-			userservice.deleteUser(userId);    //更改用户OK
-			jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
-			chatMapper.deleteCharInfo(imei);
-			jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
-			sensorstatusMapper.deleteSensorstatusInfo(imei);
-			//usercodeMapper   这个是验证码的，不删除也没事
-			
-			//删除通知数据
-		//	pushMapper.removePush(userId,mid);
-			
+	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer mid){
+			try {
+			//判断是否删除默认者
+			UserEq eq =eqMapper.ifuse(eqId);
+			if(eq.getFollow()==1){//  是默认者
+				positionigMapper.deletePositionigInfo(imei);
+				pushMapper.deletePushInfo(userId);//执行这个,删除所有的预警关联
+				eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
+				userservice.deleteUser(userId);    //更改用户OK
+				jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
+				chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
+				jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
+				sensorstatusMapper.deleteSensorstatusInfo(imei);
+				eq=eqMapper.queryUserEqLimit(mid);
+				eq.setFollow(1);
+				eqMapper.updateById(eq);
+			}else{
+				positionigMapper.deletePositionigInfo(imei);
+				pushMapper.deletePushInfo(userId);//执行这个,删除所有的预警关联
+				eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
+				userservice.deleteUser(userId);    //更改用户OK
+				jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
+				chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
+				jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
+				sensorstatusMapper.deleteSensorstatusInfo(imei);
+			}
 			return true;
 		} catch (Exception e) {
-			System.out.println(e);
 			return false;
 		}
 	}
@@ -720,6 +685,53 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 
 	public UserEq selectUserEq(Integer eqId,Integer mid) {
 		return eqMapper.selectGuardian(eqId,mid);
+	}
+	/**
+	 * 删除设备操作者
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public ResultBase deleteguardian111111(DataRow map, ResultBase re) throws Exception {
+		Integer typeof = map.getInt("type_of");
+		Integer mid = map.getInt("mid");		
+		Equipment e = equipmentService.selectquipmentimei(map.getString("imei"));
+		//卡片的id
+		Integer userId = map.getInt("userId");
+		boolean status = false;
+		if(typeof==2){
+			if(e.getBluetoothmac().equals("000000000000") && e.getBluetoothName().equals("000000000000")&&e.getBluetoothType().equals("0")){
+				status = usereqservice.deleteguardian(e.getImei(),e.getId(), userId,mid);//删除用户
+				if (status) {
+					
+					Channel c =	NettyChannelMap.get(e.getImei());
+					if(c!=null){
+						c.writeAndFlush("$R06|:\r\n");
+					}
+					re.setCode(200);
+					re.setMessage("取消成功！！！");
+					e.setBluetoothmac("000000000000");
+					e.setBluetoothName("000000000000");
+					e.setBluetoothList(null);
+					e.setBluetoothStatus("0");
+					e.setBluetoothType("0");
+					e.setPhone1(null);
+					e.setPhone2(null);
+					equipmentService.updatEequipmentst(e);
+			} else {
+				re.setCode(350);
+				re.setMessage("取消失败！！！");
+			}
+			}else{
+				re.setCode(350);
+				re.setMessage("请先断开衣服");
+			}
+		}else if(typeof==1){
+			status = usereqservice.deleteequse(e.getId(),map.getInt("userId"), 1,mid);//取消观察者
+			re.setCode(200);
+			re.setMessage("取消成功！！！");
+		}
+		return re;
 	}
 
 	

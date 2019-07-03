@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.service.IService;
 import com.sy.pojo.Equipment;
-import com.sy.utils.PageModel;
 import com.sy.vo.EquipmentVo;
-import com.sy.vo.Equipmentstatus;
 
 public interface EquipmentService extends IService<Equipment>{
 	
@@ -49,25 +47,6 @@ public interface EquipmentService extends IService<Equipment>{
 	 * @return
 	 */
 	public List<EquipmentVo> selelctequipments(Integer userId );
-	
-	
-	/**
-	 * 分页获取设备信息
-	 * @param pageNo
-	 * @param keyWord
-	 * @return
-	 */
-	public PageModel<Equipmentstatus> getusersone(Integer pageNo,String keyWord);
-	
-	
-	/**
-	 * 分页获取设备信息
-	 * @param pageNo
-	 * @param map
-	 * @return 
-	 */
-	public PageModel<Equipment> getusersone(Integer pageNo,Map<String,Object> map);
-	public PageModel<Equipment> getAgentEquipment(Integer pageNo,Map<String,Object> map);
 
 	public List<String> allentry(List<String> list,Integer agentid,String model);
 	

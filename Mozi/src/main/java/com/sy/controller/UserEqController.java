@@ -3,7 +3,6 @@ package com.sy.controller;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.PushMapper;
-import com.sy.nettyulit.NettyChannelMap;
 import com.sy.pojo.Equipment;
 import com.sy.pojo.Push;
 import com.sy.pojo.User;
@@ -25,7 +23,6 @@ import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.utils.DataRow;
 import com.sy.vo.Userdata;
-import io.netty.channel.Channel;
 
 @Controller
 @RequestMapping(value = "usereq")
@@ -47,8 +44,8 @@ public class UserEqController {
 	 */
 	@RequestMapping(value = "queryUserEqFollowList")
 	@ResponseBody
-	public ResultData<List<Map<String,Object>>> queryUserEqFollowList(@RequestBody Map<String,Object> map) {
-		ResultData<List<Map<String,Object>>> re = new ResultData<List<Map<String,Object>>>();
+	public ResultData<List<DataRow>> queryUserEqFollowList(@RequestBody DataRow map) {
+		ResultData<List<DataRow>> re = new ResultData<List<DataRow>>();
 		try {
 			re = usereqservice.queryUserEqFollowList(map,re);
 		} catch (Exception e) {
@@ -58,67 +55,37 @@ public class UserEqController {
 		}
 		return re;
 	}
-
+	/**
+	 *  更改默认关注列表
+	 * @param map
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("updateUserFollow")
+	@ResponseBody
+	public ResultBase updateUserFollow(@RequestBody DataRow map){
+		ResultBase re = new ResultBase();
+		try{
+			re=usereqservice.updateUserFollow(map,re);
+		}catch (Exception e) {
+			logger.info(e.getMessage());
+		}
+		return re;
+	}
 	/**
 	 * 删除设备操作者
-	 * 
-	 * @param u
+	 * @param map
 	 * @return
 	 */
 	@RequestMapping(value = "deleteequse")
 	@ResponseBody
-	public ResultBase deleteguardian(@RequestBody Map m) {
-		
+	public ResultBase deleteguardian(@RequestBody DataRow map) {
 		ResultBase re = new ResultBase();
 		try {
-		Integer typeof = Integer.parseInt((String) m.get("typeof"));
-								
-		Integer mid = Integer.parseInt((String) m.get("mid"));		
-		
-		Equipment e = equipmentservice.selectquipmentimei((String) m.get("imei"));
-		
-		//卡片的id
-		Integer userId = Integer.parseInt((String) m.get("userId"));
-		boolean status = false;
-		
-		if(typeof==2){
-			if(e.getBluetoothmac().equals("000000000000") && e.getBluetoothName().equals("000000000000")&&e.getBluetoothType().equals("0")){
-				status = usereqservice.deleteguardian(e.getImei(),e.getId(), userId,mid);//删除用户
-				if (status) {
-					
-					Channel c =	NettyChannelMap.get(e.getImei());
-					if(c!=null){
-						c.writeAndFlush("$R06|:\r\n");
-					}
-					re.setCode(200);
-					re.setMessage("取消成功！！！");
-					e.setBluetoothmac("000000000000");
-					e.setBluetoothName("000000000000");
-					e.setBluetoothList(null);
-					e.setBluetoothStatus("0");
-					e.setBluetoothType("0");
-					e.setPhone1(null);
-					e.setPhone2(null);
-					equipmentservice.updatEequipmentst(e);
-			} else {
-				re.setCode(350);
-				re.setMessage("取消失败！！！");
-			}
-			}else{
-				re.setCode(350);
-				re.setMessage("请先断开衣服");
-			}
-		}else if(typeof==1){
-			status = usereqservice.deleteequse(e.getId(),
-					Integer.parseInt((String) m.get("userId")), 1,mid);
-			re.setCode(200);
-			re.setMessage("取消成功！！！");
+		re = usereqservice.deleteguardian111111(map,re);
+		} catch (Exception e) {
+			logger.error("UserEqController>>>>>>>>>>>>>>>>>>>>deleteguardian",e);
 		}
-		
-		} catch (Exception et) {
-			et.printStackTrace();
-		}
-		
 		return re;
 	}
 
@@ -147,7 +114,13 @@ public class UserEqController {
 				re.setCode(350);
 				re.setMessage("已经绑定,不可再关注");
 			} else {
+				EntityWrapper<UserEq> ew = new EntityWrapper<UserEq>();
+				ew.eq("user_id", mid);
+				UserEq eq =usereqservice.selectOne(ew);
 				UserEq u = new UserEq();
+				if(eq==null){
+					u.setFollow(1);
+				}
 				u.setUserId(mid);
 				u.setEqId(e.getId());
 				u.setTypeof(1);
@@ -227,30 +200,6 @@ public class UserEqController {
 			}
 			return re;
 	}
-
-
-	/**
-	 * 点击卡片接口
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "userdata")
-	@ResponseBody
-	public ResultData<Map<String, Object>> userdata(@RequestBody Map m) {
-		ResultData<Map<String, Object>> re = new ResultData<Map<String, Object>>();
-		Map<String, Object> map = usereqservice
-				.userdata((String) m.get("imei"));
-		if (map.size() > 0) {
-			re.setCode(200);
-			re.setMessage("获取设备使用者信息成功！！！");
-			re.setData(map);
-		} else {
-			re.setCode(350);
-			re.setMessage("该用户未有使用信息！！！");
-		}
-		return re;
-	}
-
 	/**
 	 * 更换设备
 	 * 
@@ -306,7 +255,7 @@ public class UserEqController {
 				status = usereqservice.deleteEqUser(e.getId());
 				User user2 = userservice.getUser(userid);
 				user2.setImei(imei);
-				userservice.updateUser(user2);
+				userservice.updateById(user2);
 					if (status) {
 						re.setCode(200);
 						re.setMessage("跟换设备成功！！！");

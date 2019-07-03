@@ -3,21 +3,43 @@ package com.sy.pojo;
 import java.io.Serializable;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
 @TableName("user_eq")
 public class UserEq extends Model<UserEq>{
+	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 主键ID
+	 */
+	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
-
+	/**
+	 * 用户ID
+	 */
+    @TableField(value="user_id")
     private Integer userId;
-
+    /**
+     * 设备ID
+     */
+    @TableField(value="eq_id")
     private Integer eqId;
-
+    /**
+     * 关联关系
+     */
     private Integer typeof;
-
+    /**
+     * 已授权--未授权
+     */
     private String authorized;
-
+    /**
+     * 默认关注首页显示  0.隐藏  1.显示	
+     */
+    private Integer follow; 
+    
     public Integer getId() {
         return id;
     }
@@ -54,7 +76,15 @@ public class UserEq extends Model<UserEq>{
         return authorized;
     }
 
-    public void setAuthorized(String authorized) {
+    public Integer getFollow() {
+		return follow;
+	}
+
+	public void setFollow(Integer follow) {
+		this.follow = follow;
+	}
+
+	public void setAuthorized(String authorized) {
         this.authorized = authorized == null ? null : authorized.trim();
     }
 

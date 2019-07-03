@@ -8,22 +8,16 @@ public class Usermanagement {
 	private Integer id;
 	//监护者ID
 	private Integer mid;
-	//角色
-	private String role;
 	//姓名
 	private String name;
 	//手机号码
 	private String account;
 	//密码
 	private String password;
-	//年龄
-	private Integer age;
 	//男女
 	private String gender;
 	//地址
 	private String address;
-	//创建时间
-	private Date createtime;
 	//体重
 	private Float weight;
 	//身高
@@ -32,7 +26,10 @@ public class Usermanagement {
 	private Date born;
 	//imei号
 	private String imei;
-	
+	//省市区
+	private String city;
+	//病史
+	private String illness;
 	
 	public Integer getMid() {
 		return mid;
@@ -48,14 +45,6 @@ public class Usermanagement {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
 	}
 
 	public String getName() {
@@ -82,14 +71,6 @@ public class Usermanagement {
 		this.password = password;
 	}
 
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -105,14 +86,6 @@ public class Usermanagement {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public Date getCreatetime() {
-		return createtime;
-	}
-
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
-	}
-
 	public Float getWeight() {
 		return weight;
 	}
@@ -144,6 +117,23 @@ public class Usermanagement {
 
 	public void setImei(String imei) {
 		this.imei = imei;
+	}
+
+	
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getIllness() {
+		return illness;
+	}
+
+	public void setIllness(String illness) {
+		this.illness = illness;
 	}
 
 	public Usermanagement() {

@@ -3,92 +3,35 @@
 <mapper namespace="com.sy.mapper.UserMapper" >
   <resultMap id="BaseResultMap" type="com.sy.pojo.User" >
     <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="imei" property="imei" jdbcType="VARCHAR" />
     <result column="role" property="role" jdbcType="VARCHAR" />
     <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+   	<result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="calibration" property="calibration" jdbcType="INTEGER" />
+    <result column="jfdataUpdateTime" property="jfdataUpdateTime" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="isDelete" property="isDelete" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="age" property="age" jdbcType="INTEGER" />
-    <result column="gender" property="gender" jdbcType="VARCHAR" />
-    <result column="phone" property="phone" jdbcType="VARCHAR" />
-    <result column="calibration" property="calibration" jdbcType="VARCHAR" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
-    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="weight" property="weight" jdbcType="REAL" />
-    <result column="height" property="height" jdbcType="REAL" />
     <result column="born" property="born" jdbcType="TIMESTAMP" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="imei" property="imei" jdbcType="VARCHAR" />
+    <result column="height" property="height" jdbcType="REAL" />
     <result column="walkCount" property="walkCount" jdbcType="VARCHAR" />
     <result column="love" property="love" jdbcType="INTEGER" />
     <result column="bedId" property="bedId" jdbcType="BIGINT" />
     <result column="nurseId" property="nurseId" jdbcType="BIGINT" />
     <result column="liveTime" property="liveTime" jdbcType="TIMESTAMP" />
     <result column="illness" property="illness" jdbcType="VARCHAR" />
-    <result column="follow" property="follow" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
-    id, role, account, password, isDelete,name, age, gender, phone, calibration,address, avatar, wechat, qq, 
-    createtime, atlasttime, weight, height, born, code,imei,walkCount,walkPushTime,love,bedId,nurseId,liveTime,illness
+    id, role, account, password, isDelete,name, age, gender, phone, calibration,city,address, avatar,
+    createtime, weight, height, born, code,imei,walkCount,love,bedId,nurseId,liveTime,illness
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -101,153 +44,6 @@
     update user set isDelete=1
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <insert id="insert" parameterType="com.sy.pojo.User" >
-    insert into user (id, role, account, 
-      password, name, age, 
-      gender, phone, address, 
-      avatar, wechat, qq, 
-      createtime, atlasttime, weight, 
-      height, born, code)
-    values (#{id,jdbcType=INTEGER}, #{role,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
-      #{gender,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{avatar,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, 
-      #{createtime,jdbcType=TIMESTAMP}, #{atlasttime,jdbcType=TIMESTAMP}, #{weight,jdbcType=REAL}, 
-      #{height,jdbcType=REAL}, #{born,jdbcType=TIMESTAMP}, #{code,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.sy.pojo.User" >
-    insert into user
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="role != null" >
-        role,
-      </if>
-      <if test="account != null" >
-        account,
-      </if>
-      <if test="password != null" >
-        password,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="age != null" >
-        age,
-      </if>
-      <if test="gender != null" >
-        gender,
-      </if>
-      <if test="phone != null" >
-        phone,
-      </if>
-      <if test="address != null" >
-        address,
-      </if>
-      <if test="avatar != null" >
-        avatar,
-      </if>
-      <if test="wechat != null" >
-        wechat,
-      </if>
-      <if test="qq != null" >
-        qq,
-      </if>
-      <if test="createtime != null" >
-        createtime,
-      </if>
-      <if test="atlasttime != null" >
-        atlasttime,
-      </if>
-      <if test="weight != null" >
-        weight,
-      </if>
-      <if test="height != null" >
-        height,
-      </if>
-      <if test="born != null" >
-        born,
-      </if>
-      <if test="code != null" >
-        code,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="role != null" >
-        #{role,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="age != null" >
-        #{age,jdbcType=INTEGER},
-      </if>
-      <if test="gender != null" >
-        #{gender,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="avatar != null" >
-        #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="wechat != null" >
-        #{wechat,jdbcType=VARCHAR},
-      </if>
-      <if test="qq != null" >
-        #{qq,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="atlasttime != null" >
-        #{atlasttime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="weight != null" >
-        #{weight,jdbcType=REAL},
-      </if>
-      <if test="height != null" >
-        #{height,jdbcType=REAL},
-      </if>
-      <if test="born != null" >
-        #{born,jdbcType=TIMESTAMP},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.sy.pojo.User" >
-    update user
-    set role = #{role,jdbcType=VARCHAR},
-      account = #{account,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
-      age = #{age,jdbcType=INTEGER},
-      gender = #{gender,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      avatar = #{avatar,jdbcType=VARCHAR},
-      createtime = #{createtime,jdbcType=TIMESTAMP},
-      weight = #{weight,jdbcType=REAL},
-      height = #{height,jdbcType=REAL},
-      born = #{born,jdbcType=TIMESTAMP},
-      code = #{code,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
   <select id="ifUser" parameterType="java.lang.String" resultMap="BaseResultMap">
       select * from  user where  account = #{account} and isDelete=0
   </select>
@@ -256,12 +52,6 @@
   </select>
   <select id="getpassword" parameterType="java.util.Map" resultMap="BaseResultMap">
       select * from  User  where password = #{password} and  id=#{id} and isDelete=0
-  </select>
-    <select id="getcount" parameterType="java.lang.String" resultType="java.lang.Integer">
-      select count(*) from  User where isDelete=0
-      <if test="_parameter != null and _parameter != '' ">
-   			and  CONCAT(account,name,address,wechat)  LIKE concat(concat('%',#{_parameter}),'%')
-  	  </if> 
   </select>
    
   <!-- 获取想要的页面数据 -->
@@ -275,15 +65,13 @@
   <select id="phoenselectuser" parameterType="java.lang.String" resultMap="BaseResultMap">
   		select * from user where phone = #{phone} and isDelete=0
   </select>
-  
-  <!-- 啊健写的 查询使用者的详情信息-->
-  <select id="queryUserInfo" resultMap="BaseResultMap"  parameterType="java.util.Map">
- 	 	SELECT tk.* FROM equipment tp
-		LEFT JOIN user_eq tg
-		ON tp.id=tg.eq_id
-		LEFT JOIN (select * from user where isDelete=0) tk
-		ON tg.user_id=tk.id
-		WHERE tp.imei=#{imei}
+  <!-- 查询个人资料 -->
+  <select id="queryUserInfo" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
+  	SELECT id,name,imei,gender,height,weight,DATE_FORMAT(born,'%Y-%m-%d') as born,city,
+  	CASE WHEN phone IS NULL THEN '' ELSE phone END as phone,
+	CASE WHEN illness IS NULL THEN '' ELSE illness END as illness,
+	CASE WHEN address IS NULL THEN '' ELSE address END as address
+  	FROM user WHERE id=#{userId} and isDelete=0
   </select>
   <select id="selectaccount" parameterType="java.lang.String" resultMap="BaseResultMap">
   		select * from user where account = #{account} and isDelete=0
@@ -300,4 +88,26 @@
  	SELECT id,name,avatar,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=0) as aliasCount,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=1) as observerCount,
 	(SELECT COUNT(*) FROM group_relation WHERE relationUserId=#{userId}) as groupCount FROM user WHERE id=#{userId}
   </select>
+  <!--  点击卡片查询 -->
+  <select id="queryUserData" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
+	SELECT tp.id,tp.imei,tp.name,tp.avatar,tt.charges,tt.integral,tt.member,tp.calibration,tp.jfdataUpdateTime,td.allNotifyOn,
+	(SELECT tp.typeof FROM user_eq tp
+	INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId}) tt
+	ON tp.eq_id=tt.eq_id
+	 WHERE tp.user_id=#{alias}) as type_of
+ 	FROM user tp
+	INNER JOIN member tt
+	ON tp.id=tt.userId
+	INNER JOIN (SELECT * FROM push WHERE alias=#{alias} AND userId=#{userId}) td
+	ON tp.id=td.userId
+	WHERE tp.id=#{userId} AND tp.isDelete=0
+  </select>
+  <!-- 通过使用者ID查询首页需要的数据-->
+	<select id="queryUsersInfo" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
+		SELECT tp.id as userId,tt.id as eq_id,tp.name,tt.eq_status,tv.positioning_data,tp.avatar,tp.imei,tp.age,2 as type_of FROM user tp
+		INNER JOIN equipment tt
+		ON tp.imei=tt.imei
+		INNER JOIN (SELECT * FROM positionig WHERE imei=(SELECT imei from user WHERE id=#{userId}) ORDER BY cratetime DESC LIMIT 1) tv
+		WHERE tp.id=#{userId} and isDelete=0
+	</select>
 </mapper>

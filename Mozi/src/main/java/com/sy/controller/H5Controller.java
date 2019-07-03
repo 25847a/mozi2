@@ -1,9 +1,7 @@
 package com.sy.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+/*import java.io.BufferedReader;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,28 +10,20 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
-import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.sy.mapper.AlipayOrderMapper;
 import com.sy.mapper.GroupPhoneMapper;
 import com.sy.mapper.WxpayOrderMapper;
@@ -41,59 +31,18 @@ import com.sy.pojo.AlipayOrder;
 import com.sy.pojo.GroupPhone;
 import com.sy.pojo.WxpayOrder;
 import com.sy.utils.AlipayConfig;
-import com.sy.utils.ApiUtils;
 import com.sy.utils.HttpUrlUtil;
 import com.sy.utils.PayCommonUtil;
 import com.sy.utils.WechatConfig;
 import com.sy.utils.XMLUtil;
-import com.sy.utils.XmlStrToMap;
-import com.taobao.api.internal.toplink.logging.LogUtil;
-
-import net.sf.json.JSON;
-import net.sf.json.JSONObject;
-import net.sf.json.xml.XMLSerializer;
-
+import com.sy.utils.XmlStrToMap;*/
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping(value = "h5")
 public class H5Controller {
 
-	private static DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-	private final static Logger logger = LoggerFactory.getLogger(H5Controller.class);
-	private static final String String = null;
-
-	@Autowired
-	private AlipayOrderMapper alipayOrderMapper;
-	@Autowired
-	private WxpayOrderMapper wxpayOrderMapper;
-	@Autowired
-	private GroupPhoneMapper groupPhoneMapper;
-
-	/**
-	 * 充值页面
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "index")
-	public ModelAndView index(String phone) {
-		ModelAndView mo = new ModelAndView();
-		mo.addObject("phone", phone);
-		mo.setViewName("pay");
-		return mo;
-	}
-	/**
-	 * 
-	 * 手机号码激活页面
-	 * @return
-	 */
-	@RequestMapping(value = "jhindex")
-	public ModelAndView jhindex(@RequestBody JSONObject json) {
-		ModelAndView mo = new ModelAndView();
-		mo.setViewName("jh");
-		mo.addObject("phone", json.getString("phone"));
-		mo.addObject("ICCIC", json.getString("ICCIC"));
-		mo.addObject("PUK", json.getString("PUK"));
-		return mo;
-	}
 
 	/**
 	 * 协议页面
@@ -107,35 +56,72 @@ public class H5Controller {
 		return mo;
 	}
 	/**
-	 * 健康说明页面
+	 * 新闻---墨子星页面
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "jksj")
-	public ModelAndView jksj() {
-		ModelAndView mo = new ModelAndView();
-		mo.setViewName("jksj");
-		return mo;
+	@RequestMapping(value = "mzx")
+	public String news() {
+		return "/news/mzx";
 	}
 	/**
-	 * 微信同步返回页面returnurl
+	 * 新闻---娱乐页面
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "returnurl")
-	public ModelAndView returnurl() {
-		ModelAndView mo = new ModelAndView();
-		mo.setViewName("returnurl");
-		return mo;
+	@RequestMapping(value = "recreation")
+	public String recreation() {
+		return "/news/recreation";
 	}
-
-	
-
+	/**
+	 * 新闻---科技页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "science")
+	public String science() {
+		return "/news/science";
+	}
+	/**
+	 * 新闻---社会页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "society")
+	public String society() {
+		return "/news/society";
+	}
+	/**
+	 * 新闻---财经页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "finance")
+	public String finance() {
+		return "/news/finance";
+	}
+	/**
+	 * 新闻---推荐页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "recom")
+	public String recom() {
+		return "/news/recom";
+	}
+	/**private static DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+	private final static Logger logger = LoggerFactory.getLogger(H5Controller.class);
+	@Autowired
+	private AlipayOrderMapper alipayOrderMapper;
+	@Autowired
+	private WxpayOrderMapper wxpayOrderMapper;
+	@Autowired
+	private GroupPhoneMapper groupPhoneMapper;**/
 	/**
 	 * 微信异步通知
 	 * 
 	 * @return
-	 */
+	 
 	@RequestMapping(value = "notifyurl", method = RequestMethod.POST)
 	public void notifyUrl(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//System.out.println("----进入到了该页面---");
@@ -235,12 +221,12 @@ public class H5Controller {
         }catch(Exception e){
             e.printStackTrace();
         }
-	}
+	}*/
 	/**
 	 * 异步通知
 	 * 
 	 * @return
-	 */
+	 
 	@RequestMapping(value = "notify_url", method = RequestMethod.POST)
 	public void notify_url(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// 获取支付宝POST过来反馈信息
@@ -367,13 +353,13 @@ public class H5Controller {
 			// out.println("fail");
 		}
 	}
-
+*/
 	/**
 	 * 
 	 * 同步通知页面
 	 * 
 	 * @return
-	 */
+	
 	@RequestMapping(value = "return_url")
 	public ModelAndView return_url(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -415,14 +401,14 @@ public class H5Controller {
 		mo.setViewName("returnurl");
 		return mo;
 	}
-	
+	 */
 	
 
 	/**
 	 * 立即充值
 	 * 
 	 * @return
-	 */
+	
 	@RequestMapping(value = "yesPay", method = RequestMethod.POST)
 	public void yesPay(String phone, String totalAmount, String pay,HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -434,7 +420,7 @@ public class H5Controller {
 			wxpay(phone, totalAmount, request, response);
 		}
 	}
-
+ */
 	/**
 	 * 微信支付
 	 * @param phone
@@ -442,13 +428,9 @@ public class H5Controller {
 	 * @param request
 	 * @param response
 	 * @throws Exception
-	 */
+
 	private void wxpay(String phone, String totalAmount, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		
 		try {
-			
-		
 					//随机数
 					Integer randomNum = (int) ((Math.random() * 9 + 1) * 1000);
 					String nonce_str = dateFormat.format(new Date()) + randomNum;
@@ -501,9 +483,13 @@ public class H5Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}	 */
 	
-	
+	/**
+	 * 
+	 * @param phone
+	 * @return
+	 
 	@RequestMapping(value = "checkPhoneNum", method = RequestMethod.POST)
 	@ResponseBody
 	public Boolean checkPhoneNum(String phone) {
@@ -574,20 +560,6 @@ public class H5Controller {
 			try {
 				// 调用SDK生成表单
 				form = client.pageExecute(alipay_request).getBody();
-				/*String dosubmit =  "<script type='text/javascript'>"+"\r\n"+"document.forms[0].submit();"+"\r\n"+
-						"var commitStatus = false;"+"\r\n"+
-						" function dosubmit(){"+"\r\n"+
-		                "  if(commitStatus==false){"+"\r\n"+
-		                 " commitStatus = true;"+"\r\n"+
-		                  "return true;"+"\r\n"+
-		                " }else{"+
-		                  "return false;"+"\r\n"+
-		             " }"+"\r\n"+
-		            " }"+"\r\n"+
-		           " </script>"+"\r\n";
-				String replace = form.replace("<script>document.forms[0].submit();</script>", "");
-				replace = replace.replace("<form","<form onsubmit='return dosubmit();'");
-				System.out.println(replace+dosubmit);*/
 				response.setContentType("text/html;charset=" + AlipayConfig.CHARSET);
 				response.getWriter().write(form);// 直接将完整的表单html输出到页面
 				response.getWriter().flush();
@@ -601,5 +573,5 @@ public class H5Controller {
 				response.getWriter().close();
 			}
 	}
-	
+	*/
 }

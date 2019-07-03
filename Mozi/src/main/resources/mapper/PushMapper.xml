@@ -10,8 +10,8 @@
     <result column="boolPreNotifyOn" property="boolPreNotifyOn" jdbcType="TINYINT" />
     <result column="heartLowThd" property="heartLowThd" jdbcType="INTEGER" />
     <result column="heartHigThd" property="heartHigThd" jdbcType="INTEGER" />
-    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="t" property="updatetime" jdbcType="TIMESTAMP" />
     <result column="lbpstart" property="heartHigThd" jdbcType="INTEGER" />
     <result column="lbpend" property="heartHigThd" jdbcType="INTEGER" />
     <result column="hbpstart" property="heartHigThd" jdbcType="INTEGER" />
@@ -19,7 +19,7 @@
 	
   </resultMap>
   <sql id="Base_Column_List" >
-    id, userId, alias, allNotifyOn, heartNotifyOn,boolPreNotifyOn,heartLowThd,heartHigThd,createTime,updateTime,lbpstart,lbpend,hbpstart,hbpend
+    id, userId, alias, allNotifyOn, heartNotifyOn,boolPreNotifyOn,heartLowThd,heartHigThd,createtime,updatetime,lbpstart,lbpend,hbpstart,hbpend
   </sql>
   
   <!-- 取消关注删除用户需要删除预警值 -->
@@ -76,18 +76,18 @@
  		<if test="hbpstart!=null">
  		hbpstart=#{hbpstart},
  		</if>
- 		updateTime=NOW()  WHERE alias=#{alias} and userId = #{userId}
+ 		updatetime=NOW()  WHERE alias=#{alias} and userId = #{userId}
  	</update>
  	
  	
  	<!-- 查询 -->
  	<select id="selectPushInfo" resultMap="BaseResultMap" parameterType="java.util.Map">
 	    SELECT id,alias,allNotifyOn,heartNotifyOn,boolPreNotifyOn,fallNotifyOn,
-		heartLowThd,heartHigThd,boolLowThd,boolHigThd,createTime,updateTime FROM push WHERE alias= # {alias} and userId = #{userId}
+		heartLowThd,heartHigThd,boolLowThd,boolHigThd,createtime,updatetime FROM push WHERE alias= # {alias} and userId = #{userId}
   	</select>
   	<!-- 插入推送表 -->
   	<insert id="insertPush" parameterType="java.util.Map">
-  		INSERT INTO push (alias,createTime,updateTime) VALUES (#{userId},NOW(),NOW())
+  		INSERT INTO push (alias,createtime,updatetime) VALUES (#{userId},NOW(),NOW())
   	</insert>
   
   <insert id="addPushMap" parameterType="java.util.Map" >
@@ -137,7 +137,7 @@
  		<if test="hbpstart!=null">
  		hbpstart,
  		</if>
- 		createTime
+ 		createtime
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
  		#{alias},

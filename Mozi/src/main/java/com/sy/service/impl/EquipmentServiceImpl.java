@@ -1,9 +1,7 @@
 package com.sy.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +14,10 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.mapper.EquipmentMapper;
 import com.sy.mapper.SensorstatusMapper;
 import com.sy.pojo.Equipment;
-import com.sy.pojo.Sensorstatus;
 import com.sy.pojo.UserEq;
 import com.sy.service.EquipmentService;
 import com.sy.service.UserEqService;
-import com.sy.utils.PageModel;
 import com.sy.vo.EquipmentVo;
-import com.sy.vo.Equipmentstatus;
 @Service
 public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment> implements EquipmentService {
 	@Autowired
@@ -208,95 +203,6 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 		return imeiList;
 	}
 
-	@Override
-	public PageModel<Equipmentstatus> getusersone(Integer pageNo, String keyWord) {
-
-		if(pageNo == null ||  pageNo.intValue() == 0){
-			pageNo=1;
-		}
-		 //获取数据总数
-		    Integer count=equipmentMapper.getcount(keyWord);
-		    Integer pageSize=10;
-		    List<Equipment>Feedbacks = null;
-		    List<Equipmentstatus>eqs = new ArrayList<Equipmentstatus>();
-		    Integer pageNo1 = ( pageNo - 1) * pageSize;
-		    //获取页数
-		    HashMap<String, Object> parameter = new HashMap<>();
-		    parameter.put("pageNo", pageNo1);
-		    parameter.put("keyWord", keyWord);
-		    parameter.put("pageSize", pageSize);
-		    Feedbacks = equipmentMapper.list(parameter);
-		    for(Equipment e : Feedbacks){
-		    	Sensorstatus sensorstatus =sensorstatusmapper.selecttimesensorstatus(e.getImei());
-		    	Equipmentstatus eq=null;
-		    	if(sensorstatus !=null){
-		    		String g =sensorstatus.getG();
-			    	String h = sensorstatus.getH();
-			    			
-			    	 eq = new Equipmentstatus(e.getId(), e.getImei(), e.getLordpower(), e.getSignalxhao(), e.getBluetoothType(), e.getEqStatus(), e.getCreatetime(), e.getUpdatetime(), e.getEqtype(), e.getBluetoothName(), 
-			    			e.getBluetoothStatus(), e.getBluetoothElectricity(), e.getClock(), e.getPhone1(), e.getPhone2(), e.getName(), e.getVersion(), e.getUploadtime(), e.getBluetoothmac(), h.split(":")[1], g.split(":")[1]);
-			    		
-		    	}else {
-		    		 eq = new Equipmentstatus(e.getId(), e.getImei(), e.getLordpower(), e.getSignalxhao(), e.getBluetoothType(), e.getEqStatus(), e.getCreatetime(), e.getUpdatetime(), e.getEqtype(), e.getBluetoothName(), 
-				    			e.getBluetoothStatus(), e.getBluetoothElectricity(), e.getClock(), e.getPhone1(), e.getPhone2(), e.getName(), e.getVersion(), e.getUploadtime(), e.getBluetoothmac(), "暂时没有数据", "暂时没有数据");
-				    
-				}
-		    	eqs.add(eq);
-		    }
-		    PageModel<Equipmentstatus> pageModel = new PageModel<Equipmentstatus>(pageNo, pageSize,count, eqs,"equipment/list");
-		if(pageModel.getCount() !=0){
-			pageModel.init();
-		}
-		return pageModel;
-	}
-	@Override
-	public PageModel<Equipment> getusersone(Integer pageNo, Map<String, Object> map) {
-		
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		
-		if(pageNo == null ||  pageNo.intValue() == 0){
-			pageNo=1;
-		}
-		
-		//获取数据总数
-		Integer count=equipmentMapper.getcount2(map);
-		Integer pageSize=10;
-		List<Equipment>Feedbacks = null;
-		//List<Equipmentstatus>eqs = new ArrayList<Equipmentstatus>();
-		Integer pageNo1 = ( pageNo - 1) * pageSize;
-		//获取页数
-		map.put("pageNo", pageNo1);
-		map.put("pageSize", pageSize);
-		Feedbacks = equipmentMapper.list(map);
-		/*for(Equipment e : Feedbacks){
-			
-			String formatStr =formatter.format(e.getUpdatetime());
-			
-			Sensorstatus sensorstatus =sensorstatusmapper.selecttimesensorstatus(e.getImei());
-			Equipmentstatus eq=null;
-			if(sensorstatus !=null){
-				String g =sensorstatus.getG();
-				String h = sensorstatus.getH();
-				
-				eq = new Equipmentstatus(e.getId(), e.getImei(), e.getLordpower(), e.getSignalxhao(), e.getBluetoothType(), e.getEqStatus(), e.getCreatetime(), formatStr, e.getEqtype(), e.getBluetoothName(), 
-						e.getBluetoothStatus(), e.getBluetoothElectricity(), e.getClock(), e.getPhone1(), e.getPhone2(), e.getName(), e.getVersion(), e.getUploadtime(), e.getBluetoothmac(), h.split(":")[1], g.split(":")[1]);
-				
-			}else {
-				eq = new Equipmentstatus(e.getId(), e.getImei(), e.getLordpower(), e.getSignalxhao(), e.getBluetoothType(), e.getEqStatus(), e.getCreatetime(), formatStr, e.getEqtype(), e.getBluetoothName(), 
-						e.getBluetoothStatus(), e.getBluetoothElectricity(), e.getClock(), e.getPhone1(), e.getPhone2(), e.getName(), e.getVersion(), e.getUploadtime(), e.getBluetoothmac(), "暂时没有数据", "暂时没有数据");
-				
-			}
-			eqs.add(eq);
-		}*/
-		//PageModel<Equipmentstatus> pageModel = new PageModel<Equipmentstatus>(pageNo, pageSize,count, eqs,"equipment/list");
-		PageModel<Equipment> pageModel = new PageModel<Equipment>(pageNo, pageSize,count, Feedbacks,"equipment/list");
-		if(pageModel.getCount() !=0){
-			pageModel.init();
-		}
-		return pageModel;
-	}
 
 	/**
 	 * 根据代理商id统计设备数量
@@ -305,24 +211,6 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 		return equipmentMapper.selectEqNumber(agentid);
 	}
 
-	@Override
-	public PageModel<Equipment> getAgentEquipment(Integer pageNo, Map<String, Object> map) {
-		if(pageNo == null ||  pageNo.intValue() == 0){
-			pageNo=1;
-		}
-		//获取数据总数
-		Integer count=equipmentMapper.getcount2(map);
-		Integer pageSize=10;
-		Integer pageNo1 = ( pageNo - 1) * pageSize;
-		//获取页数
-		map.put("pageNo", pageNo1);
-		map.put("pageSize", pageSize);
-		List<Equipment>list = equipmentMapper.list(map);
-		
-		PageModel<Equipment> pageModel = new PageModel<Equipment>(pageNo, pageSize,count, list,"management/equipmentlist");
-			pageModel.init();
-		return pageModel;
-	}
 
 	public boolean imeiUpdateAgentAccount(Equipment e) {
 		return equipmentMapper.imeiUpdateAgentAccount(e);

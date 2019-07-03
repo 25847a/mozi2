@@ -26,9 +26,8 @@ public class Ceshi {
 			//更新数据
 		//	update(MZ, list);
 			//插入数据
-			//insert(MZ);//惊凡数据表
-			insetequipmentdata(MZ);
-		//	insertEQ(MZ);
+			insert(MZ);//惊凡数据表
+		//	insetequipmentdata(MZ);
 			//insetequipmentdata(MZ, list);
 			System.out.println("加载成功");
 		}catch(Exception e){
@@ -134,7 +133,7 @@ public class Ceshi {
 		*/
 		public static void 	insert(Connection ZX){
 			boolean fag = true;
-			String date = "2018-06-16 00:00:00";
+			String date = "2019-07-01 00:00:00";
 			try {
 				SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				System.out.println(sf.parse(date));
@@ -144,7 +143,7 @@ public class Ceshi {
 					 cd.add(Calendar.MINUTE, 5);
 				String sql = "INSERT INTO jfhealth(HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,"
 						+ "microcirculation,Amedicalreport,respirationrate,phone,imei,createtime)"
-						+ "VALUES(?,?,?,?,?,?,?,?,?,867186039369995,?)";
+						+ "VALUES(?,?,?,?,?,?,?,?,?,862237045561003,?)";
 				PreparedStatement ten = ZX.prepareStatement(sql);
 				ten.setString(1,String.valueOf((int)(100+Math.random()*(140-100+1))));
 				ten.setString(2,String.valueOf((int)(100+Math.random()*(180-100+1))));
@@ -160,11 +159,11 @@ public class Ceshi {
 						"5、如有病理性的低血压，请到正规医院就诊。");
 				ten.setString(8,String.valueOf((int)(70+Math.random()*(85-70+1))));
 				String time = sf.format(cd.getTime());
-				ten.setString(9,"mozistar251");
+				ten.setString(9,"mozistar28704");
 				ten.setString(10,time);
 				ten.executeUpdate();
 				System.out.println("插入成功");
-				if(time.equals("2018-06-30 23:55:00")) {
+				if(time.equals("2019-08-30 23:55:00")) {
 					 fag=false;
 					 System.out.println("OK");
 				 }

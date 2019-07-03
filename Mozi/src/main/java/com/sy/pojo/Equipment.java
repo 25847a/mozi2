@@ -2,13 +2,16 @@ package com.sy.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
 @TableName("equipment")
 public class Equipment extends Model<Equipment>{
 	private static final long serialVersionUID = 1L;
+	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
 
     private String imei;
@@ -16,9 +19,9 @@ public class Equipment extends Model<Equipment>{
     private Integer lordpower;
 
     private String signalxhao;
-
+    @TableField(value="bluetooth_type")
     private String bluetoothType;
-
+    @TableField(value="eq_status")
     private String eqStatus;
 
     private Date createtime;
@@ -26,11 +29,11 @@ public class Equipment extends Model<Equipment>{
     private Date updatetime;
 
     private String eqtype;
-
+    @TableField(value="bluetooth_name")
     private String bluetoothName;
-
+    @TableField(value="bluetooth_status")
     private String bluetoothStatus;
-
+    @TableField(value="bluetooth_electricity")
     private Integer bluetoothElectricity;
 
     private String clock;
@@ -46,7 +49,7 @@ public class Equipment extends Model<Equipment>{
     private Date uploadtime;
 
     private String bluetoothmac;
-    
+    @TableField(value="bluetooth_list")
     private String bluetoothList;
     
     private Integer agentid;

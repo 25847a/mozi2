@@ -1,7 +1,6 @@
 package com.sy.service;
 
 import com.sy.pojo.Uploaddownload;
-import com.sy.utils.PageModel;
 
 public interface UploaddownloadService {
 	
@@ -21,14 +20,6 @@ public interface UploaddownloadService {
 	 * @return
 	 */
 	public boolean updateUploaddownload(Uploaddownload u);
-	
-	/**分页获取版本号记录
-	 * @param pageNo
-	 * @param keyword
-	 * @return
-	 */
-	public PageModel<Uploaddownload>  getusersone(Integer pageNo,String keyword);
-	
     /**删除
      * @param id
      * @return

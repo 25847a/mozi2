@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.UserEq;
+import com.sy.utils.DataRow;
 
 public interface UserEqMapper extends BaseMapper<UserEq>{
 	
@@ -14,59 +15,91 @@ public interface UserEqMapper extends BaseMapper<UserEq>{
 	 * @param u
 	 * @return
 	 */
-	public List<Map<String, Object>> queryUserEqFollowUsersList(Map<String,Object> map)throws SQLException;
+	public List<DataRow> queryUserEqFollowUsersList(DataRow map)throws SQLException;
 	/**
 	 * 查询关注人观察者列表
 	 * @param u
 	 * @return
 	 */
-	public List<Map<String, Object>> queryUserEqFollowObserverList(Map<String,Object> map)throws SQLException;
-	
-
-
+	public List<DataRow> queryUserEqFollowObserverList(DataRow map)throws SQLException;
+	/**
+	 * 通过用户ID查询所有信息唯一一条
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserEq queryUserEqLimit(int userId)throws SQLException;
+	/**
+	 * 根据ID删除数据
+	 * @param id
+	 * @return
+	 */
     int deleteByPrimaryKey(Integer id);
-
+    /**
+     * 插入数据
+     */
     Integer insert(UserEq record);
-
+    /**
+     * 插入数据
+     * @param record
+     * @return
+     */
     int insertSelective(UserEq record);
-
-
+    /**
+     * 根据ID查询数据 
+     * @param id
+     * @return
+     */
     UserEq selectByPrimaryKey(Integer id);
-
-
+    /**
+     * 更新数据
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeySelective(UserEq record);
-
+    /**
+     * 更新数据
+     * @param record
+     * @return
+     */
     int updateByPrimaryKey(UserEq record);
-    
+    /**
+     * 通过设备ID查询监护者唯一一条
+     * @param eqId
+     * @return
+     */
     public UserEq getuserimei2(Integer  eqId) ;
     
-    public Integer getimei(String imei);
-    
-    public Integer geteqid(Integer userId);
-    
-    public UserEq selectguardianship(Integer userId);
-    
     /**
-     * 根据设备eqid 获取 监护者的UserEq 
+     * 通过用户ID查询监护者
+     * @param userId
+     * @return
+     */
+    public UserEq selectguardianship(Integer userId);
+    /**
+     * 通过设备ID查询监护者 
      * @param eqId
      * @return
      */
     public UserEq ifguardianship(Integer eqId) ;
    
     /**
-     * 根据设备eqid 查询使用者
+     * 通过设备ID查询使用者
      * @param eqId
      * @return
      */
     public UserEq ifuse(Integer eqId);
-    
     /**
      * 查询观察者 
      * @param eqId 和 userId
      * @return
      */
     public UserEq ifObserved(UserEq userEq);
-    //
+    /**
+     * 通过设备ID查询所有信息
+     * @param eqId
+     * @return
+     */
     public List<UserEq> selelctequser(Integer eqId);
     
     /**
@@ -81,7 +114,11 @@ public interface UserEqMapper extends BaseMapper<UserEq>{
 	 * @param u
 	 */
 	public void deleteequsetype(UserEq u );
-	
+	/**
+	 * 通过用户ID查询所有信息
+	 * @param userId
+	 * @return
+	 */
 	public List<UserEq> selectuserqe( @Param("userId") Integer userId);
 
 	/**
@@ -104,7 +141,7 @@ public interface UserEqMapper extends BaseMapper<UserEq>{
 	 */
 	public void  deleteuserid( Integer userId);
 	/**
-	 * 查询有没有是否为监护者
+	 * 查询监护者
 	 * @param userId
 	 * @return
 	 */
@@ -122,6 +159,20 @@ public interface UserEqMapper extends BaseMapper<UserEq>{
 	 * @return
 	 * @throws SQLException
 	 */
-	public Map<String,Object> queryUserEq(Map<String,Object> map)throws SQLException;
+	public DataRow queryUserEq(DataRow map)throws SQLException;
+	/**
+	 * 根据监护者ID更新所有follow为0
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public int updateUserEqFollow(DataRow map)throws SQLException;
+	/**
+	 * 根据设备ID和用户ID更新follow为1
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public int updateUserEqFollowInfo(DataRow map)throws SQLException;
     
 }

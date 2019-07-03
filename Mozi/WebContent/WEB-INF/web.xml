@@ -45,7 +45,10 @@
 			仍然会由 DispatcherServlet 解析 jsp地址,不能根据jsp页面找到handler,会报错 -->
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
+	<servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
 
 
 
@@ -67,19 +70,11 @@
 	<listener>
 		<listener-class>com.sy.controller.HardwareController</listener-class>
 	</listener>
-	<!-- <listener> <listener-class>com.sy.utils.MySessionListener</listener-class> 
-		</listener> <session-config> <session-timeout>1</session-timeout> </session-config> -->
-	<!-- 404 配置 -->
-	<error-page>
-		<error-code>404</error-code>
-		<location>/WEB-INF/view/login.jsp</location>
-	</error-page>
 	<!-- web异常页面处理 -->
 	<error-page>
 		<exception-type>java.lang.Throwable</exception-type>
 		<location>/error_500</location>
 	</error-page>
-
 	<error-page>
 		<error-code>500</error-code>
 		<location>/error_500</location>
@@ -92,6 +87,7 @@
 		<error-code>502</error-code>
 		<location>/error_500</location>
 	</error-page>
+	<!-- 404 配置跳转到/error_404 -->
 	<error-page>
 		<error-code>404</error-code>
 		<location>/error_404</location>
@@ -105,12 +101,12 @@
 		<location>/error_404</location>
 	</error-page>
 
-	<welcome-file-list>
+<!-- 	<welcome-file-list>
 		<welcome-file>login.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
 		<welcome-file>login.jsp</welcome-file>
 		<welcome-file>default.html</welcome-file>
 		<welcome-file>default.htm</welcome-file>
 		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
+	</welcome-file-list> -->
 </web-app>

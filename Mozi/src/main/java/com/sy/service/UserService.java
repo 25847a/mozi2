@@ -1,24 +1,15 @@
 package com.sy.service;
 
-import java.util.Map;
-
 import com.baomidou.mybatisplus.service.IService;
+import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.pojo.User;
 import com.sy.utils.DataRow;
-import com.sy.utils.PageModel;
 import com.sy.vo.LoginReturn;
-import com.sy.vo.Loginuser;
 import com.sy.vo.Usermanagement;
 
 public interface UserService  extends IService<User>{
 
-	/**����û�
-	 * @param u
-	 * @return
-	 */
-	public boolean addUser(User u );
-	
 	/**判断该用户是否存在
 	 * @param account
 	 * @return
@@ -31,13 +22,22 @@ public interface UserService  extends IService<User>{
 	 */
 	public ResultData<LoginReturn> landingUser(DataRow data,ResultData<LoginReturn> re)throws Exception;
 	/**
+	 * 点击卡片接口
+	 * @return
+	 */
+	public ResultData<DataRow> userdata(DataRow map,ResultData<DataRow> re)throws Exception;
+	/**
+	 * 查看个人资料
+	 * @return
+	 */
+	public ResultData<DataRow> queryUserInfo(DataRow map,ResultData<DataRow> re)throws Exception;
+	/**
 	 *  添加使用者
 	 * @param u
 	 * @return
 	 * @throws Exception 
 	 */
-	public ResultData<Loginuser>addUsermanagement(Usermanagement u,ResultData<Loginuser> re)throws Exception;
-	
+	public ResultBase addUsermanagement(Usermanagement u,ResultBase re)throws Exception;
 	/**头像上传
 	 * @param avatar
 	 * @param id
@@ -54,7 +54,7 @@ public interface UserService  extends IService<User>{
 	 * @param u
 	 * @return
 	 */
-	public boolean updateUser(User u );
+	public ResultBase updateUser(User u,ResultBase re)throws Exception;
 	
 	/**修改用戶
 	 * @param password
@@ -62,13 +62,6 @@ public interface UserService  extends IService<User>{
 	 * @return
 	 */
 	public boolean updatepassword(String password,String newpassword,Integer id);
-	
-	/**分页获取用户数据
-	 * @param pageNo
-	 * @param keyword
-	 * @return
-	 */
-	public PageModel<User>  getusersone(Integer pageNo,String keyword);
 	
 	/**手机号码
 	 * @param phone
@@ -81,30 +74,16 @@ public interface UserService  extends IService<User>{
 	 * @return
 	 */
 	public  User  phoenselectuser(String phoen);
-	/**
-	 * 啊健写的 查询使用者的详情信息
-	 * @param map
-	 * @return
-	 */
-	public User queryUserInfo(Map map);
-	
 	/**通过账号获取用户数据
 	 * @param account
 	 * @return
 	 */
 	public User selectaccount(String account);
-	/**
-	 * 啊健写的 查询使用者的详情信息
-	 * @param map
-	 * @return
-	 */
-	public User queryHomepageUserInfo(Map<String,Object> map)throws Exception;
 
 	User getUser(String imei);
 
 	public Integer deleteUser(Integer userId);
 	
 	public Integer selectId(String imei);
-	
 
 }

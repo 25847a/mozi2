@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import com.sy.common.ResultData;
 import com.sy.mapper.EquipmentDataMapper;
-import com.sy.pojo.Jfhealth;
-import com.sy.pojo.Management;
 import com.sy.pojo.User;
 import com.sy.service.EquipmentDataService;
 import com.sy.service.ConfigService;
@@ -27,7 +23,6 @@ import com.sy.service.UserService;
 import com.sy.utils.DataRow;
 import com.sy.utils.DataUtil;
 import com.sy.utils.Managementconstant;
-import com.sy.utils.PageModel;
 import com.sy.vo.Chart;
 import com.sy.vo.SHChart;
 
@@ -51,30 +46,6 @@ public class JfhealthController {
 	ConfigService extendService;
 	
 
-	@RequestMapping(value = "list")
-	public ModelAndView list(Integer pageNo, String keyword,String time,Integer userid, HttpSession session) {
-		
-		ModelAndView mo = new ModelAndView();
-		
-		Map<String,Object> map = new HashMap<>();
-		Management m  = (Management)session.getAttribute("USER");
-		String role = m.getRole();
-		if("代理商".equals(role)){
-			map.put("mid", m.getId());
-		}
-		map.put("keyword", keyword);
-		map.put("userid", userid);
-		map.put("time", time);
-		PageModel<Jfhealth> pagemodel = jfhealthservice.getJfhealthVoLsit(pageNo, map);
-		mo.setViewName("jfhealth");
-		mo.addObject("keyword", keyword);
-		mo.addObject("time", time);
-		mo.addObject("userid", userid);
-		mo.addObject("pagemodel", pagemodel);
-		return mo;
-	}
-	
-	
 	/**
 	 * 二级页面数据展示
 	 * @param m
@@ -399,46 +370,6 @@ public class JfhealthController {
 			e.printStackTrace();
 		}
 		return re;
-	}
-	/**
-	 * 获取睡眠数据 （根据年月日 周）查找
-	 * @param m
-	 * @return
-	 * @throws ParseException
-	 */
-	@RequestMapping(value="selecSleeping")
-	@ResponseBody
-	public ResultData<Map<String,Object>> selecSleeping(@RequestBody Map<String,Object> m)throws ParseException {
-		Map<String,Object> data = new HashMap<String,Object>();
-		data.put("categoryId", "8");
-		data.put("name", "step_when");
-		data.put("desc", "睡眠");
-		ResultData<Map<String,Object>> re = new ResultData<Map<String,Object>>();
-		Integer userId = userEqservice.getimei((String) m.get("imei"));
-		m.put("userId", userId);
-		List<SHChart> shChart = jfhealthservice.selectSHChart(m);
-		if (shChart != null && shChart.size() > 0) {
-			List<Map<String,Object>> bloodpressureList = new ArrayList<Map<String,Object>>();
-				for (int i = 0; i < shChart.size(); i++) {
-					SHChart j = shChart.get(i);
-					Map<String,Object> chartData = new HashMap<String,Object>();
-					int[] bloodpressure = new int[1];
-					bloodpressure[0] = j.getSleeping();
-					chartData.put("value", bloodpressure);
-					chartData.put("createtime", j.getDate());
-					chartData.put("updateTime",  j.getDate());
-					bloodpressureList.add(chartData);
-				}
-				data.put("chartData", bloodpressureList);
-				re.setCode(200);
-				re.setData(data);
-				re.setMessage("获取睡眠健康数据成功！！！");
-			} else {
-				re.setCode(400);
-				re.setMessage("没有睡眠健康数据！！！");
-			}
-			return re;
-		
 	}
 	
 }

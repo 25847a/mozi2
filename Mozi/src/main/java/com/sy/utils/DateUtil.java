@@ -76,6 +76,20 @@ public class DateUtil {
             return yearTwo.format(d);
         }
     }
+    /**
+     * 数据day获取往后推算的时间
+     * @param day
+     * @return
+     */
+    public static Date getNextDay(int day){
+    	Date date = new Date();
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(date);
+    	cal.add(Calendar.DAY_OF_MONTH, day);
+    	date = cal.getTime();
+		return date;
+    	
+    }
     @SuppressWarnings("deprecation")
 	public static Date getSystemAddHours(int num) {
         Date date = new Date();

@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 @TableName("member")
 public class Member extends Model<Member>{
 	
 	private static final long serialVersionUID = 1L;
+	@TableId(value="id", type= IdType.AUTO)
 	/**
 	 * 主键ID
 	 */
@@ -32,7 +35,7 @@ public class Member extends Model<Member>{
     /**
      * 用户到期时间
      */
-    private Date createtime;
+    private Date endTime;
 
     
 
@@ -96,14 +99,14 @@ public class Member extends Model<Member>{
 
 
 
-	public Date getCreatetime() {
-		return createtime;
+	public Date getEndTime() {
+		return endTime;
 	}
 
 
 
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
 	}
 
 

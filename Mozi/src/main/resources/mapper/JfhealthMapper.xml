@@ -268,8 +268,7 @@
 		resultMap="SHChartBaseResultMap">
 		<if
 			test="service != null and service != '' and  service == 'year' ">
-			SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
-			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
+			SELECT CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime, '%Y-%m-%d')
 			as date
 			FROM equipment_data WHERE DATE_FORMAT(createtime, '%Y') =
@@ -280,8 +279,7 @@
 		<if
 			test="service != null and service != '' and  service == 'month' ">
 			
-	SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
-			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
+			SELECT CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime, '%Y-%m-%d')
 			as date
 			FROM equipment_data WHERE DATE_FORMAT(createtime, '%Y-%m') =
@@ -290,16 +288,14 @@
 			'%Y%m%d')
 		</if>
 		<if test="service != null and service != '' and  service == 'day' ">
-			SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
-			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
+			SELECT CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime,'%Y-%m-%d %H:%i:%S') as date FROM equipment_data WHERE
 			DATE_FORMAT(createtime,'%Y-%m-%d')=#{timedata} AND user_id=#{userId}
 			GROUP BY date_format(createtime, '%Y%m%d %H:%i:%S');
 		</if>
 		<if
 			test="service != null and service != '' and  service == 'week' ">
-			SELECT CASE WHEN TRUNCATE(avg(sleeping),0) IS null THEN 0 ELSE TRUNCATE(avg(sleeping),0) END AS sleeping,
-			 CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
+			SELECT CASE WHEN TRUNCATE(avg(step_when),0) IS null THEN 0 ELSE TRUNCATE(avg(step_when),0) END AS step_when,
 			date_format(createtime, '%Y-%m-%d')
 			as date FROM equipment_data WHERE
 			YEARWEEK(DATE_FORMAT(createtime,'%Y-%m-%d'))=YEARWEEK(NOW()) AND
@@ -382,7 +378,7 @@
 	<select id="selectHeartRateInfo" parameterType="java.util.Map" resultType="java.util.HashMap">
 		<if test="service != null and service != '' and  service == 'month' ">
 			SELECT tt.*,new,createtime FROM (
-			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,AVG(heartRate) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}
+			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}
 			)tt
 			 INNER JOIN (
 			SELECT tp.phone,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
@@ -394,7 +390,7 @@
 		</if>
 		<if test="service != null and service != '' and  service == 'day' ">
 			SELECT tt.*,new,createtime FROM (
-			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,AVG(heartRate) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}
+			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}
 			)tt
 			 INNER JOIN (
 			SELECT tp.phone,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
@@ -406,7 +402,7 @@
 		</if>
 		<if test="service != null and service != '' and  service == 'week' ">
 		SELECT tt.*,new,createtime FROM (
-			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,AVG(heartRate) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			SELECT MAX(heartRate) as max,MIN(heartRate) AS min,COUNT(*) AS count,ROUND(AVG(heartRate)) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
 			)tt
 			 INNER JOIN (
 			SELECT tp.phone,heartRate as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
@@ -421,7 +417,7 @@
 	<select id="selectHrvInfo" parameterType="java.util.Map" resultType="java.util.HashMap">
 		<if test="service != null and service != '' and  service == 'month' ">
 			SELECT tt.*,new,createtime FROM (
-			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,AVG(HRV) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}
+			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,ROUND(AVG(HRV)) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m')=#{timedata}
 			)tt
 			 INNER JOIN (
 			SELECT tp.phone,HRV as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
@@ -433,7 +429,7 @@
 		</if>
 		<if test="service != null and service != '' and  service == 'day' ">
 			SELECT tt.*,new,createtime FROM (
-			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,AVG(HRV) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}
+			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,ROUND(AVG(HRV)) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND date_format(createtime,'%Y-%m-%d')=#{timedata}
 			)tt
 			 INNER JOIN (
 			SELECT tp.phone,HRV as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
@@ -445,7 +441,7 @@
 		</if>
 		<if test="service != null and service != '' and  service == 'week' ">
 		SELECT tt.*,new,createtime FROM (
-			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,AVG(HRV) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			SELECT MAX(HRV) as max,MIN(HRV) AS min,COUNT(*) AS count,ROUND(AVG(HRV)) AS avg,phone FROM jfhealth WHERE phone=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
 			)tt
 			 INNER JOIN (
 			SELECT tp.phone,HRV as new,date_format(tp.createtime,'%H:%i') as createtime FROM jfhealth tp
@@ -461,7 +457,7 @@
 	<select id="selectStepWhenInfo" parameterType="java.util.Map" resultType="java.util.HashMap">
 		<if test="service != null and service != '' and  service == 'month' ">
 			SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM (
-			SELECT COUNT(*) AS new,AVG(step_when) as avg,COUNT(*)*50/100000 as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}
+			SELECT COUNT(*) AS new,ROUND(AVG(step_when)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m') =#{timedata}
 			)tt
 			 INNER JOIN (
 			SELECT tp.user_id,date_format(tp.createtime,'%H:%i') as createtime FROM equipment_data tp
@@ -479,7 +475,7 @@
 		</if>
 		<if test="service != null and service != '' and  service == 'day' ">
 			SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM (
-			SELECT COUNT(*) AS new,AVG(step_when) as avg,COUNT(*)*50/100000 as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}
+			SELECT COUNT(*) AS new,ROUND(AVG(step_when)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND date_format(createtime,'%Y-%m-%d') =#{timedata}
 			)tt
 			 INNER JOIN (
 			SELECT tp.user_id,date_format(tp.createtime,'%H:%i') as createtime FROM equipment_data tp
@@ -497,7 +493,7 @@
 		</if>
 		<if test="service != null and service != '' and  service == 'week' ">
 			SELECT tt.new,tg.createtime,tv.max,tv.maxtime,tj.min,tj.mintime,tt.avg,kilometre FROM (
-			SELECT COUNT(*) AS new,AVG(step_when) as avg,COUNT(*)*50/100000 as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
+			SELECT COUNT(*) AS new,ROUND(AVG(step_when)) as avg,ROUND(COUNT(*)*50/100000) as kilometre,user_id FROM equipment_data WHERE user_id=#{userId} AND YEARWEEK(date_format(createtime,'%Y-%m-%d')) =YEARWEEK(NOW())
 			)tt
 			 INNER JOIN (
 			SELECT tp.user_id,date_format(tp.createtime,'%H:%i') as createtime FROM equipment_data tp

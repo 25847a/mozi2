@@ -4,11 +4,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
 
 @TableName("user")
 public class User  extends Model<Config>{
 	private static final long serialVersionUID = 1L;
+	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
 
     private String role;
@@ -26,11 +31,12 @@ public class User  extends Model<Config>{
     private String gender;
 
     private String phone;
-
+    //省市区
+    private String city;
     private String address;
 
     private String avatar;
-
+    @TableField(value = "createtime",fill = FieldFill.INSERT )
     private Date createtime;
 
     private Float weight;
@@ -41,7 +47,7 @@ public class User  extends Model<Config>{
 
     private String code;
     
-    private String calibration;
+    private Integer calibration;
     
     private String imei;
     
@@ -59,8 +65,6 @@ public class User  extends Model<Config>{
     private Date liveTime;
     //病史
     private String illness;
-    //默认关注首页显示  0.隐藏  1.显示
-    private Integer follow;
 
     
     public User(Integer id, String role, String account, String password,
@@ -184,7 +188,13 @@ public class User  extends Model<Config>{
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public String getAddress() {
+    public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getAddress() {
         return address;
     }
 
@@ -239,16 +249,14 @@ public class User  extends Model<Config>{
     public void setCode(String code) {
         this.code = code == null ? null : code.trim();
     }
-	public String getCalibration() {
+	public Integer getCalibration() {
 		return calibration;
 	}
 
-	public void setCalibration(String calibration) {
+	public void setCalibration(Integer calibration) {
 		this.calibration = calibration;
 	}
 	
-	
-
 	public String getImei() {
 		return imei;
 	}
@@ -294,12 +302,6 @@ public class User  extends Model<Config>{
 	}
 	public void setIllness(String illness) {
 		this.illness = illness;
-	}
-	public Integer getFollow() {
-		return follow;
-	}
-	public void setFollow(Integer follow) {
-		this.follow = follow;
 	}
 	public User() {
 		super();

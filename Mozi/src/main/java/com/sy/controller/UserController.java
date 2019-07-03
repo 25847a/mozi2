@@ -1,7 +1,6 @@
 package com.sy.controller;
 
 import java.io.File;
-import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
@@ -27,16 +25,12 @@ import com.sy.pojo.User;
 import com.sy.pojo.Usercode;
 import com.sy.service.EquipmentService;
 import com.sy.service.UserService;
-import com.sy.service.UseravatarService;
 import com.sy.service.UsercodeService;
 import com.sy.utils.DataRow;
 import com.sy.utils.DeleteFileUtil;
-import com.sy.utils.GB2312Utils;
 import com.sy.utils.MD5Util;
-import com.sy.utils.PageModel;
 import com.sy.vo.LoginReturn;
 import com.sy.vo.Loginuse;
-import com.sy.vo.Loginuser;
 import com.sy.vo.Usermanagement;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.SocketChannel;
@@ -47,8 +41,6 @@ public class UserController {
 	private static final String String = null;
 	@Autowired
 	private GroupPhoneMapper groupPhoneMapper;
-	@Autowired
-	private UseravatarService useravatarservice;
 	@Autowired
 	private EquipmentService equipmentservice;
 	@Autowired
@@ -64,7 +56,7 @@ public class UserController {
 	
 	@RequestMapping(value = "selectImei")
 	@ResponseBody
-	public ResultBase selectImei(@RequestBody Map map) {
+	public ResultBase selectImei(@RequestBody DataRow map) {
 			ResultBase re = new ResultBase();
 			String imei = (String)map.get("imei");
 			if(!StringUtils.isNotBlank(imei.trim())){
@@ -111,7 +103,8 @@ public class UserController {
 					uservode.setCode(u.getCode());
 					uservode.setPhoen(u.getPhone());
 					if (usercodeservic.ifusercode(uservode)) {
-						boolean status = userService.addUser(u);
+						u.setPassword(MD5Util.MD5(u.getPassword()));
+						boolean status = userService.insert(u);
 						if (status) {
 							EntityWrapper<User> ew = new EntityWrapper<User>();
 							ew.eq("password", MD5Util.MD5(u.getPassword()));
@@ -172,7 +165,40 @@ public class UserController {
 		}
 		return re;
 	}
-
+	/**
+	 * 点击卡片接口
+	 * @return
+	 */
+	@RequestMapping(value = "userdata")
+	@ResponseBody
+	public ResultData<DataRow> userdata(@RequestBody DataRow map) {
+		ResultData<DataRow> re = new ResultData<DataRow>();
+		try {
+			re = userService.userdata(map,re);
+		} catch (Exception e) {
+			re.setCode(400);
+			re.setMessage("查询出错,请返回重试");
+			logger.error("UserEqController>>>>>>>>>>>>>>>userdata",e);
+		}
+		return re;
+	}
+	/**
+	 * 查看个人资料
+	 * @return
+	 */
+	@RequestMapping(value = "queryUserInfo")
+	@ResponseBody
+	public ResultData<DataRow> queryUserInfo(@RequestBody DataRow map) {
+		ResultData<DataRow> re = new ResultData<DataRow>();
+		try {
+			re = userService.queryUserInfo(map,re);
+		} catch (Exception e) {
+			re.setCode(400);
+			re.setMessage("查询出错,请返回重试");
+			logger.error("UserEqController>>>>>>>>>>>>>>>userdata",e);
+		}
+		return re;
+	}
 	/**
 	 * 上传头像
 	 * 
@@ -232,7 +258,7 @@ public class UserController {
 		if (status) {
 			String url = baseUrl + "avatars/" + avatar.getOriginalFilename();
 			u.setAvatar(url);
-			userService.updateUser(u);
+			userService.updateById(u);
 			re.setData(url);
 			re.setCode(200);
 			re.setMessage("修改头像成功！！!");
@@ -254,48 +280,17 @@ public class UserController {
 	@ResponseBody
 	public ResultBase updateUser(@RequestBody User u) {
 		ResultBase re = new ResultBase();
-		re.setCode(200);
-		re.setMessage("修改成功");
-		
-		String address = u.getAddress();
-		String name = u.getName();
-		String phone = u.getPhone();
-		
-		if(address!=null||name!=null){
-			userService.updateUser(u);
-			User user = userService.getUser(u.getId());
-			
-			if(user.getAccount()==null){
-				
-			Channel c =	NettyChannelMap.get(user.getImei());
-				
-				String R06 = "$R06|";
-				try {
-						R06 += GB2312Utils.gb2312eecode(user.getName()) + ":";
-						R06 += GB2312Utils.gb2312eecode(user.getAddress()) + "\r\n";
-				} catch (Exception e) {
-					logger.info(e.getMessage());
-					R06 = "$R06|ERR\r\n";
-				}
-				if(c!=null){
-					c.writeAndFlush(R06);
-				}
+		try {
+			re = userService.updateUser(u,re);
+		} catch (Exception e) {
+			String R06 = "$R06|ERR\r\n";
+			Channel c =	NettyChannelMap.get(u.getImei());
+			if(c!=null){
+				c.writeAndFlush(R06);
 			}
-		}else if(phone!=null){
-			
-			GroupPhone selectPhone = groupPhoneMapper.selectPhone(phone);
-			if(selectPhone==null){
-				re.setCode(350);
-				re.setMessage("号码不存在");
-			}else{
-				userService.updateUser(u);
-			}
-		}else{
-			boolean status = userService.updateUser(u);
-			if (!status) {
-				re.setMessage("修改失败");
-				re.setCode(400);
-			}
+			re.setCode(400);
+			re.setMessage("修改失败,可能设备未启动导致");
+			logger.error("UserController>>>>>>>>>>>>updateUser",e);
 		}
 		return re;
 	}
@@ -308,7 +303,7 @@ public class UserController {
 	 */
 	@RequestMapping("updatepassword")
 	@ResponseBody
-	public ResultBase updatepassword(@RequestBody Map m) {
+	public ResultBase updatepassword(@RequestBody DataRow m) {
 		ResultBase re = new ResultBase();
 		boolean status = userService.updatepassword((String) m.get("password"),
 				(String) m.get("newpassword"),
@@ -321,17 +316,7 @@ public class UserController {
 			re.setCode(400);
 
 		}
-
 		return re;
-	}
-
-	@RequestMapping(value = "list")
-	public ModelAndView list(Integer pageNo, String keyword) {
-		ModelAndView mo = new ModelAndView();
-		PageModel<User> pagemodel = userService.getusersone(pageNo, keyword);
-		mo.setViewName("user");
-		mo.addObject("pagemodel", pagemodel);
-		return mo;
 	}
 	/**
 	 * 获取验证码
@@ -340,13 +325,13 @@ public class UserController {
 	 */
 	@RequestMapping("sendSMS")
 	@ResponseBody
-	public ResultBase sendSMS(@RequestBody Map m) {
+	public ResultBase sendSMS(@RequestBody DataRow m) {
 		System.out.println("获取验证码================" + m.get("phone"));
 		ResultBase re = new ResultBase();
-		Integer smsMsg = userService.sendSMS(String.valueOf(m.get("phone")));
+		Integer smsMsg = userService.sendSMS(m.getString("phone"));
 		if (smsMsg != 0) {
 			Usercode c = new Usercode();
-			c.setCode(String.valueOf(smsMsg));
+			c.setCode(String.valueOf((int)smsMsg));
 			c.setPhoen((String) m.get("phone"));
 			usercodeservic.addUsercode(c);
 			re.setCode(200);
@@ -357,12 +342,6 @@ public class UserController {
 		}
 		return re;
 	}
-
-	public static int getRandNum(int min, int max) {
-		int randNum = min + (int) (Math.random() * ((max - min) + 1));
-		return randNum;
-	}
-
 	/**
 	 *  添加使用者
 	 * @param u
@@ -371,16 +350,15 @@ public class UserController {
 	 */
 	@RequestMapping("addUsermanagement")
 	@ResponseBody
-	public ResultData<Loginuser> addUsermanagement(@RequestBody Usermanagement u) throws Exception {
-		ResultData<Loginuser> re = new ResultData<Loginuser>();
+	public ResultBase addUsermanagement(@RequestBody Usermanagement u){
+		ResultBase re = new ResultBase();
 		try{
 			re=userService.addUsermanagement(u,re);
 		}catch (Exception e) {
-			logger.info(e.getMessage());
+			logger.error("UserController>>>>>>>>>>>>>>>>addUsermanagement",e);
 		}
 		return re;
 	}
-	
 	/**
 	 * 单独的修改用户手机号,updateUser也可以使用
 	 * 
@@ -412,65 +390,6 @@ public class UserController {
 		return re;
 	}
 	/**
-	 * 通过role判断该用户为该设备的那种角色---啊健
-	 * 
-	 * @param map
-	 * @return
-	 */
-	@RequestMapping("queryHomepageUserInfo")
-	@ResponseBody
-	public ResultData<User> queryHomepageUserInfo(
-			@RequestBody Map<String, Object> map) {
-		ResultData<User> re = new ResultData<User>();
-		try {
-			User user = userService.queryHomepageUserInfo(map);
-			if (null != user && user.getRole().equals("使用者")) {
-				if (user.getAvatar() == null) {
-					user.setAvatar(useravatarservice.selectavartar()
-							.getAvatar());
-				}
-				String calibration = user.getCalibration();
-				if(calibration == null){
-					user.setCalibration("0");
-				}
-				re.setCode(200);
-				re.setData(user);
-				re.setMessage("获取使用者个人信息成功！！");
-			} else {
-				re.setCode(400);
-				re.setMessage("失败,必须是使用者ID或者权限为使用者！！！");
-			}
-		} catch (Exception e) {
-			logger.info(e.getMessage());
-		}
-		return re;
-
-	}
-	/**
-	 * 设置用户围栏信息
-	 * 
-	 * @param id rodius midpoint
-	 * @return
-	 */
-	@RequestMapping("setRodiusAndMidpoint")
-	@ResponseBody
-	public ResultBase setRodiusAndMidpoint(@RequestBody User user) {
-		ResultBase re = new ResultBase();
-		
-		try{
-			
-				userMapper.setRodiusAndMidpoint(user);
-				re.setMessage("修改成功");
-				re.setCode(200);
-				
-			}catch (Exception e) {
-				logger.info(e.getMessage());
-				re.setMessage("修改失败");
-				re.setCode(400);
-			}
-		return re;
-	}
-	/**
 	 * 设置用户健康数据的更新时间
 	 * 
 	 */
@@ -481,7 +400,6 @@ public class UserController {
 		try{
 			String imei = user.getImei();
 			String jfdataUpdateTime = (String) user.getJfdataUpdateTime();
-			//BluetoothMap.deletesb(imei);
 			SocketChannel c = (SocketChannel) NettyChannelMap.get(imei);
 			if(c!=null){
 				c.writeAndFlush("$R27|" + jfdataUpdateTime + "\r\n");
@@ -525,7 +443,7 @@ public class UserController {
 	public ResultBase updateCalibration(@RequestBody User user) {
 		ResultBase re = new ResultBase();
 		try{
-			String calibration = user.getCalibration();
+			String calibration = String.valueOf(user.getCalibration());
 			Integer id = user.getId();
 			logger.info("设置学习状态id="+id+"calibration="+calibration);
 			userMapper.updateCalibration(user);
@@ -534,8 +452,6 @@ public class UserController {
 		}
 		return re;
 	}
-	
-	
 	/**\
 	 * 忘记密码,重置密码
 	 * @param m
@@ -543,7 +459,7 @@ public class UserController {
 	 */
 	@RequestMapping("recoverpassword")
 	@ResponseBody
-	public ResultBase recoverpassword(@RequestBody Map m){
+	public ResultBase recoverpassword(@RequestBody DataRow m){
 		ResultBase re = new ResultBase();
 		String phone = (String) m.get("phone");
 		String code =  (String) m.get("code");
@@ -556,7 +472,7 @@ public class UserController {
 			User u = userMapper.ifUser(phone);
 			if(u!=null){
 			u.setPassword(MD5Util.MD5(password));
-			userService.updateUser(u);
+			userService.updateById(u);
 			re.setCode(200);
 			re.setMessage("找回密码成功！！！");
 		}else {

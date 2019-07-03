@@ -4,18 +4,23 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
 @TableName("equipment_data")
 public class EquipmentData extends Model<EquipmentData>{
 	private static final long serialVersionUID = 1L;
+	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
-
+	@TableField(value="user_id")
     private Integer userId;
-
+	@TableField(value="step_when")
     private Integer stepWhen;
 
    private Integer carrieroad;
-
+   @TableField(value = "createtime",fill = FieldFill.INSERT )
     private Date createtime;
 
     public Integer getId() {

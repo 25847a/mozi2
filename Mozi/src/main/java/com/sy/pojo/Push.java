@@ -4,13 +4,18 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
 @TableName("push")
 public class Push extends Model<Push>{
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 编号id
 	 */
+	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
 	/**
 	 * 登录 的mid做为alias
@@ -44,27 +49,30 @@ public class Push extends Model<Push>{
 	/**
 	 * 创建时间
 	 */
-	private Date createTime;
+	@TableField(value = "createtime",fill = FieldFill.INSERT )
+	private Date createtime;
 	/**
-	 * 修改时间
+	 * 低血压低位值
 	 */
+	
 	private Integer lbpstart;
 	/**
-	 * 修改时间
+	 * 低血压高位值
 	 */
 	private Integer lbpend;
 	/**
-	 * 修改时间
+	 * 高血压低位值
 	 */
 	private Integer hbpstart;
 	/**
-	 * 修改时间
+	 * 高血压高位值
 	 */
 	private Integer hbpend;
 	/**
 	 * 修改时间
 	 */
-	private Date updateTime;
+	@TableField(value = "updatetime",fill = FieldFill.INSERT_UPDATE )
+	private Date updatetime;
 
 	public Integer getId() {
 		return id;
@@ -122,12 +130,12 @@ public class Push extends Model<Push>{
 		this.heartHigThd = heartHigThd;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
+	public Date getCreatetime() {
+		return createtime;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
 	}
 
 	public Integer getLbpstart() {
@@ -163,11 +171,11 @@ public class Push extends Model<Push>{
 	}
 
 	public Date getUpdateTime() {
-		return updateTime;
+		return updatetime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
 	}
 
 	public Integer getUserId() {

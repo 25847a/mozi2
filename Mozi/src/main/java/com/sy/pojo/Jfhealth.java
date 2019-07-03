@@ -4,18 +4,23 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
 
 @TableName("jfhealth")
 public class Jfhealth extends Model<UserEq>{
 	
 	private static final long serialVersionUID = 1L;
+	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
 
     private Integer HRV;
-
+    @TableField(value="sbp_ave")
     private Integer sbpAve;
-
+    @TableField(value="dbp_ave")
     private Integer dbpAve;
 
     private Integer heartrate;
@@ -29,7 +34,7 @@ public class Jfhealth extends Model<UserEq>{
     private String phone;
 
     private String imei;
-
+    @TableField(value = "createtime",fill = FieldFill.INSERT )
     private Date createtime;
 
     private String amedicalreport;

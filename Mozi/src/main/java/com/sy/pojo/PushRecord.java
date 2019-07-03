@@ -2,12 +2,15 @@ package com.sy.pojo;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PushRecord {
 	/**
 	 * 主键ID
 	 */
+	@TableId(value="id", type= IdType.AUTO)
 	private Long id;
 	/**
 	 * 使用者ID

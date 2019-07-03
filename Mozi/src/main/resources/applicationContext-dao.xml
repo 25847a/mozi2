@@ -127,11 +127,17 @@
 	    <property name="dbColumnUnderline" value="false" />  
  	    <property name="sqlInjector">  
 	        <bean class="com.baomidou.mybatisplus.mapper.AutoSqlInjector" />  
-	    </property>  
+	    </property> 
+	    <!--注入公共字段填充处理器-->
+    <property name="metaObjectHandler" ref="metaHandler"></property> 
 	</bean> 
+	<!--自定义公共字段填充处理器-->
+	<bean class="com.sy.utils.MyMetaObjectHandler" id="metaHandler"></bean>
+	
 	
 
-<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
         <constructor-arg ref="sqlSessionFactory" />  
     </bean>
 

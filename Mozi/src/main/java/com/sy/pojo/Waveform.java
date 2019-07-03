@@ -1,6 +1,10 @@
 package com.sy.pojo;
 
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.enums.IdType;
+
 public class Waveform {
+	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
 	private Integer userId;
 	private String imei;

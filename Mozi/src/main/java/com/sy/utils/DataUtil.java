@@ -219,7 +219,7 @@ public class DataUtil {
 	}
 	/*******************************************************二级页面的聚合函数值和提示语******************************************************/
 	/**
-	 * 1.心率
+	 * 1.心率type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static ResultData<DataRow> heartSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
@@ -233,26 +233,27 @@ public class DataUtil {
 		dataRow.put("indexType", indexType);
 		dataRow.put("healthData", String.valueOf(jfhealth.getHeartrate()));
 		dataRow.put("unit", "次/分钟");
+		dataRow.put("name", "心率");
 		int low =ReadProperties.getIntValue("heartLow");
 		int higt = ReadProperties.getIntValue("heartHigh");
 		if(jfhealth.getHeartrate()<low){
 			dataRow.put("analy", ReadProperties.getValue("heartAnalyC"));
 			dataRow.put("proposal", ReadProperties.getValue("heartProposalC"));
 			dataRow.put("reason", "心动过慢");
+			dataRow.put("type", 1);
 		}else if(jfhealth.getHeartrate()>=low && jfhealth.getHeartrate()<=higt){
 			dataRow.put("analy", ReadProperties.getValue("heartAnalyA"));
 			dataRow.put("proposal", ReadProperties.getValue("heartProposalA"));
 			dataRow.put("reason", "心动正常");
+			dataRow.put("type", 0);
 		}else if(jfhealth.getHeartrate()>higt){
 			dataRow.put("analy", ReadProperties.getValue("heartAnalyB"));
 			dataRow.put("proposal", ReadProperties.getValue("heartProposalB"));
 			dataRow.put("reason", "心动过速");
+			dataRow.put("type", 1);
 		}
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
-		//心率
-		/*da=DataUtil.heartrateData("heartrate","心率",1, "次/分",jfhealth.getHeartrate()==null?0:jfhealth.getHeartrate());
-		list.add(da);*/
 		//血氧
 		da=DataUtil.mocrocirculationData("qxygen","血氧",2, "%",jfhealth.getBloodoxygen()==null?0:jfhealth.getBloodoxygen());
 		list.add(da);
@@ -308,7 +309,7 @@ public class DataUtil {
 		return re;
 	}
 	/**
-	 * 2.血氧
+	 * 2.血氧type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static ResultData<DataRow> bloodSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
@@ -317,20 +318,24 @@ public class DataUtil {
 		dataRow.put("range", ReadProperties.getValue("bloodRange"));
 		dataRow.put("healthData", String.valueOf(jfhealth.getBloodoxygen()));
 		dataRow.put("unit", "%");
+		dataRow.put("name", "血氧");
 		int low =ReadProperties.getIntValue("bloodLow");
 		int higt = ReadProperties.getIntValue("bloodHigh");
 		if(jfhealth.getBloodoxygen()<low){
 			dataRow.put("analy", ReadProperties.getValue("bloodAnalyB"));
 			dataRow.put("proposal", ReadProperties.getValue("bloodProposalB"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(jfhealth.getBloodoxygen()>=low && jfhealth.getBloodoxygen()<=higt){
 			dataRow.put("analy", ReadProperties.getValue("bloodAnalyA"));
 			dataRow.put("proposal", ReadProperties.getValue("bloodProposalA"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 0);
 		}else if(jfhealth.getBloodoxygen()>higt){
 			dataRow.put("analy", ReadProperties.getValue("bloodAnalyA"));
 			dataRow.put("proposal", ReadProperties.getValue("bloodProposalA"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -389,7 +394,7 @@ public class DataUtil {
 		return re;
 	}
 	/**
-	 * 3.微循环
+	 * 3.微循环血氧type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static ResultData<DataRow> microcSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
@@ -399,31 +404,36 @@ public class DataUtil {
 		int low =ReadProperties.getIntValue("microcLow");
 		int in = ReadProperties.getIntValue("microcIn");
 		int higt = ReadProperties.getIntValue("microcHigh");
+		int type = 0;
 		if(jfhealth.getMicrocirculation()<low){
 			analy=ReadProperties.getValue("microcAnalyC");
 			proposal = ReadProperties.getValue("microcProposalC");
 			reason = "无定义";
+			type=1;
 		}else if(jfhealth.getMicrocirculation()>=low && jfhealth.getMicrocirculation()<in){
 			analy=ReadProperties.getValue("microcAnalyC");
 			proposal = ReadProperties.getValue("microcProposalC");
 			reason = "无定义";
+			type=1;
 		}else if(jfhealth.getMicrocirculation()>=in && jfhealth.getMicrocirculation()<higt){
 			analy=ReadProperties.getValue("microcAnalyB");
 			proposal = ReadProperties.getValue("microcProposalB");
 			reason = "无定义";
+			type=1;
 		}else if(jfhealth.getMicrocirculation()>=higt){
 			analy=ReadProperties.getValue("microcAnalyA");
 			proposal = ReadProperties.getValue("microcProposalA");
 			reason = "无定义";
+			type=0;
 		}
 		
 		
 		
-		re=micro(jfhealth.getMicrocirculation(),ReadProperties.getValue("microcIntroduce"),ReadProperties.getValue("microcRange"),"%",analy,proposal,reason,data,re);
+		re=micro(jfhealth.getMicrocirculation(),ReadProperties.getValue("microcIntroduce"),ReadProperties.getValue("microcRange"),"%",analy,proposal,reason,type,data,re);
 		
 		return re;
 	}
-	public static ResultData<DataRow> micro(int healthData,String index,String range,String unit,String analy,String proposal,String reason,DataRow data,ResultData<DataRow> re){
+	public static ResultData<DataRow> micro(int healthData,String index,String range,String unit,String analy,String proposal,String reason,int type,DataRow data,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", index);
 		dataRow.put("range", range);
@@ -432,8 +442,8 @@ public class DataUtil {
 		dataRow.put("analy", analy);
 		dataRow.put("proposal", proposal);
 		dataRow.put("reason", reason);
-		
-		
+		dataRow.put("name", "血氧");
+		dataRow.put("type", type);
 		dataRow.put("detail", data);
 		re.setCode(200);
 		re.setData(dataRow);
@@ -441,7 +451,7 @@ public class DataUtil {
 		return re;
 	} 
 	/**
-	 * 4.呼吸
+	 * 4.呼吸type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static ResultData<DataRow> breathSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
@@ -450,20 +460,24 @@ public class DataUtil {
 		dataRow.put("range", ReadProperties.getValue("breathRange"));
 		dataRow.put("healthData", String.valueOf(jfhealth.getRespirationrate()));
 		dataRow.put("unit", "次/分钟");
+		dataRow.put("name", "呼吸");
 		int low =ReadProperties.getIntValue("breathLow");
 		int higt = ReadProperties.getIntValue("breathHigh");
 		if(jfhealth.getRespirationrate()<low){
 			dataRow.put("analy", ReadProperties.getValue("breathAnalyC"));
 			dataRow.put("proposal", ReadProperties.getValue("breathProposalA"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(jfhealth.getRespirationrate()>=low && jfhealth.getRespirationrate()<=higt){
 			dataRow.put("analy", ReadProperties.getValue("breathAnalyB"));
 			dataRow.put("proposal", ReadProperties.getValue("breathProposalB"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 0);
 		}else if(jfhealth.getRespirationrate()>higt){
 			dataRow.put("analy", ReadProperties.getValue("breathAnalyA"));
 			dataRow.put("proposal", ReadProperties.getValue("breathProposalA"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -522,7 +536,7 @@ public class DataUtil {
 		return re;
 	}
 	/**
-	 * 5.步数
+	 * 5.步数type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static ResultData<DataRow> stepWhenSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
@@ -534,6 +548,8 @@ public class DataUtil {
 		dataRow.put("analy", ReadProperties.getValue("stepAnalyA"));
 		dataRow.put("proposal", ReadProperties.getValue("stepProposalA"));
 		dataRow.put("reason", "无定义");
+		dataRow.put("name", "步数");
+		dataRow.put("type", 0);
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
 		//心率
@@ -591,7 +607,7 @@ public class DataUtil {
 		return re;
 	}
 	/**
-	 * 6.血压
+	 * 6.血压type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static ResultData<DataRow> pressureSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
@@ -600,6 +616,7 @@ public class DataUtil {
 		dataRow.put("range", ReadProperties.getValue("pressureRange"));
 		dataRow.put("healthData", jfhealth.getSbpAve()+"/"+jfhealth.getDbpAve());
 		dataRow.put("unit", "mmHg");
+		dataRow.put("name", "血压");
 		int low =ReadProperties.getIntValue("pressureLow");
 		int just = ReadProperties.getIntValue("pressureJust");
 		int in = ReadProperties.getIntValue("pressureIn");
@@ -609,26 +626,32 @@ public class DataUtil {
 			dataRow.put("analy", ReadProperties.getValue("pressureAnalyA"));
 			dataRow.put("proposal", ReadProperties.getValue("pressureProposalA"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(jfhealth.getSbpAve()>=low && jfhealth.getSbpAve()<just){
 			dataRow.put("analy", ReadProperties.getValue("pressureAnalyB"));
 			dataRow.put("proposal", ReadProperties.getValue("pressureProposalB"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 0);
 		}else if(jfhealth.getSbpAve()>=just && jfhealth.getSbpAve()<in){
 			dataRow.put("analy", ReadProperties.getValue("pressureAnalyC"));
 			dataRow.put("proposal", ReadProperties.getValue("pressureProposalB"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(jfhealth.getSbpAve()>=in && jfhealth.getSbpAve()<inHigh){
 			dataRow.put("analy", ReadProperties.getValue("pressureAnalyD"));
 			dataRow.put("proposal", ReadProperties.getValue("pressureProposalC"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(jfhealth.getSbpAve()>=inHigh && jfhealth.getSbpAve()<higt){
 			dataRow.put("analy", ReadProperties.getValue("pressureAnalyE"));
 			dataRow.put("proposal", ReadProperties.getValue("pressureProposalC"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(jfhealth.getSbpAve()>=higt){
 			dataRow.put("analy", ReadProperties.getValue("pressureAnalyF"));
 			dataRow.put("proposal", ReadProperties.getValue("pressureProposalC"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -687,7 +710,7 @@ public class DataUtil {
 		return re;
 	}
 	/**
-	 * 7.体温
+	 * 7.体温type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static ResultData<DataRow> warmSecondary(DataRow data,JfhealthNew jfhealth,Integer age,Float healthData,ResultData<DataRow> re){
@@ -696,6 +719,7 @@ public class DataUtil {
 		dataRow.put("range", ReadProperties.getValue("warmRange"));
 		dataRow.put("healthData", String.valueOf(healthData));
 		dataRow.put("unit", "℃");
+		dataRow.put("name", "体温");
 		Float low =ReadProperties.getFloatValue("warmLow");//36.3
 		Float just = ReadProperties.getFloatValue("warmJust");//37.5
 		Float in = ReadProperties.getFloatValue("warmIn");//38
@@ -705,26 +729,32 @@ public class DataUtil {
 			dataRow.put("analy", ReadProperties.getValue("warmAnalyA"));
 			dataRow.put("proposal", ReadProperties.getValue("warmProposalA"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(healthData>=low && healthData<just){
 			dataRow.put("analy", ReadProperties.getValue("warmAnalyB"));
 			dataRow.put("proposal", ReadProperties.getValue("warmProposalB"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 0);
 		}else if(healthData>=just && healthData<in){
 			dataRow.put("analy", ReadProperties.getValue("warmAnalyC"));
 			dataRow.put("proposal", ReadProperties.getValue("warmProposalC"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(healthData>=in && healthData<inHigh){
 			dataRow.put("analy", ReadProperties.getValue("warmAnalyD"));
 			dataRow.put("proposal", ReadProperties.getValue("warmProposalC"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(healthData>=inHigh && healthData<higt){
 			dataRow.put("analy", ReadProperties.getValue("warmAnalyE"));
 			dataRow.put("proposal", ReadProperties.getValue("warmProposalC"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}else if(healthData>=higt){
 			dataRow.put("analy", ReadProperties.getValue("warmAnalyF"));
 			dataRow.put("proposal", ReadProperties.getValue("warmProposalC"));
 			dataRow.put("reason", "无定义");
+			dataRow.put("type", 1);
 		}
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -842,60 +872,76 @@ public class DataUtil {
 		dataRow.put("range", ReadProperties.getValue("hrvRange"));
 		dataRow.put("healthData", String.valueOf(jfhealth.getHRV()));
 		dataRow.put("unit", "ms");
+		dataRow.put("name", "HRV");
 		if(age<18){
 			if(jfhealth.getHRV()<25){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}else if(jfhealth.getHRV()>=25 && jfhealth.getHRV()<120){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyA"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 0);
 			}else if(jfhealth.getHRV()>=120){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}
 		}else if(age>=18 && age<30){
 			if(jfhealth.getHRV()<25){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);;
 			}else if(jfhealth.getHRV()>=25 && jfhealth.getHRV()<120){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyA"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 0);
 			}else if(jfhealth.getHRV()>=120){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}
 		}else if(age>=30 && age<50){
 			if(jfhealth.getHRV()<27){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}else if(jfhealth.getHRV()>=27 && jfhealth.getHRV()<70){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyA"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 0);
 			}else if(jfhealth.getHRV()>=70){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}
 		}else if(age>=50 && age<70){
 			if(jfhealth.getHRV()<22){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}else if(jfhealth.getHRV()>=22 && jfhealth.getHRV()<60){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyA"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 0);
 			}else if(jfhealth.getHRV()>=60){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}
 		}else if(age>70){
 			if(jfhealth.getHRV()<22){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}else if(jfhealth.getHRV()>=22 && jfhealth.getHRV()<60){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyA"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 0);
 			}else if(jfhealth.getHRV()>=60){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
 				dataRow.put("reason", "无定义");
+				dataRow.put("type", 1);
 			}
 		}
 		dataRow.put("proposal", ReadProperties.getValue("hrvProposalA"));

@@ -28,25 +28,15 @@
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> 
 	<!-- jsp储存视图的路径 -->
 		<property name="prefix" value="/WEB-INF/view/"></property>
-		<property name="suffix" value=".jsp" 
+		<property name="suffix" value=".html" 
 		/> </bean> 
 
 	<!-- 静态资源解析 包括：js、css、images.... -->
 	<mvc:annotation-driven />
 	<mvc:resources location="/Mobile Surveys - Survey Anyplace_files/" mapping="/Mobile Surveys - Survey Anyplace_files/**" />
-	<mvc:resources location="/media/" mapping="/media/**/**" />
-	<mvc:resources location="/image/" mapping="/image/**" />
 	<mvc:resources location="/img/" mapping="/img/**" />
 	<mvc:resources location="/css/" mapping="/css/**" />
 	<mvc:resources location="/js/" mapping="/js/**" />
-	<mvc:resources location="/cssindex/" mapping="/cssindex/**" />
-	<mvc:resources location="/resources/" mapping="/resources/**" />
-	<mvc:resources location="/swagger/" mapping="/swagger/**" />
-	<mvc:resources location="/jsp/" mapping="/jsp/**" />
-	<mvc:resources location="/views/" mapping="/views/**" />
-	<mvc:resources location="/index.html" mapping="/index.html" />
-	<mvc:resources location="/h5/" mapping="/h5/**/**" />
-	<mvc:resources location="/jksj/" mapping="/jksj/**/**" />
 
 	<!-- 使用mva:mvc:annotation-driven代替注解映射器和注解适配器配置 默认加载很多的参数绑定方法、比如：json转换解析器就默认加载了、如果使用这个就不用配置上边两个配置了 
 		实际开发时使用 注入自定义参数绑定 :conversion-service="conversionService" 注入校验器:validator="validator" -->
@@ -63,7 +53,6 @@
 			</bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
-
 	<!-- 自定义参数绑定 conversionService -->
 	<bean id="conversionService"
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
@@ -75,8 +64,6 @@
 			</list>
 		</property>
 	</bean>
-
-
 	<!-- 文件上传 -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -86,48 +73,18 @@
 			<value>52428800000</value>
 		</property>
 	</bean>
-
-
-
 <!-- 拦截器配置 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
+			<!-- 拦截所有的请求，这个必须写在前面，也就是写在【不拦截】的上面 -->
 			<mvc:mapping path="/**" />
+			<!-- 但是排除下面这些，也就是不拦截请求 -->
 			<mvc:exclude-mapping path="/Mobile Surveys - Survey Anyplace_files/**"/>
 			<mvc:exclude-mapping path="/css/**"/>
-			<mvc:exclude-mapping path="/media/**"/>
-			<mvc:exclude-mapping path="/cssindex/**"/>
 			<mvc:exclude-mapping path="/js/**"/>
 			<mvc:exclude-mapping path="/img/**"/>
-			<mvc:exclude-mapping path="/image/**"/>
-			<mvc:exclude-mapping path="/user/test"/>
-			<mvc:exclude-mapping path="/user/login"/>
 			<mvc:exclude-mapping path="/css/**"/>
-			<mvc:exclude-mapping path="/jsp/**"/>
-			<mvc:exclude-mapping path="/h5/pay"/>
 			<bean class="com.sy.interceptor.SecurityInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
-		
-    <!-- 全局异常处理
-    <bean id="exceptionHandler" class="com.sy.exception.CustomExceptionResolver" />   -->  
-    
-    <!--Bean自动代理处理器 配置
-    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator" >
-        <property name="beanNames">
-            <list>
-                配置需要进行日志记录的Service和Dao
-                <value>*Dao</value>
-                <value>*Mapper</value>
-                <value>*service</value>
-            </list>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>exceptionAdvisor</value>
-				<value>methodLogInterceptor</value>
-                <value>transactionInterceptor</value>
-            </list>
-        </property>
-    </bean> -->
 </beans>

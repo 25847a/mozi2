@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.sy.common.ResultBase;
 import com.sy.pojo.Uploaddownload;
 import com.sy.pojo.Versionhistory;
 import com.sy.service.UploaddownloadService;
 import com.sy.service.VersionhistoryService;
-import com.sy.utils.PageModel;
 
 @Controller
 @RequestMapping(value = "uploaddownload")
@@ -22,14 +20,8 @@ public class UploaddownloadController {
 	private VersionhistoryService versionhistoryservice;
 	@Autowired
 	private UploaddownloadService uploaddownloadservice;
-	@RequestMapping(value = "list")
-	public ModelAndView  list(Integer pageNo, String keyword){
-			ModelAndView mo = new ModelAndView();
-			PageModel<Uploaddownload> pagemodel = uploaddownloadservice.getusersone(pageNo, keyword);
-			mo.setViewName("uploaddownload");
-			mo.addObject("pageModel", pagemodel);
-		return mo;
-	}
+	
+	
 	@RequestMapping(value = "addUploaddownload")
 	public ResultBase addUploaddownload(String imei ,Integer id){
 		Versionhistory v=versionhistoryservice.seleversiontory(id);		

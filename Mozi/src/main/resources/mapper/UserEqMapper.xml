@@ -7,10 +7,12 @@
 		<result column="eq_id" property="eqId" jdbcType="INTEGER" />
 		<result column="typeof" property="typeof" jdbcType="INTEGER" />
 		<result column="authorized" property="authorized" jdbcType="VARCHAR" />
+		<result column="follow" property="follow" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, user_id, eq_id, typeof, authorized
+		id, user_id, eq_id, typeof, authorized,follow
 	</sql>
+	<!-- 根据ID查询数据 -->
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Integer">
 		select
@@ -18,10 +20,12 @@
 		from user_eq
 		where id = #{id,jdbcType=INTEGER}
 	</select>
+	<!-- 根据ID删除数据 -->
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from user_eq
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
+	<!-- 插入数据 -->
 	<insert id="insert" parameterType="com.sy.pojo.UserEq">
 		insert into user_eq (id, user_id, eq_id,
 		typeof, authorized)
@@ -29,6 +33,7 @@
 		#{eqId,jdbcType=INTEGER},
 		#{typeof,jdbcType=INTEGER}, #{authorized,jdbcType=VARCHAR})
 	</insert>
+	<!-- 插入数据 -->
 	<insert id="insertSelective" parameterType="com.sy.pojo.UserEq">
 		insert into user_eq
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -66,6 +71,7 @@
 			</if>
 		</trim>
 	</insert>
+	<!-- 更新数据 -->
 	<update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.UserEq">
 		update user_eq
 		<set>
@@ -92,48 +98,49 @@
 		authorized = #{authorized,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
+	<!-- 通过设备ID查询监护者唯一一条 -->
 	<select id="getuserimei2" parameterType="java.lang.Integer"
 		resultMap="BaseResultMap">
 		select * from user_eq where eq_id=#{eqId} and typeof = 2   
 			LIMIT 0, 1 
 	</select>
-	<select id="geteqid"  parameterType="java.lang.Integer" resultType="java.lang.Integer">
-	     select eq_id  from user_eq     where   user_id = #{userId}  and  typeof=2
+	<!-- 通过用户ID查询所有信息唯一一条 -->
+	<select id="queryUserEqLimit" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+	     select *  from user_eq   where   user_id = #{userId} LIMIT 0, 1 
 	</select>
+	<!-- 通过用户ID查询监护者 -->
 	<select id="selectguardianship" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 	     select * from user_eq   where  user_id=#{userId}  and typeof=0
 	</select>
+	<!-- 通过设备ID查询监护者 -->
 	<select id="ifguardianship" parameterType="java.lang.Integer"   resultMap="BaseResultMap">
 	    select * from user_eq where eq_id=#{eqId} and  typeof = 0
 	</select>
+	<!-- 通过设备ID查询使用者 -->
 	<select id="ifuse" parameterType="java.lang.Integer"   resultMap="BaseResultMap">
 	     select * from user_eq   where  eq_id=#{eqId}  and typeof = 2
 	</select>
+	<!-- 查询观察者 -->
 	<select id="ifObserved" parameterType="java.lang.Integer"   resultMap="BaseResultMap">
 	     select * from user_eq   where  eq_id=#{eqId}  and typeof=1  and user_id=#{userId}
 	</select>
+	<!-- 通过设备ID查询所有信息 -->
 	<select id="selelctequser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 	  	 select * from user_eq   where  eq_id = #{eqId} 
 	</select>
-
-	
-	<delete id="deleteequse" parameterType="com.sy.pojo.UserEq"  >
-	    delete from user_eq   where   typeof = 1  and eq_id = #{eqId}  and user_id = #{userId} 
-	</delete>
-	<delete id="deleteequsetype" parameterType="com.sy.pojo.UserEq"  >
-	    delete from user_eq   where   user_id=#{userId}  and eq_id = #{eqId}  and typeof=#{typeof}
-	</delete>
+	<!-- 通过用户ID查询所有信息 -->
 	<select id="selectuserqe" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
-	          select *  from user_eq     where   user_id = #{userId} 
+	          select *  from user_eq   where   user_id = #{userId} 
 	</select>
-	
+	<!-- 查询监护者 -->
 	<select id="selectGuardian"  resultMap="BaseResultMap" >
-	         select * from user_eq where eq_id = #{eqId} and user_id = #{mid} and typeof = 0
+	     select * from user_eq where eq_id = #{eqId} and user_id = #{mid} and typeof = 0
 	</select>
-	
+	<!-- 查询使用者 -->
 	<select id="geteqiduse"  parameterType="java.lang.Integer" resultType="java.lang.Integer">
-	 select  eq_id  from user_eq     where   user_id = #{userId}  and  typeof=2
+	 	select  eq_id  from user_eq where  user_id = #{userId}  and  typeof=2
 	</select>
+	<!-- 删除所有该设备号的 -->
 	<delete id="deleteguardian"  parameterType="java.lang.Integer"  >
 	  delete from user_eq where eq_id = #{eqId}
 	</delete>
@@ -149,9 +156,9 @@
 		ON tp.user_id=td.id
 	</select>
 	<!-- 通过监护者ID查询首页需要的数据-->
-	<select id="queryUserEq" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	<select id="queryUserEq" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
 		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,tv.positioning_data,td.avatar,tc.imei,td.age,tp.typeof as type_of FROM user_eq tp
-		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId} AND typeof='0') tt
+		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id AND tp.typeof='2'
 		INNER JOIN user td
 		ON tp.user_id=td.id
@@ -159,26 +166,44 @@
 		ON td.imei=tc.imei
 		LEFT JOIN (SELECT * FROM positionig ORDER BY cratetime DESC LIMIT 1) tv
 		ON tc.imei=tv.imei
-		WHERE td.follow=1 and isDelete=0
+		WHERE tt.follow=1 and isDelete=0
 	</select>
 	<!-- 查询关注人使用者列表-->
-	<select id="queryUserEqFollowUsersList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		SELECT tp.user_id,tc.name,tc.avatar,tc.follow,td.lordpower,td.eq_status,td.bluetooth_type,tp.typeof as type_of FROM user_eq tp
+	<select id="queryUserEqFollowUsersList" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
+		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.bluetooth_type,tp.typeof as type_of FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE typeof=0 AND user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id and tp.typeof=2
 		INNER JOIN equipment td
 		ON tp.eq_id=td.id
 		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tc
 		ON tp.user_id=tc.id
+		ORDER BY tt.follow DESC
 	</select>
 	<!-- 查询关注人观察者列表-->
-	<select id="queryUserEqFollowObserverList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		SELECT tp.user_id,tc.name,tc.avatar,tc.follow,td.lordpower,td.eq_status,td.bluetooth_type,tt.typeof as type_of FROM user_eq tp
+	<select id="queryUserEqFollowObserverList" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
+		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.bluetooth_type,tt.typeof as type_of FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE  typeof=1 AND user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id and tp.typeof=2
 		INNER JOIN equipment td
 		ON tp.eq_id=td.id
 		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tc
 		ON tp.user_id=tc.id
+		ORDER BY tt.follow DESC
 	</select>
+	<!-- 根据监护者ID更新所有follow为0 -->
+	<update id="updateUserEqFollow" parameterType="com.sy.utils.DataRow">
+		UPDATE user_eq SET follow=0 WHERE user_id=#{alias}
+	</update>
+	<!-- 根据设备ID和用户ID更新follow为1 -->
+	<update id="updateUserEqFollowInfo" parameterType="com.sy.utils.DataRow">
+		UPDATE user_eq SET follow=1 WHERE user_id=#{alias} and eq_id=#{id}
+	</update>
+		<!-- 删除监护者 -->
+	<delete id="deleteequse" parameterType="com.sy.pojo.UserEq"  >
+	    delete from user_eq   where   typeof = 1  and eq_id = #{eqId}  and user_id = #{userId} 
+	</delete>
+	<!-- 删除数据 -->
+	<delete id="deleteequsetype" parameterType="com.sy.pojo.UserEq"  >
+	    delete from user_eq   where   user_id=#{userId}  and eq_id = #{eqId}  and typeof=#{typeof}
+	</delete>
 </mapper>
