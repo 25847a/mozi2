@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/company.css">
+    <script src="../js/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <h2 class="rich_media_title">广州墨子星智能科技集团有限公司</h2>
+            <div class="rich_media_meta_list ">
+                <span class="rich_media_meta">墨子星</span>
+                <em class="rich_media_meta rich_media_meta_text">1月31日</em>
+            </div>
+            <div class="rich_media_content">
+                <div class="img">
+                    <img src="https://mmbiz.qpic.cn/mmbiz/nia02yQdMmJY0WuvXwibYr8ZVfiaNqW5vq3shRBldiboWaYlM9iadvW4OTKMQry90XePObBqelZznJxicZuRYLiccYsMw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                        alt="">
+                </div>
+                <div class="content">
+                    <p class="title">
+                        <span>
+                            <img src="https://mmbiz.qpic.cn/mmbiz/nia02yQdMmJY0WuvXwibYr8ZVfiaNqW5vq3Pvzczqibcahe8VO5trIQ7aBmVW7DoGsViaYOnxTOD79ZteAX137BibDFQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                                alt="">
+                        </span>
+                        <span>
+                            <strong class="face">公司简介</strong>
+                        </span>
+                    </p>
+                    <section>
+                        <div v-for="item in list">
+                            <p>
+                                <img :src="item.imgurl" alt="">
+                            </p>
+                            <p>
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span>{{item.content}}</span>
+                            </p>
+                        </div>
+                    </section>
+                    <p>
+                        <span class="tail">
+                            <img src="https://mmbiz.qpic.cn/mmbiz/nia02yQdMmJY0WuvXwibYr8ZVfiaNqW5vq37jJU5P1kjb6Lk6iaUGb24VdeTQr1oO5FPlich8d6kREibTeVnxCNAmnyQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                                alt="">
+                        </span>
+                    </p>
+                    <p class="title">
+                        <span>
+                            <img src="https://mmbiz.qpic.cn/mmbiz/nia02yQdMmJY0WuvXwibYr8ZVfiaNqW5vq3Pvzczqibcahe8VO5trIQ7aBmVW7DoGsViaYOnxTOD79ZteAX137BibDFQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                                alt="">
+                        </span>
+                        <span>
+                            <strong class="face">核心团队</strong>
+                        </span>
+                    </p>
+                    <section>
+                        <div v-for="items of corelist">
+                            <p>
+                                <img :src="items.imageurl" alt="">
+                            </p>
+                            <p class="name">
+                                <span>
+                                    <strong>&nbsp;{{items.name}}&nbsp;{{items.position}}&nbsp;</strong>
+                                </span>
+                            </p>
+                            <p v-for="ites in items.text">
+                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span class="text">{{ites.msg}}</span>
+                            </p>
+                        </div>
+                    </section>
+                    <p>
+                        <span class="tail">
+                            <img src="https://mmbiz.qpic.cn/mmbiz/nia02yQdMmJY0WuvXwibYr8ZVfiaNqW5vq37jJU5P1kjb6Lk6iaUGb24VdeTQr1oO5FPlich8d6kREibTeVnxCNAmnyQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                                alt="">
+                        </span>
+                    </p>
+                    <p class="title">
+                        <span>
+                            <img src="https://mmbiz.qpic.cn/mmbiz/nia02yQdMmJY0WuvXwibYr8ZVfiaNqW5vq3Pvzczqibcahe8VO5trIQ7aBmVW7DoGsViaYOnxTOD79ZteAX137BibDFQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                                alt="">
+                        </span>
+                        <span>
+                            <strong class="face">公司文化</strong>
+                        </span>
+                    </p>
+                    <section>
+                        <div v-for="lists of culture">
+                            <p>
+                                <img :src="lists.img" alt="">
+                            </p>
+                            <p style="text-align: center">
+                                <span class="text" v-for="ites in lists.text">{{ites.msg}}</span>
+                                <span v-for="ites in lists.text">{{ites.msgg}}</span>
+                            </p>
+                            <p v-for="i in lists.txt" style="text-align: center">
+                                <span class="red">{{i.message}}</span>
+                                <span>{{i.test}}</span>
+                                <span>{{i.text}}</span>
+                            </p>
+                        </div>
+                    </section>
+                    <p>
+                        <span class="tail">
+                            <img src="https://mmbiz.qpic.cn/mmbiz/nia02yQdMmJY0WuvXwibYr8ZVfiaNqW5vq37jJU5P1kjb6Lk6iaUGb24VdeTQr1oO5FPlich8d6kREibTeVnxCNAmnyQ/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                                alt="">
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    culture: [
+                        {
+                            img: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmC4j1BMWUKibo1jBrYiaJYr6VJWjqgpVSGQoxgUChTXjoNic68SGWVQMc5MASAlun61L8zbE7qbyPXKQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            text: [
+                                {
+                                    msg: "墨子星是一家"
+                                },
+                                {
+                                    msg: "从事生命关怀服务"
+                                },
+                                {
+                                    msg: "的大数据运营商"
+                                }
+                            ],
+                            txt: [
+                                {
+                                    message: "我们的愿景：",
+                                    test: "做卓越的生命关怀服务运营平台"
+                                },
+                                {
+                                    message: "我们的使命：",
+                                    test: "用智能科技让关爱无处不在如影随形"
+                                },
+                                {
+                                    message: "我们核心价值观：",
+                                    test: "科技关爱、成就客户，同创共赢"
+                                },
+                                {
+                                    message: "我们的企业精神：",
+                                    test: "以人为本，创新为魂，稳健务实、开拓创新、团结拼搏、服务社会"
+                                },
+                                {
+                                    message: "我们的用人观：",
+                                    test: "德才兼备，以德为先，任人唯贤，用人所长"
+                                }
+                            ]
+                        },
+                        {
+                            img: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmAria6eXGnungGd5uWuYVr2GK2gNeRULeib80NMiaoiaTxn7uhQ6mib4DvBGYFrPicGDEFKfELPVmccc9cw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            text: [
+                                {
+                                    msgg: "墨子星"
+                                },
+                                {
+                                    msgg: "不是"
+                                },
+                                {
+                                    msgg: "在贩卖产品，"
+                                },
+                                {
+                                    msgg: "不是"
+                                },
+                                {
+                                    msgg: "在销售服务，"
+                                },
+                                {
+                                    msgg: "而是"
+                                },
+                                {
+                                    msgg: "在传播关爱"
+                                }
+                            ],
+                            txt: [
+                                {
+                                    text: "墨子星科技将关爱进行到底  长相随左右  将温情留在身边"
+                                },
+                                {
+                                    text: "爱在哪里  墨子星就在那里  墨子星的关爱伴你一生"
+                                },
+                                {
+                                    text: "墨子星智能产品是一款有爱的产品"
+                                }
+                            ]
+                        }
+                    ],
+                    corelist: [
+                        {
+                            imageurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmAria6eXGnungGd5uWuYVr2Grs37oknicyF7ibKDhTrwADopcgHk4SWpmqpuTDHSTBhXqJib5k2dy5VXQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            name: "谢虎",
+                            position: "董事长",
+                            text: [
+                                {
+                                    msg: "广州墨子星智能科技集团董事长兼CEO，创始人，博士，工业和信息化部领军人才，全国工商联中国民营经济国际合作商会主席团主席，广西科技厅火炬创业导师，2016中国民族品牌领军人物，CCTV对话中国品牌特邀嘉宾，SAP中国咨询顾问。"
+                                },
+                                {
+                                    msg: "主要负责公司发展与战略规划，负责公司内外部工作协调。曾任电子科技大学网络学院绵阳中心校长，四川涪创新能源有限公司总经理，广西长益智能科技有限公司执行董事（兼总经理）。"
+                                }
+                            ]
+                        },
+                        {
+                            imageurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmAria6eXGnungGd5uWuYVr2GDUhMe4dBZFOBxBFpIHMgRUAHfoR2G3x3SXLDOq1PiaUFdbiaxl0FRjLA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            name: " 刘心松",
+                            position: "首席科学家、教授、博士生导师 ",
+                            text: [
+                                {
+                                    msg: "电子科技大学教授，计算机系统结构博士点学科带头人。机电部有突出贡献专家，享受国务院政府特殊津贴专家。已发表科技论文200余篇，著书一本。曾获省部级科技成果或科技进步一、二、三等奖、科学大会奖和国家科技攻关表彰奖。"
+                                },
+                                {
+                                    msg: "国际高级并行处理技术会议程序委员会委员、分会主席，全国计算机系统结构学术年会程序委员会委员、程序委员会主席，航空科学基金项目评审专家，军事电子预研基金项目评审专家，国家自然科学基金评议专家，电子工业部科技进步奖资格评审委员，国家科技进步奖发明奖特邀评审委员，被美国传记研究院选入世界杰出领导者名录。"
+                                },
+                                {
+                                    msg: "2009年被中国民族贸易促进会和欧美同学基金会等授予'共和国功模人物'称号，并发给荣誉证书和奖章。"
+                                }
+                            ]
+                        },
+                        {
+                            imageurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmAtproARhKyC5CLzarsnD46jDynvvE51qJDLEBlX8D9Nib1LLlic35f1aIVf5EYrMITRd2DhriaWGGRQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            name: "陈浩",
+                            position: "墨子星智能科技集团联合创始人",
+                            text: [
+                                {
+                                    msg: "墨子星集团子公司——成都维镑科技有限公司总经理。产业生态战略谋划及产业互联网策划师，华友会智联网副理事长、成都市政府互联网顾问、资深讲师。高级数学人才（曾获全国大学生数学建模竞赛一等奖），拥有三十年程序设计的技术背景。"
+                                },
+                                {
+                                    msg: "在IT和互联网行业有十余年研发、管理、培训、策划等实战经验，曾在深圳华为担任产品经理。负责公司软件类产品的总体规划和设计。"
+                                }
+                            ]
+                        }
+                    ],
+                    list: [
+                        {
+                            imgurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmC4j1BMWUKibo1jBrYiaJYr6VJWjqgpVSGQoxgUChTXjoNic68SGWVQMc5MASAlun61L8zbE7qbyPXKQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            content: "广州墨子星智能科技集团有限公司成立于2016年11月，公司坐落于广州市番禺区海伦堡创意园，环境十分优美，交通极为便利。是一家致力于用智能科技构筑生命关怀体系的大数据运营服务商。墨子星集团目前下属七家子公司，并拥有“MOZISTAR”和“益久康”两个商业品牌。"
+                        },
+                        {
+                            imgurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmCZ4BEvexjCxKsLx9Yq6J70HJolo1dfJ5lic52h1gwtPnWegr8JSPTDT5zOvXgLHyrgcibXCr7w0WBg/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            content: "公司以“智能科研+工业设计”为核心，汇集了一批国内卓越的计算机专家，优秀的工业设计、智能硬件及软件产品专家，以及诸多领域的专业人才和管理精英，目前已拥有数十项自主知识产权。"
+                        },
+                        {
+                            imgurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmCZ4BEvexjCxKsLx9Yq6J70viaWaFB48ZUkhmRZuJNjhltCF19IBBvqd5lnoJqCXCVCn90LjHWJRUA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            content: "　我们自建“区域经销+分享经济”运营模式，以场景营销和数字运营为基础，形成一整套完整的运营体系，协助用户用最短的时间，最高效的方法占领消费者心智，打开市场，提升业绩，而我们的售后服务团队，将以最快的速度、最有保障的服务解除用户的后顾之忧。"
+                        },
+                        {
+                            imgurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmC4j1BMWUKibo1jBrYiaJYr6VJWjqgpVSGQoxgUChTXjoNic68SGWVQMc5MASAlun61L8zbE7qbyPXKQ/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1",
+                            content: "       公司秉承“科技让关爱更简单”的价值理念，致力于提高国民健康保障及生命关怀之品质，并为实现经济效益和社会责任的双重目标而不懈奋斗。"
+                        },
+                        {
+                            imgurl: "https://mmbiz.qpic.cn/mmbiz_jpg/MtVkGNNOnmC4j1BMWUKibo1jBrYiaJYr6Vr1vvbEfrgJj8LC61eGNkDFPOYtV6ObdXiczf0kuEkiaHvAwCiaATxFqIw/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1"
+                        }
+
+                    ]
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

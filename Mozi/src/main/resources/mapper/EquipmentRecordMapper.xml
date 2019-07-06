@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sy.mapper.EquipmentRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.sy.pojo.EquipmentRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="humidity" property="humidity" jdbcType="INTEGER" />
+    <result column="temperature" property="temperature" jdbcType="FLOAT" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, humidity, temperature, createtime
+  </sql>
+  
+  <!-- 查询当天最新的湿度，体温 -->
+  <select id="queryEquipmentRecord" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM equipment_record WHERE userId=#{userId} AND createtime BETWEEN DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+	ORDER BY createtime DESC LIMIT 0,1
+  </select>
+  
+</mapper>

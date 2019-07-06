@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/manual.css">
+    <link rel="stylesheet" href="../css/swiper.css">
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-router.js"></script>
+    <script src="../js/swiper.js"></script>
+    <script src="https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <router-view class="use" name="use"></router-view>
+        <router-view class="prot" name="prot"></router-view>
+        <router-view class="hearts" name="hearts"></router-view>
+        <router-view class="brains" name="brains"></router-view>
+        <router-view class="copds" name="copds"></router-view>
+        <router-view class="asidebar" name="asidebar"></router-view>
+        <router-view class="content" name="content"></router-view>
+        <!-- <router-view class="footer" name="footer"></router-view> -->
+    </div>
+    <template id="a">
+        <ul class="top">
+            <li>
+                <router-link to="/user">
+                    <div class="all">
+                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300018278&di=422d1f21016198ada2f82d716618b148&imgtype=0&src=http%3A%2F%2Fpic1.cmt.com.cn%2Fnewspic%2Fimages%2F20161018_163103.jpg"
+                            alt="">
+
+                    </div>
+                    <h2>高血压</h2>
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/pro">
+                    <div class="all">
+                        <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2776001902,2501302300&fm=26&gp=0.jpg"
+                            alt="">
+
+                    </div>
+                    <h2>冠心病</h2>
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/heart">
+                    <div class="all">
+                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300197053&di=8ab8adf2e1275d6642d4bacdc8ea9084&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn%2F20171121%2F60a0-fynwxum7974273.jpg"
+                            alt="">
+
+                    </div>
+                    <h2>心梗</h2>
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/brain">
+                    <div class="all">
+                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300237552&di=d35333385603c5bd0976c481d480fe24&imgtype=0&src=http%3A%2F%2F07imgmini.eastday.com%2Fmobile%2F20190226%2F20190226145445_844b0cab3019de5d121cf4a416feaadd_1_mwpm_03201609.jpg"
+                            alt="">
+
+                    </div>
+                    <h2>脑梗</h2>
+                </router-link>
+            </li>
+            <li>
+                <router-link to="/copd">
+                    <div class="all">
+                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300278941&di=fe13599a417fb43ac049fc763e8bbba7&imgtype=0&src=http%3A%2F%2F03imgmini.eastday.com%2Fmobile%2F20181214%2F20181214195505_874b9d656eaef3e375be097da82675a8_1.jpeg"
+                            alt="">
+
+                    </div>
+                    <h2>慢阻肺</h2>
+                </router-link>
+            </li>
+        </ul>
+    </template>
+    <template id="b">
+        <div>
+            <div class="navlist">
+                <ul>
+                    <li class="navli" v-for="(item,index) in navList" :class="{'activeT':nowIndex===index}"
+                        @click="tabClick(index)"><i>{{item.name}}</i>
+                    </li>
+                </ul>
+            </div>
+            <div class="swiper-container swiper_con">
+                <div class="swiper-wrapper">
+                    <!-- 第一个swiper -->
+                    <div class="swiper-slide" ref="viewBox">
+                        <div class="rules">
+                            <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
+                            <div class="bscroll" ref="bscroll">
+                                <div class="bscroll-container">
+                                    <ul>
+                                        <li v-for="item in list" class="mind" @click="point(item)">
+                                            <div class="image">
+                                                <img :src="item.imgurl" alt="">
+                                            </div>
+                                            <div class="tit">
+                                                <h2>{{item.title}}</h2>
+                                                <div class="amount">
+                                                    <span>{{item.msg}}</span>
+                                                    <span>{{item.amount}}万人浏览</span>
+                                                </div>
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- <p class="x">加载更多...</p> -->
+                        </div>
+                    </div>
+                    <!-- 第二个swiper -->
+                    <div class="swiper-slide">
+                        <ul>
+                            <li v-for="item in motion" class="mind"  @click="point(item)">
+                                <div class="image">
+                                    <img :src="item.imgurl" alt="">
+                                </div>
+                                <div class="tit">
+                                    <h2>{{item.title}}</h2>
+                                    <div class="amount">
+                                        <span>{{item.msg}}</span>
+                                        <span>{{item.amount}}万人浏览</span>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 第3个swiper -->
+                    <div class="swiper-slide">
+                        <ul>
+                            <li v-for="item in diet" class="mind" @click="point(item)">
+                                <div class="image">
+                                    <img :src="item.imgurl" alt="">
+                                </div>
+                                <div class="tit">
+                                    <h2>{{item.title}}</h2>
+                                    <div class="amount">
+                                        <span>{{item.msg}}</span>
+                                        <span>{{item.amount}}万人浏览</span>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 第4个swiper -->
+                    <div class="swiper-slide">
+                        <ul>
+                            <li v-for="item in life" class="mind" @click="point(item)">
+                                <div class="image">
+                                    <img :src="item.imgurl" alt="">
+                                </div>
+                                <div class="tit">
+                                    <h2>{{item.title}}</h2>
+                                    <div class="amount">
+                                        <span>{{item.msg}}</span>
+                                        <span>{{item.amount}}万人浏览</span>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="c">
+        <p>这是底部</p>
+    </template>
+    <template id="d">
+        <div>
+            <div v-for="item in highlist">
+                <div class="public">
+                    <h3>{{item.title}}</h3>
+                </div>
+                <div v-for="(mesg,index) in item.message" class="common">
+                    <span v-if="item.message.length>1">{{index+1}}.</span>
+                    <p>{{mesg.msg}}</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="e">
+        <div>
+            <div v-for="item in highlist">
+                <div class="public">
+                    <h3>{{item.title}}</h3>
+                </div>
+                <div v-for="(mesg,index) in item.message" class="common">
+                    <span v-if="item.message.length>1">{{index+1}}.</span>
+                    <p>{{mesg.msg}}</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="f">
+        <div>
+            <div v-for="item in highlist">
+                <div class="public">
+                    <h3>{{item.title}}</h3>
+                </div>
+                <div v-for="(mesg,index) in item.message" class="common">
+                    <span v-if="item.message.length>1">{{index+1}}.</span>
+                    <p>{{mesg.msg}}</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="g">
+        <div>
+            <div v-for="item in highlist">
+                <div class="public">
+                    <h3>{{item.title}}</h3>
+                </div>
+                <div v-for="(mesg,index) in item.message" class="common">
+                    <span v-if="item.message.length>1">{{index+1}}.</span>
+                    <p>{{mesg.msg}}</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="h">
+        <div>
+            <div v-for="item in highlist">
+                <div class="public">
+                    <h3>{{item.title}}</h3>
+                </div>
+                <div v-for="(mesg,index) in item.message" class="common">
+                    <span v-if="item.message.length>1">{{index+1}}.</span>
+                    <p>{{mesg.msg}}</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>
+
+        var asidebar = {
+            template: "#a"
+        }
+        var content = {
+            template: "#b",
+            data() {
+                return {
+                    navList: [
+                        { name: '心理健康' },
+                        { name: '运动健康' },
+                        { name: '饮食健康' },
+                        { name: '生活健康' }
+                    ],
+                    nowIndex: 0,
+                    dropDown: false,
+                    list: [
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIMIKUEQ04148ETB.html?spss=newsapp",
+                            imgurl: "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3225765627,1552830925&fm=173&app=49&f=PNG?w=218&h=146&s=B420D710588B97111F8C28D7030080E3",
+                            title: "老年人心理关爱：关爱老人重在心理抚慰",
+                            msg: "养生科普",
+                            amount: "1256"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EDPNRDJN05492EV2.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2019%2F04%2F27%2F06d7a16f5b2f4fac9018df49f1e34ec4.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "老吾老：中老年人心理健康有以下10条标准",
+                            msg: "精选文章",
+                            amount: "224"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ11HSQQ0517OPJT.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2FI6U4vWZ97EGz0cN04QC9ejF7vqeirzPz3vCXxTF0QYCga1561972609293.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "老年人心理健康的十条金标准",
+                            msg: "精选文章",
+                            amount: "456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIM6U10V0528ERVF.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FjPXtHw03J99L7m919xyvkv0QHdlHZ2zbEL%3Dj4XNyDsJbN1561608919506.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "心理学家：如果你想让自己长期处在快乐之中，请坚持做三件事",
+                            msg: "精选文章",
+                            amount: "654"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIER6Q440514HJI7.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F5NBdOlhz0Pj%3Dw9qcMvx9qgt%3DTAOgD%3DvDq2Uf85L1rycys1561361983816.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "哪些因素可导致老年人心理问题",
+                            msg: "养生科普",
+                            amount: "2456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ824HV50528JSOA.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FRu73FVuCIyeZ0kLwvN0FYT5Gpj3YWZau8uRdtpp87cbuI1562208111468.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "心理测试：第一眼你看到了下图的什么？测你的心理承受能力多强！",
+                            msg: "精选文章",
+                            amount: "1346"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EDPNRDJN05492EV2.html?spss=newsapp",
+                            imgurl: "https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2708902322,3060776058&fm=173&app=49&f=JPG?w=218&h=146&s=BF1ECD4F4173343442CD98080300E042",
+                            title: "心里养生四要素，你听过吗",
+                            msg: "精选文章",
+                            amount: "2356"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/DPE59ACT0517EI01.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fcrawl.nosdn.127.net%2Fimg%2F47f0cb5682c85a9206070016fd5c1537.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "心理养生谨记有八戒",
+                            msg: "精选文章",
+                            amount: "1256"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/DN6FG5HO0514RN3D.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fspider.nosdn.127.net%2F597fb2753d4ca8ff0feb913b3e020bfb.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "【健康】心理健康的10个标准 你能达到几个？",
+                            msg: "养生科普",
+                            amount: "126"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/DN02QU7O0518PBJ9.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2FQ2vswK9j5GYO6nneRfs0MtbZYVX8CKUJ4x1eTPdLWZNwB1531875532835.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "关爱老年心理健康：为老人找点事儿",
+                            msg: "精选文章",
+                            amount: "1346"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/DGTRM8NG0516CTUT.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2Fv4JRC8hqt8I85dwNkYPOXsKRvc6z%3DN1q9ii7t%3D0hZ6tJV1525358541467compressflag.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "养花可以调节心理平衡，保持心理健康！",
+                            msg: "精选文章",
+                            amount: "1456"
+                        }
+                    ],
+                    motion: [
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EH6ERJBF05342ZTZ.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fspider.ws.126.net%2Ffee651f24275394ecc498ca9d326fb5e.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "【运动健康】甩腿千次，膝盖疼痛不用治",
+                            msg: "养生科普",
+                            amount: "1856"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ3VMD5E0514BBVC.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FQvKh4W4zanWILbniybNk5LTDsbFYz9CuCNSok0W0CKnfL1562071317949compressflag.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "如何运动才能降血压？如果是老年人，请做到这几点",
+                            msg: "精选文章",
+                            amount: "2224"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIPB7CV60514FFUL.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FqM1WFFf5%3Drkexto6PCCTRGrLmDI7wf8JmcbzHF3xKj4XH1561714326348compressflag.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "降脂有捷径：3类运动轮流做，血脂一稳再稳",
+                            msg: "精选文章",
+                            amount: "456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EI4O7FP70513ALN2.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FPIj8SLQVH9sGIeaVN4TSOyQdZX%3Dk9J19pWbXxDJBE%3DwBT1561023058600.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "其实，世界上最健康的运动不是跑步，而是走路！",
+                            msg: "精选文章",
+                            amount: "654"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EILNK8UL053111PT.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2FJGC18AefpnpVJv1Rlsb3XPvyMFLqcuRlFQzmJRRDT6gil1561593097434.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "每天步行30分钟，你的身体会发生神奇的变化",
+                            msg: "养生科普",
+                            amount: "123456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EDRQ22R50517BUV5.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2FAhaCD9E57nGHj83uBAmDN9caqQDFqPGKxwaxmTsGzCk3G1556428280685compressflag.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "不想老年痴呆？医生建议：常做这4项运动",
+                            msg: "精选文章",
+                            amount: "123456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIMHEIGU0526R2KU.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2NSpQoGxdy1RrULQlj8HmBEqxEW7TbhJiJwOOmjVhgTgE1561620191128.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "保护膝关节的11种常见方法",
+                            msg: "精选文章",
+                            amount: "1756"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EHVAEE1E05452S1W.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FEf16t5YdMP853BE6i9QTUMPudkuAqnEsA7krtIbS6jRgS1560841092468.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "中医养生功法，八段锦，太极拳，易筋经，五禽戏，运动，锻炼",
+                            msg: "精选文章",
+                            amount: "356"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EHG5LK4N053778KA.html?spss=newsapp",
+                            imgurl: "https://ss1.baidu.com/6ONXsjip0QIZ8tyhnq/it/u=2169988957,424978842&fm=173&app=49&f=JPG?w=218&h=146&s=E6303AC7717883929D19C48E0300F043",
+                            title: "剧烈运动后记得不要喝冷饮，也不要做这些事",
+                            msg: "养生科普",
+                            amount: "1456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ7IUJTE053722R8.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FuqBaEQKabhXJHK1F1L9RM0m8u7q9I2It1aJOxfaP9o3ka1562192190844compressflag.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "为什么我们需要瑜伽运动？4个理由，让你重新认识瑜伽运动",
+                            msg: "精选文章",
+                            amount: "123456"
+                        }
+                    ],
+                    diet: [
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EHCS131U05368T9O.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2019%2F06%2F11%2F8d2b69ff24594100ad2a096365aadba7.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "血脂偏高，疾病上身！高血脂的“死对头”，常吃3物，血液不粘稠",
+                            msg: "养生科普",
+                            amount: "1256"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ87ACOF0514VRGS.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FSyeOdeS%3D15TZePg%3Dgg29Rkkfih9zFwbU4NWpuvTdE2DNT1562213390740compressflag.png&thumbnail=690x2147483647&quality=75&type=png",
+                            title: "体检血压135/90，算是高血压吗？需要控制吗？为你一次性全说清",
+                            msg: "精选文章",
+                            amount: "2224"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ5AE45904158FGR.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FuqBaEQKabhXJHK1F1L9RM0m8u7q9I2It1aJOxfaP9o3ka1562192190844compressflag.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "什么样的饮食才算清淡饮食呢？",
+                            msg: "精选文章",
+                            amount: "456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ3KM0FU0514CKTV.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F%3DKdgNc63xknlgGDtgDNjVfdioUF%3DYaJN0DccoNod3r6eP1562058988943.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "健康生活|关于夏季饮食的几点注意事项",
+                            msg: "精选文章",
+                            amount: "654"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIU2VTQI053744H7.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2FrNVxl6dkAb3xBqK8MFzLCZE9YDZrj5DPhmDjor1LcUQiJ1561873453499.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "五谷杂粮带你正确打开夏季养胃的大门",
+                            msg: "养生科普",
+                            amount: "11456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/DOF3MBUE05149HT8.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2Fm1gnDfxCYFJRdtUVPsdl%3DFbMqU7jQNza0pnimOAiVB2TO1533453486157.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "这3种“食物相克”的养生谣言，你了解过吗？",
+                            msg: "精选文章",
+                            amount: "1236"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIM2KOJL0522R2QI.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FJfb21BTQf22hveKWyfcQVMGeKVGTFTrOSBwNcRzPkJebQ1561604665455.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "这菜是“血管清洁工”，隔三差五吃1次，防血栓，清理血管垃圾！",
+                            msg: "精选文章",
+                            amount: "12486"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EI6QAMV005372YR3.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2019%2F06%2F21%2Fb172457f773f4410b489042c2574fa0a.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "胃不好吃什么养胃？其实养胃食物就在你身边，你知道几个？",
+                            msg: "精选文章",
+                            amount: "123456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ803ENE054450DC.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FZs7f7SZNmEdnJN%3DvfjAWSpAvEsdNDzXFcCuySFhW9XUc51562205980829.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "想要不生病 合理饮食很关键",
+                            msg: "养生科普",
+                            amount: "15156"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIE7V39605149HT8.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2FemoNEy9C0nGg3j%3DCSSX1Y13skt3Noh1SsE6r5h%3DeKnahp1561341637958.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "夏季体内湿气重，饮食上注意好4点就够了",
+                            msg: "精选文章",
+                            amount: "986"
+                        }
+                    ],
+                    life: [
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIQULUFC0521BB8C.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fspider.ws.126.net%2F3afd7fec10d8429bad5c9462042276c6.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "2019年最健康的生活方式，牢牢收藏！",
+                            msg: "养生科普",
+                            amount: "65421"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ57JV6L05349179.html?spss=newsapp",
+                            imgurl: "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=490547070,1407030924&fm=173&app=49&f=PNG?w=218&h=146&s=B1A0DD1548A2F0178A2281F903009020",
+                            title: "生活常识丨4个信号说明你的血液太黏稠了",
+                            msg: "精选文章",
+                            amount: "224"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIPS5OT90522858B.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fspider.ws.126.net%2F47aa710d4af75e94a39517472d8f06be.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "这十种食物不能放进冰箱？似是而非的“生活常识”",
+                            msg: "精选文章",
+                            amount: "456"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/DS2OD6SC0525SGHO.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.nosdn.127.net%2FJUfY2OuxqyLeEd604qZ1E7YLFCt5xVsaxRn3VtsCNnpFt1537334062812.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "生活贴士：30个日常生活小常识",
+                            msg: "精选文章",
+                            amount: "654"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EIVQLFUE0521836G.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fspider.ws.126.net%2Facd8e4ed91039e68738ed89a1d6001ad.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "[养生]炎夏养生须谨记：一觉、二瓜、三汤、四穴、五果",
+                            msg: "养生科普",
+                            amount: "346"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ7L7D3T05444WZB.html?spss=newsapp",
+                            imgurl: "http://nimg.ws.126.net/?url=http%3A%2F%2Fdingyue.ws.126.net%2F2019%2F07%2F04%2F33d233959eda467d81f266c173f5b926.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "宽心谣+静心谣+去烦谣+夫妻快乐谣+莫生气，送给你",
+                            msg: "精选文章",
+                            amount: "2356"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ8HHN850514A8O4.html?spss=newsapp",
+                            imgurl: "https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=2708902322,3060776058&fm=173&app=49&f=JPG?w=218&h=146&s=BF1ECD4F4173343442CD98080300E042",
+                            title: "【生活小常识】去医院看病八大注意",
+                            msg: "精选文章",
+                            amount: "1346"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ8EASCI0514CO1G.html?spss=newsapp",
+                            imgurl: "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2305125021,3798108512&fm=173&app=49&f=PNG?w=218&h=146&s=69E233660247A1155900658A0300C092",
+                            title: "你的头发健康吗？快来看看头发缺少哪些营养",
+                            msg: "精选文章",
+                            amount: "1236"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ83HLVA05128AKO.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fcrawl.ws.126.net%2F8cf8e22f8f4e7bef51c0149ebd7c613e.jpg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "保健品不是药，日常用药守六条",
+                            msg: "养生科普",
+                            amount: "345"
+                        },
+                        {
+                            Jumpurl:"https://c.m.163.com/news/a/EJ69GNMB05128AKO.html?spss=newsapp",
+                            imgurl: "https://nimg.ws.126.net/?url=http%3A%2F%2Fspider.ws.126.net%2Fb8142d6f1c5f69cbdc52b4f6c298615b.jpeg&thumbnail=690x2147483647&quality=75&type=jpg",
+                            title: "夏季泡脚好处多，补肾、祛湿、降血压……赶紧安排上！",
+                            msg: "精选文章",
+                            amount: "246"
+                        }
+                    ]
+                        
+                }
+            },
+            mounted() {
+                var that = this
+                that.mySwiper = new Swiper('.swiper-container', {
+                    initialSlide: 0,
+                    autoplay: false,
+                    keyboardControl: true,
+                    autoHeight: true,
+                    observer: true,
+                    observeParents: true,
+                    onSlideChangeStart: function () {
+                        //console.log(that.mySwiper.activeIndex)
+                        that.nowIndex = that.mySwiper.activeIndex
+                    },
+                    on: {
+                        slideChangeTransitionStart: function () {
+                            //console.log(this.activeIndex);
+                            that.nowIndex = that.mySwiper.activeIndex
+                        },
+                    },
+
+                });
+                // this.getList();
+                this.scrollFn();
+            },
+            methods: {
+                //点击那一条
+                point(item){
+                    console.log(item.Jumpurl)
+                    window.open(item.Jumpurl)
+                },
+
+                //点击滑动第几个
+                tabClick(index) {
+                    this.nowIndex = index
+                    this.mySwiper.slideTo(index, 1000, false)
+                },
+                scrollFn() {
+                    this.$nextTick(() => {
+                        if (!this.scroll) {
+                            this.scroll = new BScroll(this.$refs.bscroll, {
+                                click: true,
+                                scrollY: true,
+                                probeType: 3
+                            });
+                        } else {
+                            this.scroll.refresh();
+                        }
+                        this.scroll.on('scroll', (pos) => {
+                            //console.log(pos.y, this.dropDown)
+                            //如果下拉超过50px 就显示下拉刷新的文字
+                            if (pos.y > 50) {
+                                this.dropDown = true
+                            } else {
+                                this.dropDown = false
+                            }
+                        })
+                        //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
+                        this.scroll.on('touchEnd', (pos) => {
+                            // 下拉动作
+                            if (pos.y > 50) {
+                                console.log("下拉刷新成功")
+                                this.dropDown = false
+                            }
+                            //上拉加载 总高度>下拉的高度+10 触发加载更多
+                            if (this.scroll.maxScrollY > pos.y + 10) {
+                                console.log("加载更多")
+                                //使用refresh 方法 来更新scroll  解决无法滚动的问题
+                                this.scroll.refresh()
+                            }
+                            //console.log(this.scroll.maxScrollY + "总距离----下拉的距离" + pos.y)
+                        })
+                        //console.log(this.scroll.maxScrollY)
+                    });
+                }
+
+            },
+        }
+        var footer = {
+            template: "#c"
+        }
+        var use = {
+            template: "#d",
+            data() {
+                return {
+                    highlist: [
+                        {   
+                            title: "疾病介绍",
+                            message: [
+                                {
+                                    msg: "高血压是指以体循环动脉血压增高为主要特征（收缩压≥140mmHg，舒张压≥90mmHg），可伴有心、脑、肾等器官的功能或器质性损害的临床综合征。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                         title: "临床表现",
+                            message: [
+                                {
+                                    msg: "早期可能无症状或症状不明显，常见的是头晕、头痛、颈项板紧、疲劳、心悸等。仅仅会在劳累、精神紧张、情绪波动后发生血压升高，并在休息后恢复正常。"
+                                },
+                                {
+                                    msg: "当血压突然升高到一定程度时甚至会出现剧烈头痛、呕吐、心悸、眩晕等症状，严重时会发生神志不清、抽搐，多会在短期内发生严重的心、脑、肾等器官的损害和病变，如中风、心梗、肾衰等。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                        title: "治疗方法",
+                            message: [
+                                {
+                                    msg: "减轻并控制体重"
+                                },
+                                {
+                                    msg: "合理膳食，减少钠盐和脂肪的摄入"
+                                },
+                                {
+                                    msg: "适当增加运动"
+                                },
+                                {
+                                    msg: "减轻精神压力，保持平衡心理"
+                                },
+                                {
+                                    msg: "戒烟，少饮酒"
+                                }
+                            ]
+
+                        }
+                    ]
+
+                }
+            },
+            methods: {
+
+            }
+        }
+        var prot = {
+            template: "#e",
+            data() {
+                return {
+                    highlist: [
+                        {
+                         title: "疾病介绍",
+                            message: [
+                                {
+                                    msg: "冠状动脉粥样硬化性心脏病是冠状动脉血管发生动脉粥样硬化病变而引起血管腔狭窄或阻塞，造成心肌缺血、缺氧或坏死而导致的心脏病，常常被称为“冠心病”。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                         title: "临床表现",
+                            message: [
+                                {
+                                    msg: "典型胸痛，因体力活动、情绪激动等诱发，突感心前区疼痛，多为发作性绞痛或压榨痛，也可为憋闷感。"
+                                },
+                                {
+                                    msg: "需要注意，部分患者的症状并不典型，仅仅表现为心前区不适、心悸或乏力，或以胃肠道症状为主。某些患者可能没有疼痛，如老年人和糖尿病患者。"
+                                },
+                                {
+                                    msg: "猝死，约有1/3的患者首次发作冠心病表现为猝死。"
+                                },
+                                {
+                                    msg: "其他，可伴有全身症状，如发热、出汗、惊恐、恶心、呕吐等。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                          title: "治疗方法",
+                            message: [
+                                {
+                                    msg: "药物治疗"
+                                },
+                                {
+                                    msg: "戒烟限酒，低脂低盐饮食，适当体育锻炼，控制体重等"
+                                },
+                                {
+                                    msg: "血运重建治疗，包括介入治疗（血管内球囊扩张成形术和支架植入术）和外科冠状动脉旁路移植术"
+                                }
+                            ]
+
+                        }
+                    ]
+
+                }
+            },
+            methods: {
+
+            }
+        }
+        var hearts = {
+            template: "#f",
+            data() {
+                return {
+                    highlist: [
+                        {
+                          title: "疾病介绍",
+                            message: [
+                                {
+                                    msg: "心肌梗死在病理上被定义为长时间缺血导致的心肌细胞死亡。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                           title: "临床表现",
+                            message: [
+                                {
+                                    msg: "最常见的是胸骨后或心前区的疼痛，疼痛向左肩、左臂放射，疼痛有时在上腹部，同时胸骨后有憋闷不适，疼痛剧烈时间久，伴大汗、恶心呕吐等。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                          title: "治疗方法",
+                            message: [
+                                {
+                                    msg: "药物治疗"
+                                },
+                                {
+                                    msg: "手术治疗，直接冠状动脉介入治疗（PCI）、冠状动脉旁路移植术"
+                                },
+                                {
+                                    msg: "多食富含纤维素、易消化、清淡的饮食"
+                                },
+                                {
+                                    msg: "少食高胆固醇、高热量、高脂食物"
+                                },
+                                {
+                                    msg: "禁食油炸、辛辣等刺激性食物"
+                                },
+                                {
+                                    msg: "忌烟忌酒"
+                                }
+                            ]
+
+                        }
+                    ]
+
+                }
+            },
+            methods: {
+
+            }
+        }
+        var brains = {
+            template: "#g",
+            data() {
+                return {
+                    highlist: [
+                        {
+                          title: "疾病介绍",
+                            message: [
+                                {
+                                    msg: "脑梗死是指血液中的各种栓子（如心脏内的附壁血栓、动脉粥样硬化的斑块、脂肪、肿瘤细胞、纤维软骨或空气等）随血流进入脑动脉而阻塞血管，当侧支循环不能代偿时，引起该动脉供血区脑组织缺血性坏死，出现局灶性神经功能缺损。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                           title: "临床表现",
+                            message: [
+                                {
+                                    msg: "腔隙性梗死 脑梗死的梗死面积小于1.5厘米，表现为：亚急性起病、头昏、头晕、步态不稳、肢体无力，少数有饮水呛咳，吞咽困难；也可有偏瘫、偏身感觉减退，部分患者没有定位体征。"
+                                },
+                                {
+                                    msg: "中等面积梗死 以基底核区侧脑室体旁丘脑、双侧额叶、颞叶区发病多见。表现为：突发性头痛、眩晕、频繁恶心、呕吐、神志清醒，偏身瘫痪或偏身感觉障碍、偏盲、中枢性面瘫及舌瘫、假性延髓性麻痹、失语等。"
+                                },
+                                {
+                                    msg: "大面积梗死 患者起病急骤，表现危重，可以有偏盲偏瘫、偏身感觉减退甚至四肢瘫、脑疝、昏迷等。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                            title: "治疗方法",
+                            message: [
+                                {
+                                    msg: "及时就医"
+                                },
+                                {
+                                    msg: "药物治疗"
+                                },
+                                {
+                                    msg: "抗凝及溶栓治疗，考虑溶栓剂易发生出血的并发症，应特别慎用"
+                                },
+                                {
+                                    msg: "亚低温治疗：亚低温对缺血性的脑损伤亦有肯定意义，不但减轻梗死后的病理损害程度，而且能促进神经功能恢复，并不产生严重的并发症。尽量在发病6小时内给予。"
+
+                                },
+                                {
+                                    msg: "护理建议：①卧床及镇静处理。②保持呼吸道通畅和心脏功能。③注意营养状况，保持水和电解质的平衡。④加强护理，防止肺炎、泌尿系感染和压疮等并发症的发生。"
+                                }
+                            ]
+
+                        }
+                    ]
+
+                }
+            },
+            methods: {
+
+            }
+        }
+        var copds = {
+            template: "#h",
+            data() {
+                return {
+                    highlist: [
+                        {
+                           title: "疾病介绍",
+                            message: [
+                                {
+                                    msg: "慢性阻塞性肺疾病是一种具有气流阻塞特征的慢性支气管炎和（或）肺气肿，可进一步发展为肺心病和呼吸衰竭的常见慢性疾病。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                           title: "临床表现",
+                            message: [
+                                {
+                                    msg: "慢性咳嗽，常为最早出现的症状，随病程发展可终身不愈，常晨间咳嗽明显，夜间有阵咳或排痰。"
+                                },
+                                {
+                                    msg: "咳痰，一般为白色黏液或浆液性泡沫痰，偶可带血丝，清晨排痰较多。急性发作期痰量增多，可有脓性痰。"
+                                },
+                                {
+                                    msg: "气短或呼吸困难，慢性阻性肺疾病的主要症状。"
+                                },
+                                {
+                                    msg: "喘息和胸闷，部分患者特别是重度患者或急性加重时出现的。"
+                                },
+                                {
+                                    msg: "其它，疲乏、消瘦、焦虑等常在慢性阻塞性肺疾病病情严重时出现，但并非慢性阻塞性肺疾病的典型表现。"
+                                }
+                            ]
+
+
+                        },
+                        {
+                          title: "治疗方法",
+                            message: [
+                                {
+                                    msg: "戒烟、运动或肺康复训练，接种流感疫苗与肺炎疫苗。"
+                                },
+                                {
+                                    msg: "理疗、高压负离子氧疗等对COPD患者肺功能的康复有利。"
+                                },
+                                {
+                                    msg: "饮食调节，多吃水果和蔬菜，可以吃肉、鱼、鸡蛋、牛奶、豆类、荞麦。"
+                                },
+                                {
+                                    msg: "长期家庭氧疗，如有呼吸衰竭建议长期低流量吸氧，每天超过15小时。"
+                                },
+                                {
+                                    msg: "药物治疗。"
+                                }
+                            ]
+
+                        }
+                    ]
+
+                }
+            },
+            methods: {
+
+            }
+        }
+        var routes = [
+            {
+                path: "/",
+                components: {
+                    asidebar: asidebar,
+                    content: content,
+                    footer: footer
+                }
+            },
+            {
+                path: "/user",
+                components: {
+                    use: use
+                }
+            },
+            {
+                path: "/pro",
+                components: {
+                    prot: prot
+                }
+            },
+            {
+                path: "/heart",
+                components: {
+                    hearts: hearts
+                }
+            },
+            {
+                path: "/brain",
+                components: {
+                    brains: brains
+                }
+            },
+            {
+                path: "/copd",
+                components: {
+                    copds: copds
+                }
+            }
+        ]
+
+        var router = new VueRouter({
+            routes: routes
+        })
+        var app = new Vue({
+            el: "#app",
+            router: router
+        })
+
+    </script>
+
+</body>
+
+</html>

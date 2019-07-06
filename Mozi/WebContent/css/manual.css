@@ -1,0 +1,225 @@
+html {  
+    overflow-x: hidden;  
+    overflow-y: auto;  
+  }  
+  body {  
+    width: 100vw;  
+    overflow: hidden;  
+    padding-left: calc(100vw - 100%);  
+  }  
+#app{
+	padding: 0 .5rem;
+	max-width: 677px;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 300px;
+}
+.top{
+    overflow:auto hidden;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 55px;
+    height: 85px;
+    padding: 1rem 0 .5rem 0;
+    border-bottom: 5px solid #c8c7cc;
+}
+.top li{
+    display: inline-block;
+    text-align: center;
+    width: 18.9%;
+}
+.all{
+    height: 3.5rem;
+    width: 3.5rem;
+    margin: 0 auto;
+}
+.all img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.top li h2{
+    padding-top: .5rem;
+    color: #374752;
+    font-size: 13px;
+}
+
+
+/* d */
+.use>div,.prot>div,.hearts>div,.brains>div,.copds>div{
+    padding: 0 .5rem;
+    border-bottom: 5px solid #dbd7d7;
+}
+
+.public{
+    display: flex;
+    padding: .5rem 0;
+    border-bottom:1px solid #c8c7cc;
+}
+.public div{
+    width: 30px;
+    height: 30px;
+}
+.public div img{
+    width: 100%;
+    height: 100%;
+}
+.public h3{
+    line-height: 30px;
+    font-size: 14px;
+    color: #101010;
+    text-indent: .5rem;
+}
+.common{
+    display: flex;
+    padding: .5rem 0 .5rem 2.5rem;
+    color: #101010;
+    font-size: 14px;
+}
+.common p{
+    text-indent: .5rem;
+}
+
+
+/* 选项卡 */
+.content{
+    padding: 0 .5rem;
+}
+
+.navlist{
+    width:100%;
+    height:40px;
+    border-bottom:1px solid rgba(151,151,151,0.1);
+    position:relative;
+   }
+   .navli{
+    padding:10px 0px;
+    text-align:center;
+    float:left;
+    width: 25%;
+   }
+   .navli i{
+    font-style: normal;
+    font-size: 15px;
+   }
+   .activeT{
+    color:#3f9cc7;
+    padding-bottom: .5rem;
+    border-bottom: 2px solid #3f9cc7;
+   }
+   .swiper_con{
+    width:100%;
+    margin-bottom:40px;
+    position:relative;
+   } 
+   .choosegrand{
+    position:absolute;
+    top:-3;
+    right:0;
+   }
+   .show{
+    display:block;
+   }
+   .none{
+    display:none;
+   }
+
+
+
+
+   .bscroll{
+    width: 100%;
+    height:500px;
+    overflow: hidden;
+}
+.bscroll-container{
+    /* background: #ff0000; */
+}
+.drop-down{
+    position: absolute;
+    top:0px;
+    lefT:0px;
+    width: 100%;
+    height: 50px;
+    line-height:50px;
+    text-align: center;
+    font-size:0.8rem;
+    color:#CCC;
+}
+
+
+.mind{
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 11px 15px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    border-bottom: 1px solid #bbbbbb;
+}
+.image{
+    width: 6rem;
+    height: 4rem;
+    margin-right: 1rem;
+}
+.image img{
+    width: 100%;
+    height: 100%;
+}
+.tit{
+    height: auto;
+    -webkit-justify-content: space-around;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    flex: 1;
+}
+.tit h2{
+    height: 37px;
+    font-size: 14px;
+    overflow: hidden;
+}
+.tit .amount{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+.tit .amount span{
+    line-height: 15px;
+    font-size: 13px;
+    color: #8f8f94;
+}
