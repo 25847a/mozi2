@@ -2,7 +2,6 @@ package com.sy.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import com.sy.common.ResultData;
 import com.sy.mapper.ChatMapper;
 import com.sy.mapper.EquipmentDataMapper;
 import com.sy.mapper.EquipmentMapper;
+import com.sy.mapper.EquipmentRecordMapper;
 import com.sy.mapper.JfhealthNewMapper;
 import com.sy.mapper.JfhealthdaoMapper;
 import com.sy.mapper.PositionigMapper;
@@ -28,13 +28,15 @@ import com.sy.mapper.UsercodeMapper;
 import com.sy.mapper.WaveformMapper;
 import com.sy.nettyulit.NettyChannelMap;
 import com.sy.pojo.Equipment;
-import com.sy.pojo.EquipmentData;
+import com.sy.pojo.EquipmentRecord;
 import com.sy.pojo.JfhealthNew;
+import com.sy.pojo.Message;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.pojo.Waveform;
 import com.sy.service.EquipmentService;
 import com.sy.service.JfhealthdaoService;
+import com.sy.service.MessageService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.service.UseravatarService;
@@ -63,8 +65,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	@Autowired
 	private EquipmentService equipmentService;
 	@Autowired
-	private UserEqService userEqservice;
-	@Autowired
 	private UserMapper usermapper;
 	@Autowired
 	private PushMapper pushMapper;
@@ -86,6 +86,10 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	UserEqMapper userEqMapper;
 	@Autowired
 	UseravatarService useravatarService;
+	@Autowired
+	MessageService messageService;
+	@Autowired
+	EquipmentRecordMapper equipmentRecordMapper;
 	/**
 	 * 关注列表
 	 * @param u
@@ -274,7 +278,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 			}
 		}
 		if (lu.size() == 0) {
-			Equipment eq = equipmentMapper.selectByPrimaryKey(eqId);
+			Equipment eq = equipmentMapper.selectById(eqId);
 			if (eq != null) {
 				String imei = eq.getImei();
 				User user = usermapper.getUser(imei);
@@ -300,11 +304,16 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 * @return
 	 */
 	@Override
-	public ResultData<List<Userdata>> selectuserdata1(DataRow map,ResultData<List<Userdata>> re) throws Exception {
+	public ResultData<List<Userdata>> selectuserdata(DataRow map,ResultData<List<Userdata>> re) throws Exception {
 		User user = userservice.selectById(map.getInt("userId"));
 		DataRow detail = new DataRow();
 		if(user.getRole().equals("使用者")){
 			detail=usermapper.queryUsersInfo(map);
+			UserEq  userEq =eqMapper.queryUserEqAlias(user.getId());
+			EntityWrapper<Message> ew = new EntityWrapper<Message>();
+			ew.eq("alias", userEq.getUserId());
+			int messageCount =messageService.selectCount(ew);
+			detail.put("messageCount", messageCount);
 		}else{
 			 detail =eqMapper.queryUserEq(map);
 		}
@@ -312,6 +321,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		if(detail!=null){
 			JfhealthNew jfhealth = jMapperNew.newJfhealthNew(String.valueOf(detail.get("imei")));
 			if(jfhealth!=null){
+				EquipmentRecord record=equipmentRecordMapper.queryEquipmentRecord(map.getInt("userId"));
 				SimpleDateFormat updatetimedf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
 				detail.put("updatetime", updatetimedf.format(jfhealth.getCreatetime()));
 				detail.put("amedicalreport", jfhealth.getAmedicalreport() == null ? "" : jfhealth.getAmedicalreport());
@@ -340,23 +350,15 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				map=DataUtil.bloodData("pressure","血压",6, "mmHg",jfhealth.getSbpAve()==null?0:jfhealth.getSbpAve(),jfhealth.getDbpAve()==null?0:jfhealth.getDbpAve());
 				list.add(map);
 				//体温
-				map=new DataRow();
-				map.put("name", "temperature");
-				map.put("desc", "体温");
-				map.put("category",7);
-				map.put("unit", "℃");
-				map.put("lastestValue", "39");
-				map.put("type", 1);
+				map=DataUtil.temperatureData("temperature","体温",7, "℃",record==null?(float)36.5:record.getTemperature());
 				list.add(map);
 				//湿度
-				map=new DataRow();
-				map.put("name", "humidity");
-				map.put("desc", "湿度");
-				map.put("category",8);
-				map.put("unit", "%RH");
+				map=DataUtil.humidityData("humidity","湿度",8, "%RH",record==null?(float)36.5:record.getTemperature());
+				list.add(map);
+				/*map=new DataRow();
 				map.put("lastestValue", "偏高");
 				map.put("type", 1);
-				list.add(map);
+				list.add(map);*/
 				//hrv
 				map=DataUtil.hrvData("hrv","心率变异性HRV",9, "ms",jfhealth.getHRV()==null?0:jfhealth.getHRV(),detail.get("age")==null?30:(int) detail.get("age"));
 				list.add(map);
@@ -391,206 +393,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		return re;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * 获取app首页数据
-	 * 
-	 * @return
-	 */
-	@Override
-	public List<Map<String, Object>> selectuserdata(Integer userid)throws Exception {
-
-		ArrayList<String> ls = new ArrayList<String>();
-		List<UserEq> ues = usereqservice.selectuserqe(userid);
-		if (ues != null && ues.size() > 0) {
-
-			List<Map<String, Object>> es = new ArrayList<Map<String, Object>>();
-			for (UserEq ue : ues) {
-				List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-				Map<String, Object> detail = new HashMap<String, Object>();
-				Map<String, Object> map = new HashMap<String, Object>();
-				// 获取到监护者
-				Equipment e = equipmentMapper.selectByPrimaryKey(ue.getEqId());
-				if (!ls.contains(e.getImei())) {
-					ls.add(e.getImei());
-					User u = userservice.getUser(e.getImei());
-					if (u != null) {
-						if (u.getAvatar() == null) {
-							detail.put("iconPath", useravatarservice.selectavartar().getAvatar());
-						} else {
-							detail.put("iconPath", u.getAvatar());
-						}
-						detail.put("eqid", e.getId());
-						detail.put("calibration", u.getCalibration());
-						detail.put("username", u.getName());
-						detail.put("address", u.getAddress());
-						detail.put("deviceEnergy", e.getLordpower());
-						detail.put("userid", u.getId());
-						detail.put("imei", e.getImei());
-						if (ue.getTypeof() == 0) {
-							detail.put("managenment", true);
-							detail.put("role", ue.getTypeof());
-						} else {
-							detail.put("managenment", false);
-							detail.put("role", ue.getTypeof());
-						}
-
-						boolean status = false;
-						if (e.getBluetoothStatus().equals("1")) {
-							status = true;
-						}
-						detail.put("bluetoothStatus", status);
-						boolean stas = false;
-						if (e.getEqStatus().equals("H:1")) {
-							stas = true;
-						}
-						if (e.getBluetoothType()!=null&&e.getBluetoothType().equals("1")) {
-							detail.put("bluetoothType", true);
-						}else{
-							detail.put("bluetoothType", false);
-						}
-						detail.put("loactionStatus", stas);
-						detail.put("mDevOnline", stas);
-						detail.put("messageStatus", stas);
-						detail.put("aclokStatus", stas);
-						detail.put("mainDevCap", e.getLordpower());
-
-						EquipmentData eqdata = null;
-						if (u.getId() != null) {
-							eqdata = equipmentDataMapper.selectdata(u.getId());
-						}
-
-						JfhealthNew jfhealth = jMapperNew.newJfhealthNew(e.getImei());
-						if (eqdata != null && jfhealth != null) {
-							try {
-							} catch (Exception e2) {
-								detail.put("userStatus", "静止");
-							}
-
-							SimpleDateFormat updatetimedf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-							detail.put("updatetime", updatetimedf.format(jfhealth.getCreatetime()));
-
-							SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
-							String dd = df.format(new Date());
-							Map<String, Object> m = new HashMap<String, Object>();
-							m.put("countdate", dd + "%");
-							m.put("userid", userEqservice.getimei(e.getImei()));
-							List<EquipmentData> countdata = equipmentDataMapper.selecttheycount(m);
-							Integer Step_whennum = 0;
-							Integer Carrieroadnum = 0;
-							// System.out.println("用户id》》》》》》》》》》》》》》》》" +
-							// userEqservice.getimei(e.getImei()));
-							if (countdata.size() > 0 && countdata != null) {
-								for (EquipmentData eqcount : countdata) {
-									if(eqcount.getStepWhen()!=null&& eqcount.getCarrieroad()!=null){
-									int count = eqcount.getStepWhen();
-									Step_whennum = Step_whennum + count;
-									int carrnum = eqcount.getCarrieroad();
-									Carrieroadnum = Carrieroadnum + carrnum;
-									}
-								}
-							}
-							System.out.println("当天步数》》》》》》》》》》》》》》》》" + Step_whennum);
-							System.out.println("当天卡里路》》》》》》》》》》》》》》》》" + Carrieroadnum);
-							map.put("name", "Step_when");
-							map.put("desc", "计步");
-							map.put("category", "13");
-							if (eqdata.getStepWhen() == 0) {
-								map.put("lastestValue", Step_whennum);
-							} else {
-								map.put("lastestValue", Step_whennum);
-							}
-							map.put("unit", "步");
-							list.add(map);
-							map = new HashMap<String, Object>();
-							map.put("name", "heartrate");
-							map.put("desc", "心率");
-							map.put("category", "2");
-							map.put("lastestValue", jfhealth.getHeartrate()==null?0:jfhealth.getHeartrate());
-							map.put("unit", "次/分");
-							list.add(map);
-							map = new HashMap<String, Object>();
-							map.put("name", "pressure");
-							map.put("desc", "血压");
-							map.put("category", "3");
-							Integer sbpAve = jfhealth.getSbpAve()==null?0:jfhealth.getSbpAve();
-							Integer dbpAve = jfhealth.getDbpAve()==null?0:jfhealth.getDbpAve();
-							String sbpAveStr = "";
-							String dbpAveStr = "";
-							if(sbpAve != null ){
-								sbpAveStr = sbpAve.toString();
-							}
-							if(dbpAve!=null){
-								dbpAveStr = dbpAve.toString();
-							}
-							map.put("lastestValue", sbpAveStr+ "/"+ dbpAveStr);
-							map.put("unit", "mmHg");
-							list.add(map);
-							map = new HashMap<String, Object>();
-							map.put("name", "hrv");
-							map.put("desc", "心率变异性HRV");
-							map.put("category", "8");
-							map.put("lastestValue", jfhealth.getHRV()==null?0:jfhealth.getHRV());
-							map.put("unit", "ms");
-							list.add(map);
-							map = new HashMap<String, Object>();
-							map.put("name", "mocrocirculation");
-							map.put("desc", "微循环");
-							map.put("category", "4");
-							map.put("lastestValue",jfhealth.getMicrocirculation()==null?0:jfhealth.getMicrocirculation());
-							map.put("unit", "%");
-							list.add(map);
-							map = new HashMap<String, Object>();
-							map.put("name", "qxygen");
-							map.put("desc", "血氧");
-							map.put("category", "10");
-							map.put("lastestValue", jfhealth.getBloodoxygen()==null?0:jfhealth.getBloodoxygen());
-							map.put("unit", "%");
-							list.add(map);
-							map = new HashMap<String, Object>();
-							map.put("name", "carrieroad");
-							map.put("desc", "卡路里");
-							map.put("category", "14");
-							map.put("lastestValue", Carrieroadnum);
-							map.put("unit", "焦耳/天");
-							list.add(map);
-							map = new HashMap<String, Object>();
-							map.put("name", "breathe");
-							map.put("desc", "呼吸");
-							map.put("category", "12");
-							map.put("lastestValue",jfhealth.getRespirationrate()==null?0:jfhealth.getRespirationrate());
-							map.put("unit", "次/分钟");
-							list.add(map);
-							detail.put("amedicalreport", jfhealth.getAmedicalreport() == null ? "" : jfhealth.getAmedicalreport());
-						}
-						detail.put("detail", list);
-						Waveform waveform =waveformMapper.queryWaveformInfo(userid);
-						detail.put("waveform", waveform==null?"0":waveform.getData());
-						es.add(detail);
-					}
-				}
-
-			}
-			return es;
-		} else {
-			return null;
-		}
-
-	}
 	/**
 	 * 取消观察者
 	 */
@@ -700,31 +502,34 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		Integer userId = map.getInt("userId");
 		boolean status = false;
 		if(typeof==2){
-			if(e.getBluetoothmac().equals("000000000000") && e.getBluetoothName().equals("000000000000")&&e.getBluetoothType().equals("0")){
-				status = usereqservice.deleteguardian(e.getImei(),e.getId(), userId,mid);//删除用户
-				if (status) {
-					
-					Channel c =	NettyChannelMap.get(e.getImei());
-					if(c!=null){
-						c.writeAndFlush("$R06|:\r\n");
-					}
-					re.setCode(200);
-					re.setMessage("取消成功！！！");
-					e.setBluetoothmac("000000000000");
-					e.setBluetoothName("000000000000");
-					e.setBluetoothList(null);
-					e.setBluetoothStatus("0");
-					e.setBluetoothType("0");
-					e.setPhone1(null);
-					e.setPhone2(null);
-					equipmentService.updatEequipmentst(e);
-			} else {
-				re.setCode(350);
-				re.setMessage("取消失败！！！");
-			}
-			}else{
-				re.setCode(350);
-				re.setMessage("请先断开衣服");
+			if(e.getEqtype()==1){//旧版
+				if(e.getBluetoothmac().equals("000000000000") && e.getBluetoothName().equals("000000000000")&&e.getBluetoothType().equals("0")){
+					status = usereqservice.deleteguardian(e.getImei(),e.getId(), userId,mid);//删除用户
+					if (status) {
+						Channel c =	NettyChannelMap.get(e.getImei());
+						if(c!=null){
+							c.writeAndFlush("$R06|:\r\n");
+						}
+						re.setCode(200);
+						re.setMessage("取消成功！！！");
+						e.setBluetoothmac("000000000000");
+						e.setBluetoothName("000000000000");
+						e.setBluetoothList(null);
+						e.setBluetoothStatus("0");
+						e.setBluetoothType("0");
+						e.setPhone1(null);
+						e.setPhone2(null);
+						equipmentService.updatEequipmentst(e);
+				} else {
+					re.setCode(350);
+					re.setMessage("取消失败！！！");
+				}
+				}else{
+					re.setCode(350);
+					re.setMessage("请先断开衣服");
+				}
+			}else{//新版可以直接删除
+				usereqservice.deleteguardian(e.getImei(),e.getId(), userId,mid);//删除用户
 			}
 		}else if(typeof==1){
 			status = usereqservice.deleteequse(e.getId(),map.getInt("userId"), 1,mid);//取消观察者

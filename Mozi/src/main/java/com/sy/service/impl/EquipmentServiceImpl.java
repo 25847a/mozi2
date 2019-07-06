@@ -1,42 +1,357 @@
 package com.sy.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.sy.common.ResultBase;
+import com.sy.common.ResultData;
 import com.sy.mapper.EquipmentMapper;
 import com.sy.mapper.SensorstatusMapper;
+import com.sy.mapper.UserMapper;
+import com.sy.nettyulit.BluetoothMap;
+import com.sy.nettyulit.NettyChannelMap;
 import com.sy.pojo.Equipment;
-import com.sy.pojo.UserEq;
+import com.sy.pojo.Sensorstatus;
+import com.sy.pojo.User;
 import com.sy.service.EquipmentService;
-import com.sy.service.UserEqService;
-import com.sy.vo.EquipmentVo;
+import com.sy.utils.DataRow;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.socket.SocketChannel;
+
 @Service
 public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment> implements EquipmentService {
 	@Autowired
-	private SensorstatusMapper sensorstatusmapper;
-	@Autowired
 	private EquipmentMapper equipmentMapper;
 	@Autowired
-	private UserEqService usereqservice;
+	private SensorstatusMapper sensorstatusMapper;
+	@Autowired
+	UserMapper userMapper;
+	/**
+	 * 获取设备基本信息
+	 * 
+	 * @param m
+	 * @return
+	 */
+	public ResultData<DataRow> selectdata(DataRow map, ResultData<DataRow> re) throws Exception {
+		// 获取到设备基本信息
+		Equipment e = equipmentMapper.selectById(map.getInt("eqId"));
+		if (e != null) {
+			map.put("eqId", e.getId());
+			map.put("eqtype", e.getEqtype());
+			map.put("eqStatus", e.getEqStatus().equals("H:0") ? 0 : 1);
+			map.put("signalxhao", e.getSignalxhao() + "%");
+			map.put("lordpower", e.getLordpower() + "%");
+			map.put("bluetoothType", Integer.valueOf(e.getBluetoothType()));
+			map.put("imei", e.getImei());
+			map.put("version", e.getVersion());
+			// 获取imei设备最新的传感器状态
+			Sensorstatus sen = sensorstatusMapper.selecttimesensorstatus(e.getImei());
+			map.put("H", sen.getH().equals("H:1") ? "正常" : "错误");
+			map.put("G", sen.getG().equals("G:1") ? "正常" : "错误");
+			re.setCode(200);
+			re.setData(map);
+			re.setMessage("获取设备基本信息成功");
+		} else {
+			re.setCode(400);
+			re.setMessage("获取不到设备基本信息");
+		}
+		return re;
+	}
+	/**
+	 * 修改设备紧急联系人
+	 * @return
+	 */
+	public ResultBase updateurgent(DataRow map,ResultBase re)throws Exception{
+		String phone1 = map.getString("phone1");
+		String phone1name =map.getString("phone1name");
+		String phone2name =map.getString("phone2name");
+		String phone2 =map.getString("phone2");
+		EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
+		ew.eq("imei", map.getString("imei"));
+		Equipment e =this.selectOne(ew);
+		if (e != null) {
+			if (phone1 != null && !phone1.equals("") && phone1name != null && !phone1name.equals("")) {
+				e.setPhone1(phone1name + "," + phone1);
+			} else {
+				e.setPhone1(0 + "," + 0);
+			}
 
+			if (phone2 != null && !phone2.equals("") && phone2name != null && !phone2name.equals("")) {
+				e.setPhone2(phone2name + "," + phone2);
+			} else {
+				e.setPhone2(0 + "," + 0);
+			}
+
+			int st =equipmentMapper.updateById(e);
+			if (st>0) {
+				re.setCode(200);
+				re.setMessage("修改紧急联系成功!!!");
+					Channel c = NettyChannelMap.get(e.getImei());
+					c.writeAndFlush("$R24|" + e.getPhone1().split(",")[1] + ","
+							+ getCode(e.getPhone1().split(",")[0]) + ":" + e.getPhone2().split(",")[1] + ","
+							+ getCode(e.getPhone2().split(",")[0]) + "\r\n");
+			} else {
+				re.setCode(350);
+				re.setMessage("修改紧急联系异常!!!");
+			}
+		} else {
+			re.setCode(350);
+			re.setMessage("该设备不存在!!!");
+		}
+		return re;
+		
+	}
+	/**
+	 * 修改设备紧急联系人调用的方法
+	 * @param content
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String getCode(String content) throws UnsupportedEncodingException {
+		byte[] bytes = content.getBytes("gb2312");
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < bytes.length; i++) {
+			sb.append(Integer.toHexString(bytes[i] & 0xff).toUpperCase() + "");
+		}
+
+		return sb.toString();
+	}
+	/**
+	 * 获取智能服饰信息
+	 * 
+	 * @return
+	 */
+	@Override
+	public ResultData<DataRow> queryClothesInfo(DataRow map, ResultData<DataRow> re) throws Exception {
+		Equipment equipment = equipmentMapper.selectById(map.getInt("eqId"));
+		List<DataRow> list = new ArrayList<DataRow>();
+		if (equipment != null) {
+			if (equipment.getBluetoothList() != null && !equipment.getBluetoothList().equals("[]")
+					&& !equipment.getBluetoothList().equals("")) {
+				String bluetooths = equipment.getBluetoothList().substring(1, equipment.getBluetoothList().length() - 1)
+						.replace("\"", "");
+				String[] bluetoothList = bluetooths.split(",");
+				for (String bluetooth : bluetoothList) {
+					if (bluetooth.equals(equipment.getBluetoothName())) {
+						map = new DataRow();
+						map.put("BluetoothName", equipment.getBluetoothName());
+						map.put("bluetoothType", Integer.valueOf(equipment.getBluetoothType()));
+					} else {
+						map = new DataRow();
+						map.put("BluetoothName", bluetooth);
+						map.put("bluetoothType", 0);
+					}
+					list.add(map);
+				}
+				re.setCode(200);
+				re.setData(list);
+				re.setMessage("获取智能服饰成功");
+			} else {
+				re.setCode(350);
+				re.setMessage("没有绑定保存智能服饰");
+			}
+		} else {
+			re.setCode(400);
+			re.setMessage("查询不到该设备信息");
+		}
+		return re;
+	}
+	/**
+	 * 连接蓝牙
+	 * 
+	 * @return
+	 */
+	public ResultBase updatebluetooth(Equipment equipment, ResultBase re) throws Exception {
+		Equipment e = equipmentMapper.selectById(equipment.getId());
+		BluetoothMap.deletesb(e.getImei());
+		SocketChannel c = (SocketChannel) NettyChannelMap.get(e.getImei());
+		ChannelFuture writeAndFlush = c.writeAndFlush("$R18|" + e.getBluetoothType() + ":"
+				+ equipment.getBluetoothName() + ":" + equipment.getBluetoothmac() + "\r\n");
+		writeAndFlush.addListener(new ChannelFutureListener() {
+			public void operationComplete(ChannelFuture future) {
+				System.out.println("发送成功,连接设备,开始操作子设备");
+			}
+		});
+		// 如果是切换蓝牙,就先更新为0,因为主控会断开蓝牙,防止新蓝牙连接不上出现不同步问题
+		Equipment eq = new Equipment();
+		if (!e.getBluetoothmac().equals("000000000000")) {
+			eq.setId(e.getId());
+			eq.setBluetoothName("000000000000");
+			eq.setBluetoothStatus("0");
+			eq.setBluetoothType("0");
+			eq.setBluetoothmac("000000000000");
+			equipmentMapper.updateById(eq);
+		}
+		boolean st;
+		int ss = 0;
+		while (true) {
+			Thread.sleep(1000);
+			st = task(e.getImei());
+			if (st) {
+				re.setMessage("操作成功！！！");
+				re.setCode(200);
+				break;
+			} else {
+				if (ss == 40) {
+					re.setCode(601);
+					re.setMessage("操作失败！！！");
+					return re;
+				}
+				ss++;
+			}
+		}
+		return re;
+	}
+	/**
+	 * 连接蓝牙调用的方法
+	 * 
+	 * @return
+	 */
+	public static boolean task(String newimei) {
+		boolean st = false;
+
+		String msg = BluetoothMap.getBs(newimei);
+		System.out.println("获取的imei" + newimei + ">>>>>>>>>>>>>>>>" + msg);
+		if (msg != null) {
+			if (msg.contains("T08") || msg.contains("R18|OK")) {
+				st = true;
+			}
+			if (msg.contains("R18|ERR1")) {
+				st = false;
+			}
+		}
+		BluetoothMap.deletesb(newimei);
+		return st;
+	}
+	/**
+	 * 更新蓝牙列表
+	 * 
+	 * @param bluetoothList
+	 * @return
+	 */
+	@Override
+	public ResultBase updateBluetoothList(DataRow map,ResultBase re) {
+		equipmentMapper.updateBluetoothList(map);
+		SocketChannel c = (SocketChannel) NettyChannelMap.get(map.getString("imei"));
+		if (c != null) {
+			String bluetoothList = map.getString("bluetoothList");
+			if (StringUtils.isNotBlank(bluetoothList)) {
+				bluetoothList = bluetoothList.substring(1, bluetoothList.length() - 1).replace("\"", "");
+			} else {
+				bluetoothList = "";
+			}
+			c.writeAndFlush("$R28|" + bluetoothList + "\r\n");
+			re.setCode(200);
+			re.setMessage("操作成功");
+		} else {
+			re.setCode(200);
+			re.setMessage("操作成功!");
+		}
+		return re;
+	}
+	/**
+	 * 发送学习指令
+	 * @param map
+	 * @return
+	 */
+	public ResultBase healthcali(DataRow map,ResultBase re)throws Exception{
+		String imei = map.getString("imei");
+		EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
+		ew.eq("imei", imei);
+		Equipment e =this.selectOne(ew);
+		System.out.println(imei + "=====imei ");
+		if (e != null) {
+			String bluetoothType = e.getBluetoothType();
+			if (bluetoothType!=null&& bluetoothType.equals("1")) {
+				BluetoothMap.deletehealthmap(imei);
+				Channel c = NettyChannelMap.get(imei);
+				if (c != null) {
+					ChannelFuture writeAndFlush = c.writeAndFlush("$R17\r\n");
+					writeAndFlush.addListener(new ChannelFutureListener() {
+						public void operationComplete(ChannelFuture future) {
+							System.out.println("发送成功,开始学习");
+						}
+					});
+					boolean st = taskhealthcali(imei);
+					if (st) {
+						User user = userMapper.getUser(imei);
+						user.setCalibration(1);
+						userMapper.updateCalibration(user);
+						re.setCode(200);
+						re.setMessage("学习完成！！！");
+					} else {
+						re.setCode(602);
+						re.setMessage("学习失败！！！");
+					}
+				} else {
+					System.out.println(imei+"=====不在线");
+					re.setCode(602);
+					re.setMessage("设备不在线");
+				}
+			} else {
+				System.out.println(imei+ ">>>>>学习失败>>>>>>bluetoothType===="+bluetoothType);
+				re.setCode(602);
+				re.setMessage("没有衣服连接");
+			}
+		} else {
+			re.setCode(602);
+			re.setMessage("imei号错误");
+		}
+		return re;
+	}
+	/**
+	 * 发送学习指令用到的方法
+	 * @throws Exception
+	 */
+	public static boolean taskhealthcali(String imei) throws Exception {
+		boolean st = false;
+		int i = 0;
+		while (true) {
+			Thread.sleep(1000);
+			String msg = BluetoothMap.gethealthmap(imei);
+			if (msg != null && msg.contains("A")) {
+				st = true;
+				System.out.println("设备号<" + imei + ">健康数据学习成功=======================" + msg);
+				break;
+			} else if (msg != null && msg.contains("b")) {
+				System.out.println("设备号<" + imei + ">学习失败,返回的数据解析失败======");
+				break;
+			} else {
+				if (i == 52) {
+					System.out.println("设备号<" + imei + ">学习失败,学习超时======");
+					break;
+				}
+				i++;
+			}
+		}
+		BluetoothMap.deletehealthmap(imei);
+		return st;
+
+	}
+	/**
+	 * 更新设备基本数据
+	 * 
+	 * @param e
+	 * @return
+	 */
 	@Override
 	public boolean updateEquipment(Equipment e) {
 		e.setUpdatetime(new Date());
 		if (equipmentMapper == null) {
-			WebApplicationContext webApplicationContext = ContextLoader
-					.getCurrentWebApplicationContext();
-			equipmentMapper = (EquipmentMapper) webApplicationContext
-					.getBean("equipmentMapper");
+			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+			equipmentMapper = (EquipmentMapper) webApplicationContext.getBean("equipmentMapper");
 		}
-		Integer num = equipmentMapper.updateByPrimaryKeySelective(e);
+		Integer num = equipmentMapper.updateById(e);
 		if (num != 0) {
 			return true;
 		} else {
@@ -44,93 +359,66 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 		}
 	}
 
-	@Override
-	public Equipment selectequipment(Integer id) {
-		// TODO Auto-generated method stub
-		return equipmentMapper.selectByPrimaryKey(id);
-	}
-
+	/**
+	 * 根据imei获取数据
+	 * 
+	 * @param imei
+	 * @return
+	 */
 	@Override
 	public Equipment selectquipmentimei(String imei) {
 		if (equipmentMapper == null) {
-			WebApplicationContext webApplicationContext = ContextLoader
-					.getCurrentWebApplicationContext();
-			equipmentMapper = (EquipmentMapper) webApplicationContext
-					.getBean("equipmentMapper");
+			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+			equipmentMapper = (EquipmentMapper) webApplicationContext.getBean("equipmentMapper");
 		}
 		Equipment eq = null;
 		try {
-			eq = equipmentMapper.getequipment(imei);
+			EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
+			ew.eq("imei", imei);
+			eq = this.selectOne(ew);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return eq;
 	}
 
+	/**
+	 * 获取所有设备数据
+	 * 
+	 * @return
+	 */
 	@Override
 	public List<Equipment> selectequipment() {
 		if (equipmentMapper == null) {
-			WebApplicationContext webApplicationContext = ContextLoader
-					.getCurrentWebApplicationContext();
-			equipmentMapper = (EquipmentMapper) webApplicationContext
-					.getBean("equipmentMapper");
+			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+			equipmentMapper = (EquipmentMapper) webApplicationContext.getBean("equipmentMapper");
 		}
-		return equipmentMapper.selectequipment();
+		return equipmentMapper.selectList(null);
 	}
 
+	/**
+	 * 更新设备
+	 * 
+	 * @param eq
+	 */
 	@Override
 	public void updatEequipmentst(Equipment e) {
 		if (equipmentMapper == null) {
-			WebApplicationContext webApplicationContext = ContextLoader
-					.getCurrentWebApplicationContext();
-			equipmentMapper = (EquipmentMapper) webApplicationContext
-					.getBean("equipmentMapper");
+			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+			equipmentMapper = (EquipmentMapper) webApplicationContext.getBean("equipmentMapper");
 		}
-		 equipmentMapper.updateByPrimaryKey(e);
+		equipmentMapper.updateById(e);
 	}
 
-	@Override
-	public List<EquipmentVo> selelctequipments(Integer userId) {
-		List<UserEq>  ues =usereqservice.selectuserqe(userId);
-		if( ues !=null   && ues.size() >= 0){
-			List<EquipmentVo>  es = new ArrayList<EquipmentVo> ();
-			for(UserEq ue :ues){
-				Equipment e =	equipmentMapper.selectByPrimaryKey(ue.getEqId());
-				EquipmentVo evo = new EquipmentVo();
-				evo.setCreatetime(e.getCreatetime());
-				if(e.getEqStatus().equals("H:0")){
-					evo.setEqStatus(false);
-				}else {
-					evo.setEqStatus(true);
-				}
-				
-				evo.setEqtype(Integer.parseInt(e.getEqtype()));
-				evo.setId(e.getId());
-				evo.setImei(e.getImei());
-				evo.setUpdatetime(e.getUpdatetime());
-				if(ue.getTypeof() ==0){
-					evo.setRole("监护者");
-				}else if (ue.getTypeof() ==1) {
-					evo.setRole("观察者");
-				}else if (ue.getTypeof() ==2) {
-					evo.setRole("使用者");
-				}
-				es.add(evo);
-			}
-
-			return es;
-		}else {
-
-			return null;
-		}
-			
-		
-		
-	}
-
+	/**
+	 * 添加设备
+	 * 
+	 * @param e
+	 * @return
+	 */
 	@Override
 	public boolean addEquipment(Equipment e) {
-		Integer num = equipmentMapper.insertSelective(e);
+		Integer num = equipmentMapper.insert(e);
 		if (num != 0) {
 			return true;
 		} else {
@@ -138,129 +426,65 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 		}
 	}
 	/**
-	 * 后台录入设备调用,返回已经存在新建失败的imei号
-	 * @param e
+	 * 硬件上传数据用到的
+	 * 
 	 * @return
 	 */
-	public List<String> allentry(List<String> list,Integer agentid,String model) {
-		
-		Set<String> set = new HashSet<>();
-		for (String string : list) {
-			set.add(string);
-		}
-		
-		List<Object> selectImei = equipmentMapper.selectImei(list);
-		List<String> imeiList = new ArrayList<>();
-		
-		if(selectImei!=null&&selectImei.size()>0){
-			for (String imei : set) {
-				if(!selectImei.contains(imei)){
-					Equipment adde = new Equipment();
-					adde.setImei(imei);
-					adde.setCreatetime(new Date());
-					adde.setUpdatetime(new Date());
-					adde.setEqStatus("H:0");
-					adde.setBluetoothElectricity(0);
-					adde.setBluetoothStatus("0");
-					adde.setBluetoothType("0");
-					adde.setClock("闹钟");
-					adde.setName("设备信息");
-					adde.setEqtype("1");
-					adde.setLordpower(0);
-					adde.setVersion("0.0");
-					adde.setSignalxhao("0");
-					adde.setBluetoothName("000000000000");
-					adde.setBluetoothmac("000000000000");
-					adde.setAgentid(agentid);
-					adde.setModel(model);
-					equipmentMapper.insertSelective(adde);
-			}else{
-				imeiList.add(imei);
-			}
-		}
-		}else{
-			for (String imei : set) {
-					Equipment adde = new Equipment();
-					adde.setImei(imei);
-					adde.setCreatetime(new Date());
-					adde.setUpdatetime(new Date());
-					adde.setEqStatus("H:0");
-					adde.setBluetoothElectricity(0);
-					adde.setBluetoothStatus("0");
-					adde.setBluetoothType("0");
-					adde.setClock("闹钟");
-					adde.setName("设备信息");
-					adde.setEqtype("1");
-					adde.setLordpower(0);
-					adde.setVersion("0.0");
-					adde.setSignalxhao("0");
-					adde.setBluetoothName("蓝牙");
-					adde.setAgentid(agentid);
-					adde.setModel(model);
-					equipmentMapper.insertSelective(adde);
-			}
-		}
-		return imeiList;
-	}
-
-
-	/**
-	 * 根据代理商id统计设备数量
-	 */
-	public Integer countEqNumber(Integer agentid) {
-		return equipmentMapper.selectEqNumber(agentid);
-	}
-
-
-	public boolean imeiUpdateAgentAccount(Equipment e) {
-		return equipmentMapper.imeiUpdateAgentAccount(e);
-	}
-	
-	public Equipment equipmentstatus(String eqStatus, String eqtype, String imei,Integer lordpower,String signalxhao,String version) {
+	public Equipment equipmentstatus(String eqStatus, Integer eqtype, String imei, Integer lordpower, String signalxhao,
+			String version) {
 		if (equipmentMapper == null) {
-			WebApplicationContext webApplicationContext = ContextLoader
-					.getCurrentWebApplicationContext();
-			equipmentMapper = (EquipmentMapper) webApplicationContext
-					.getBean("equipmentMapper");
+			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+			equipmentMapper = (EquipmentMapper) webApplicationContext.getBean("equipmentMapper");
 		}
-		Equipment e  = equipmentMapper.getequipment(imei);
-		
-			if(signalxhao !=null ){
-				e.setSignalxhao(signalxhao);
-				e.setLordpower(lordpower);
-			}
-			if(eqStatus!=null){
-				e.setEqStatus(eqStatus);
-			}
-			if(version!=null){
-			e.setVersion(version);
-			}
-			e.setEqtype(eqtype);
-			e.setUpdatetime(new Date());
-			equipmentMapper.updateByPrimaryKey(e);
-			return e;
-	}
-	public Equipment updateEqStatus(String eqStatus, String eqtype, String imei,Integer lordpower,String signalxhao,String version,Equipment e) {
-		
-		if(signalxhao !=null ){
+		EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
+		ew.eq("imei", imei);
+		Equipment e = this.selectOne(ew);
+		if (signalxhao != null) {
 			e.setSignalxhao(signalxhao);
 			e.setLordpower(lordpower);
 		}
-		if(eqStatus!=null){
+		if (eqStatus != null) {
 			e.setEqStatus(eqStatus);
 		}
-		if(version!=null){
-		e.setVersion(version);
+		if (version != null) {
+			e.setVersion(version);
 		}
 		e.setEqtype(eqtype);
 		e.setUpdatetime(new Date());
-		equipmentMapper.updateByPrimaryKey(e);
+		equipmentMapper.updateById(e);
 		return e;
 	}
 
+	/**
+	 * 修改设备在线
+	 * 
+	 * @return
+	 */
 	@Override
-	public void updateBluetoothList(Map map) {
-		equipmentMapper.updateBluetoothList(map);
+	public Equipment updateEqStatus(String eqStatus, String imei, Equipment e) {
+		e.setUpdatetime(new Date());
+		equipmentMapper.updateById(e);
+		return e;
 	}
+
+	/**
+	 * 修改设备在线、设备类型、版本号
+	 * 
+	 * @return
+	 */
+	@Override
+	public Equipment updateEqStatus(String eqStatus, Integer eqtype, String imei, Integer lordpower, String signalxhao,
+			String version, Equipment e) {
+		e.setSignalxhao(signalxhao);
+		e.setLordpower(lordpower);
+		e.setEqStatus(eqStatus);
+		e.setVersion(version);
+		e.setEqtype(eqtype);
+		e.setUpdatetime(new Date());
+		equipmentMapper.updateById(e);
+		return e;
+	}
+
+	
 
 }

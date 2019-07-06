@@ -2,9 +2,6 @@ package com.sy.utils;
 
 import java.util.LinkedHashMap;
 
-import org.apache.poi.ss.formula.functions.T;
-
-import com.baomidou.mybatisplus.plugins.Page;
 /**
  * 通用bean 接收参数进行jdbc操作
  * 

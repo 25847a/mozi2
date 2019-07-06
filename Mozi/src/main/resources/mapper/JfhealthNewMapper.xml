@@ -115,85 +115,6 @@
     delete from jfhealth_new
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insertSelective" parameterType="com.sy.pojo.JfhealthNew" >
-    insert into jfhealth_new
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="HRV != null" >
-        HRV,
-      </if>
-      <if test="sbpAve != null" >
-        sbp_ave,
-      </if>
-      <if test="dbpAve != null" >
-        dbp_ave,
-      </if>
-      <if test="heartrate != null" >
-        Heartrate,
-      </if>
-      <if test="bloodoxygen != null" >
-        Bloodoxygen,
-      </if>
-      <if test="microcirculation != null" >
-        microcirculation,
-      </if>
-      <if test="respirationrate != null" >
-        respirationrate,
-      </if>
-      <if test="phone != null" >
-        phone,
-      </if>
-      <if test="imei != null" >
-        imei,
-      </if>
-      <if test="createtime != null" >
-        createtime,
-      </if>
-      <if test="amedicalreport != null" >
-        Amedicalreport,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="HRV != null" >
-        #{HRV,jdbcType=INTEGER},
-      </if>
-      <if test="sbpAve != null" >
-        #{sbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="dbpAve != null" >
-        #{dbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="heartrate != null" >
-        #{heartrate,jdbcType=INTEGER},
-      </if>
-      <if test="bloodoxygen != null" >
-        #{bloodoxygen,jdbcType=INTEGER},
-      </if>
-      <if test="microcirculation != null" >
-        #{microcirculation,jdbcType=INTEGER},
-      </if>
-      <if test="respirationrate != null" >
-        #{respirationrate,jdbcType=INTEGER},
-      </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="imei != null" >
-        #{imei,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="amedicalreport != null" >
-        #{amedicalreport,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
   <select id="countImei" parameterType="java.lang.String" resultType="java.lang.Integer" >
     select count(id) from jfhealth_new where imei = #{imei}
   </select>
@@ -234,21 +155,6 @@
         Amedicalreport = #{amedicalreport,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sy.pojo.JfhealthNew" >
-    update jfhealth_new
-    set HRV = #{HRV,jdbcType=INTEGER},
-      sbp_ave = #{sbpAve,jdbcType=INTEGER},
-      dbp_ave = #{dbpAve,jdbcType=INTEGER},
-      Heartrate = #{heartrate,jdbcType=INTEGER},
-      Bloodoxygen = #{bloodoxygen,jdbcType=INTEGER},
-      microcirculation = #{microcirculation,jdbcType=INTEGER},
-      respirationrate = #{respirationrate,jdbcType=INTEGER},
-      phone = #{phone,jdbcType=VARCHAR},
-      imei = #{imei,jdbcType=VARCHAR},
-      createtime = #{createtime,jdbcType=TIMESTAMP},
-      Amedicalreport = #{amedicalreport,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sy.pojo.JfhealthNew" >

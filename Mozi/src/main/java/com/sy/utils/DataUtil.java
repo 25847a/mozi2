@@ -81,6 +81,30 @@ public class DataUtil {
 		return map;
 	}
 	/**
+	 * 体温type=0(正常) type=1(异常)
+	 * @return
+	 */
+	public static DataRow humidityData(String name,String desc,int category,String unit,float lastestValue){
+		int type=1;
+		if(lastestValue>=ReadProperties.getFloatValue("warmLow") && lastestValue<ReadProperties.getFloatValue("warmJust")){
+			type=0;
+		}
+		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);
+		return map;
+	}
+	/**
+	 * 体温type=0(正常) type=1(异常)
+	 * @return
+	 */
+	public static DataRow temperatureData(String name,String desc,int category,String unit,float lastestValue){
+		int type=1;
+		if(lastestValue>=ReadProperties.getFloatValue("warmLow") && lastestValue<ReadProperties.getFloatValue("warmJust")){
+			type=0;
+		}
+		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);
+		return map;
+	}
+	/**
 	 * HRVtype=0(正常) type=1(异常)
 	 * @return
 	 */
@@ -222,18 +246,14 @@ public class DataUtil {
 	 * 1.心率type=0(正常) type=1(异常)
 	 * @return
 	 */
-	public static ResultData<DataRow> heartSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> heartSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", ReadProperties.getValue("heartIntroduce"));
 		dataRow.put("range", ReadProperties.getValue("heartRange"));
-		int indexType=1;
-		if(jfhealth.getHeartrate()<Constant.heartHig && jfhealth.getHeartrate()>Constant.heartLow){
-			indexType=0;
-		}
-		dataRow.put("indexType", indexType);
 		dataRow.put("healthData", String.valueOf(jfhealth.getHeartrate()));
 		dataRow.put("unit", "次/分钟");
 		dataRow.put("name", "心率");
+		dataRow.put("category", category);
 		int low =ReadProperties.getIntValue("heartLow");
 		int higt = ReadProperties.getIntValue("heartHigh");
 		if(jfhealth.getHeartrate()<low){
@@ -312,13 +332,14 @@ public class DataUtil {
 	 * 2.血氧type=0(正常) type=1(异常)
 	 * @return
 	 */
-	public static ResultData<DataRow> bloodSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> bloodSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", ReadProperties.getValue("bloodIntroduce"));
 		dataRow.put("range", ReadProperties.getValue("bloodRange"));
 		dataRow.put("healthData", String.valueOf(jfhealth.getBloodoxygen()));
 		dataRow.put("unit", "%");
 		dataRow.put("name", "血氧");
+		dataRow.put("category", category);
 		int low =ReadProperties.getIntValue("bloodLow");
 		int higt = ReadProperties.getIntValue("bloodHigh");
 		if(jfhealth.getBloodoxygen()<low){
@@ -397,7 +418,7 @@ public class DataUtil {
 	 * 3.微循环血氧type=0(正常) type=1(异常)
 	 * @return
 	 */
-	public static ResultData<DataRow> microcSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> microcSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		String analy = "";
 		String proposal = "";
 		String reason="";
@@ -429,11 +450,11 @@ public class DataUtil {
 		
 		
 		
-		re=micro(jfhealth.getMicrocirculation(),ReadProperties.getValue("microcIntroduce"),ReadProperties.getValue("microcRange"),"%",analy,proposal,reason,type,data,re);
+		re=micro(category,jfhealth.getMicrocirculation(),ReadProperties.getValue("microcIntroduce"),ReadProperties.getValue("microcRange"),"%",analy,proposal,reason,type,data,re);
 		
 		return re;
 	}
-	public static ResultData<DataRow> micro(int healthData,String index,String range,String unit,String analy,String proposal,String reason,int type,DataRow data,ResultData<DataRow> re){
+	public static ResultData<DataRow> micro(int category,int healthData,String index,String range,String unit,String analy,String proposal,String reason,int type,DataRow data,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", index);
 		dataRow.put("range", range);
@@ -443,6 +464,7 @@ public class DataUtil {
 		dataRow.put("proposal", proposal);
 		dataRow.put("reason", reason);
 		dataRow.put("name", "血氧");
+		dataRow.put("category", category);
 		dataRow.put("type", type);
 		dataRow.put("detail", data);
 		re.setCode(200);
@@ -454,13 +476,14 @@ public class DataUtil {
 	 * 4.呼吸type=0(正常) type=1(异常)
 	 * @return
 	 */
-	public static ResultData<DataRow> breathSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> breathSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", ReadProperties.getValue("breathIntroduce"));
 		dataRow.put("range", ReadProperties.getValue("breathRange"));
 		dataRow.put("healthData", String.valueOf(jfhealth.getRespirationrate()));
 		dataRow.put("unit", "次/分钟");
 		dataRow.put("name", "呼吸");
+		dataRow.put("category", category);
 		int low =ReadProperties.getIntValue("breathLow");
 		int higt = ReadProperties.getIntValue("breathHigh");
 		if(jfhealth.getRespirationrate()<low){
@@ -539,7 +562,7 @@ public class DataUtil {
 	 * 5.步数type=0(正常) type=1(异常)
 	 * @return
 	 */
-	public static ResultData<DataRow> stepWhenSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> stepWhenSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", ReadProperties.getValue("stepIntroduce"));
 		dataRow.put("range", ReadProperties.getValue("stepRange"));
@@ -549,6 +572,7 @@ public class DataUtil {
 		dataRow.put("proposal", ReadProperties.getValue("stepProposalA"));
 		dataRow.put("reason", "无定义");
 		dataRow.put("name", "步数");
+		dataRow.put("category", category);
 		dataRow.put("type", 0);
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -610,13 +634,14 @@ public class DataUtil {
 	 * 6.血压type=0(正常) type=1(异常)
 	 * @return
 	 */
-	public static ResultData<DataRow> pressureSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> pressureSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", ReadProperties.getValue("pressureIntroduce"));
 		dataRow.put("range", ReadProperties.getValue("pressureRange"));
 		dataRow.put("healthData", jfhealth.getSbpAve()+"/"+jfhealth.getDbpAve());
 		dataRow.put("unit", "mmHg");
 		dataRow.put("name", "血压");
+		dataRow.put("category", category);
 		int low =ReadProperties.getIntValue("pressureLow");
 		int just = ReadProperties.getIntValue("pressureJust");
 		int in = ReadProperties.getIntValue("pressureIn");
@@ -713,13 +738,14 @@ public class DataUtil {
 	 * 7.体温type=0(正常) type=1(异常)
 	 * @return
 	 */
-	public static ResultData<DataRow> warmSecondary(DataRow data,JfhealthNew jfhealth,Integer age,Float healthData,ResultData<DataRow> re){
+	public static ResultData<DataRow> warmSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,Float healthData,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", ReadProperties.getValue("warmIntroduce"));
 		dataRow.put("range", ReadProperties.getValue("warmRange"));
 		dataRow.put("healthData", String.valueOf(healthData));
 		dataRow.put("unit", "℃");
 		dataRow.put("name", "体温");
+		dataRow.put("category", category);
 		Float low =ReadProperties.getFloatValue("warmLow");//36.3
 		Float just = ReadProperties.getFloatValue("warmJust");//37.5
 		Float in = ReadProperties.getFloatValue("warmIn");//38
@@ -810,7 +836,7 @@ public class DataUtil {
 	 * 8.湿度
 	 * @return
 	 */
-	public static ResultData<DataRow> humiditySecondary(DataRow data,JfhealthNew jfhealth,Integer age,String healthData,ResultData<DataRow> re){
+	public static ResultData<DataRow> humiditySecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,String healthData,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -866,13 +892,14 @@ public class DataUtil {
 	 * 9.HRV
 	 * @return
 	 */
-	public static ResultData<DataRow> hrvSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> hrvSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		dataRow.put("index", ReadProperties.getValue("hrvIntroduce"));
 		dataRow.put("range", ReadProperties.getValue("hrvRange"));
 		dataRow.put("healthData", String.valueOf(jfhealth.getHRV()));
 		dataRow.put("unit", "ms");
 		dataRow.put("name", "HRV");
+		dataRow.put("category", category);
 		if(age<18){
 			if(jfhealth.getHRV()<25){
 				dataRow.put("analy", ReadProperties.getValue("hrvAnalyB"));
@@ -1005,7 +1032,7 @@ public class DataUtil {
 	 * 10.情绪
 	 * @return
 	 */
-	public static ResultData<DataRow> emotionSecondary(DataRow data,JfhealthNew jfhealth,Integer age,int healthData,ResultData<DataRow> re){
+	public static ResultData<DataRow> emotionSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,int healthData,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -1052,6 +1079,7 @@ public class DataUtil {
 		da=DataUtil.mocrocirculationData("carrieroad","卡路里",11, "焦耳/天",data==null?0: data.getInt("carrieroad"));
 		list.add(da);
 		dataRow.put("detail", list);
+		dataRow.put("category", category);
 		re.setCode(200);
 		re.setData(dataRow);
 		re.setMessage("获取成功");
@@ -1061,7 +1089,7 @@ public class DataUtil {
 	 * 11.卡里路
 	 * @return
 	 */
-	public static ResultData<DataRow> carrieroadSecondary(DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
+	public static ResultData<DataRow> carrieroadSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,ResultData<DataRow> re){
 		DataRow dataRow = new DataRow();
 		List<DataRow> list = new ArrayList<DataRow>();
 		DataRow da = new DataRow();
@@ -1114,6 +1142,7 @@ public class DataUtil {
 		da.put("type", 1);
 		list.add(da);
 		dataRow.put("detail", list);
+		dataRow.put("category", category);
 		re.setCode(200);
 		re.setData(dataRow);
 		re.setMessage("获取成功");

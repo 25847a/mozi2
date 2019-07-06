@@ -24,7 +24,7 @@ import net.sf.json.JSONObject;
 
 /**
  * 储存硬件端的
- * 
+ * jian:单例模式饿汉式
  * @author Administrator
  *
  */

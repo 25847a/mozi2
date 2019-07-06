@@ -20,7 +20,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<String> {
 		logger.info(ctx.name()+"连接已断开");
 		// channel失效，从Map中移除
 		NettyChannelMap.remove((SocketChannel) ctx.channel());
-		ServleMap.remove((SocketChannel) ctx.channel());
 	}
 
 	@Override

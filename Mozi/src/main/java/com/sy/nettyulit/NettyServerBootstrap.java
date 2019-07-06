@@ -1,18 +1,18 @@
 package com.sy.nettyulit;
 
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
+//import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class NettyServerBootstrap {
 	    private int port;
-	    private SocketChannel socketChannel;
+	 //   private SocketChannel socketChannel;
 	    public NettyServerBootstrap(int port) throws InterruptedException {
 	        this.port = port;
 	        bind();
@@ -33,10 +33,10 @@ public class NettyServerBootstrap {
 	            System.out.println("server start");
 	        }
 	    }
-	    public static void main(String []args) throws InterruptedException {
+	   /* public static void main(String []args) throws InterruptedException {
 	    	    NettyServerBootstrap bootstrap=new NettyServerBootstrap(9);
 	        while (true){
 	            TimeUnit.SECONDS.sleep(5);
 	        }
-	    }
+	    }*/
 }

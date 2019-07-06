@@ -61,8 +61,10 @@ public class H5Controller {
 	 * @return
 	 */
 	@RequestMapping(value = "mzx")
-	public String news() {
-		return "/news/mzx";
+	public ModelAndView news() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/news/mzx");
+		return mo;
 	}
 	/**
 	 * 新闻---娱乐页面
@@ -70,8 +72,10 @@ public class H5Controller {
 	 * @return
 	 */
 	@RequestMapping(value = "recreation")
-	public String recreation() {
-		return "/news/recreation";
+	public ModelAndView recreation() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/news/recreation");
+		return mo;
 	}
 	/**
 	 * 新闻---科技页面
@@ -79,8 +83,10 @@ public class H5Controller {
 	 * @return
 	 */
 	@RequestMapping(value = "science")
-	public String science() {
-		return "/news/science";
+	public ModelAndView science() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/news/science");
+		return mo;
 	}
 	/**
 	 * 新闻---社会页面
@@ -88,8 +94,10 @@ public class H5Controller {
 	 * @return
 	 */
 	@RequestMapping(value = "society")
-	public String society() {
-		return "/news/society";
+	public ModelAndView society() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/news/society");
+		return mo;
 	}
 	/**
 	 * 新闻---财经页面
@@ -97,8 +105,10 @@ public class H5Controller {
 	 * @return
 	 */
 	@RequestMapping(value = "finance")
-	public String finance() {
-		return "/news/finance";
+	public ModelAndView finance() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/news/finance");
+		return mo;
 	}
 	/**
 	 * 新闻---推荐页面
@@ -106,8 +116,31 @@ public class H5Controller {
 	 * @return
 	 */
 	@RequestMapping(value = "recom")
-	public String recom() {
-		return "/news/recom";
+	public ModelAndView recom() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/news/recom");
+		return mo;
+	}
+	/**
+	 * 健康手册页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "manual")
+	public ModelAndView manual() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/manual/manual");
+		return mo;
+	}/**
+	 * 公司介绍页面
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "company")
+	public ModelAndView company() {
+		ModelAndView mo = new ModelAndView();
+		mo.setViewName("/company");
+		return mo;
 	}
 	/**private static DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 	private final static Logger logger = LoggerFactory.getLogger(H5Controller.class);

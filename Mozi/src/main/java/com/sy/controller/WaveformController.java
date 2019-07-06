@@ -39,7 +39,7 @@ public class WaveformController {
 			Set<String> set = new HashSet<>();
 			if(ues!=null&&ues.size()>0){
 				for (UserEq ue : ues) {
-					Equipment e = equipmentMapper.selectByPrimaryKey(ue.getEqId());
+					Equipment e = equipmentMapper.selectById(ue.getEqId());
 					set.add(e.getImei());
 				}
 			}

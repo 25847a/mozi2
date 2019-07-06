@@ -1,7 +1,6 @@
 package com.sy.service;
 
 import java.util.List;
-import java.util.Map;
 import com.baomidou.mybatisplus.service.IService;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
@@ -111,14 +110,7 @@ public interface UserEqService extends IService<UserEq>{
 	 * @param userid
 	 * @return
 	 */
-	public List<Map<String, Object>> selectuserdata(Integer userid)throws Exception;
-	/**
-	 * 获取用户所对应的设备状态
-	 * 
-	 * @param userid
-	 * @return
-	 */
-	public ResultData<List<Userdata>> selectuserdata1(DataRow map,ResultData<List<Userdata>> re)throws Exception;
+	public ResultData<List<Userdata>> selectuserdata(DataRow map,ResultData<List<Userdata>> re)throws Exception;
 	/**
 	 * 取消使用者
 	 */

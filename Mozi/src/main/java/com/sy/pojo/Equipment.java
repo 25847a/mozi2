@@ -10,50 +10,102 @@ import com.baomidou.mybatisplus.enums.IdType;
 
 @TableName("equipment")
 public class Equipment extends Model<Equipment>{
+	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 主键ID
+	 */
 	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
-
+	/**
+	 * 设备imei
+	 */
     private String imei;
-
+    /**
+	 * 主机电量
+	 */
     private Integer lordpower;
-
+    /**
+	 * 主机信号
+	 */
     private String signalxhao;
+    /**
+	 * 蓝牙类型
+	 */
     @TableField(value="bluetooth_type")
     private String bluetoothType;
+    /**
+	 * 设备状态(在线或者离线)
+	 */
     @TableField(value="eq_status")
     private String eqStatus;
-
+    /**
+	 * 注册时间
+	 */
     private Date createtime;
-
+    /**
+	 * 最近更新数据时间
+	 */
     private Date updatetime;
-
-    private String eqtype;
+    /**
+	 * 设备类型  0.旧版 1.新版
+	 */
+    private Integer eqtype;
+    /**
+	 * 蓝牙名称
+	 */
     @TableField(value="bluetooth_name")
     private String bluetoothName;
+    /**
+	 * 蓝牙状态(连接，未连接)
+	 */
     @TableField(value="bluetooth_status")
     private String bluetoothStatus;
+    /**
+	 * 蓝牙列表
+	 */
     @TableField(value="bluetooth_electricity")
     private Integer bluetoothElectricity;
-
+    /**
+	 * 蓝牙电量
+	 */
     private String clock;
-
+    /**
+	 * 时钟
+	 */
     private String phone1;
-
+    /**
+	 * 紧急联系人1
+	 */
     private String phone2;
-
+    /**
+	 * 紧急联系人2
+	 */
     private String name;
-
+    /**
+	 * 昵称
+	 */
     private String version;
-
+    /**
+	 * 版本
+	 */
     private Date uploadtime;
-
+    /**
+	 * 设备更新时间
+	 */
     private String bluetoothmac;
+    /**
+	 * 蓝牙mac地址
+	 */
     @TableField(value="bluetooth_list")
     private String bluetoothList;
-    
+    /**
+	 * 代理商id
+	 */
     private Integer agentid;
-    
+    /**
+	 * 机型
+	 */
     private String model;
 
     public Integer getId() {
@@ -120,12 +172,12 @@ public class Equipment extends Model<Equipment>{
         this.updatetime = updatetime;
     }
 
-    public String getEqtype() {
+    public Integer getEqtype() {
         return eqtype;
     }
 
-    public void setEqtype(String eqtype) {
-        this.eqtype = eqtype == null ? null : eqtype.trim();
+    public void setEqtype(Integer eqtype) {
+        this.eqtype = eqtype == null ? null : eqtype;
     }
 
     public String getBluetoothName() {

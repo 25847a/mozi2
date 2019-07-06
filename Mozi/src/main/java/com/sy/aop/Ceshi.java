@@ -26,8 +26,10 @@ public class Ceshi {
 			//更新数据
 		//	update(MZ, list);
 			//插入数据
-			insert(MZ);//惊凡数据表
+		//	insert(MZ);//惊凡数据表
+			insetequipmentRecord(MZ);
 		//	insetequipmentdata(MZ);
+			//步数、卡里路
 			//insetequipmentdata(MZ, list);
 			System.out.println("加载成功");
 		}catch(Exception e){
@@ -64,6 +66,39 @@ public class Ceshi {
 			ten.setString(4, time);
 			ten.executeUpdate();
 			 if(time.equals("2018-06-30 23:55:00")) {
+				 fag=false;
+				 System.out.println("OK");
+			 }
+			 }
+		} catch (Exception e) {
+			System.out.println("插入失败"+e);
+			
+		}
+		
+	} 
+	/**
+	 * 出湿度,健康数据
+	 * @throws SQLException 
+	*/
+	public static void 	insetequipmentRecord(Connection ZX){
+		try {
+		boolean fag = true;
+		String date = "2019-07-05 00:00:00";
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			System.out.println(sf.parse(date));
+			Calendar cd = Calendar.getInstance();   
+			 cd.setTime(sf.parse(date));
+			 while(fag) {
+				 cd.add(Calendar.MINUTE, 5);
+			  String sql = "insert into equipment_record ( userId, humidity,temperature,createtime)values(?,?,?,?)";  
+			PreparedStatement ten = ZX.prepareStatement(sql);
+			ten.setInt(1,28704);
+			ten.setInt(2,(int) (50+Math.random()*(100-50+1)));
+			ten.setFloat(3,(float) (0+Math.random()*(140-0+1)));
+			String time = sf.format(cd.getTime());
+			ten.setString(4, time);
+			ten.executeUpdate();
+			 if(time.equals("2018-07-30 23:55:00")) {
 				 fag=false;
 				 System.out.println("OK");
 			 }

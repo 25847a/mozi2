@@ -10,7 +10,7 @@ public interface JfhealthNewMapper extends BaseMapper<JfhealthNew>{
 
     int deleteByPrimaryKey(Integer id);
 
-    int insertSelective(JfhealthNew record);
+  //  int insertSelective(JfhealthNew record);
 
 
     Jfhealth selectByPrimaryKey(Integer id);
@@ -18,7 +18,6 @@ public interface JfhealthNewMapper extends BaseMapper<JfhealthNew>{
 
     int updateByPrimaryKeySelective(JfhealthNew record);
 
-    int updateByPrimaryKeyWithBLOBs(JfhealthNew record);
 
     int updateByPrimaryKey(JfhealthNew record);
     

@@ -12,7 +12,6 @@ public interface JfhealthMapper extends BaseMapper<Jfhealth>{
 
     int deleteByPrimaryKey(Integer id);
 
-    int insertSelective(Jfhealth record);
 
     Jfhealth selectByPrimaryKey(Integer id);
 

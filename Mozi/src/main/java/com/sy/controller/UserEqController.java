@@ -153,50 +153,16 @@ public class UserEqController {
 	 * m
 	 * @return
 	 */
-	@RequestMapping(value = "selectuserdata1")
-	@ResponseBody
-	public ResultData<List<Userdata>> selectuserdata1(@RequestBody DataRow map) {
-		ResultData<List<Userdata>> re = new ResultData<List<Userdata>>();
-		try {
-			re = usereqservice .selectuserdata1(map,re);
-			} catch (Exception e) {
-				re.setCode(200);
-				re.setMessage("未有用户数据 ！！！！");
-				logger.error("UserEqController>>>>>>>>>>>>>>>>>selectuserdata1",e);
-			}
-			return re;
-	}
-	
-	/**
-	 * 获取app首页数据
-	 * 
-	 * @return
-	 */
 	@RequestMapping(value = "selectuserdata")
 	@ResponseBody
-	public ResultData<List<Userdata>> selectuserdata(@RequestBody Map m) {
-		String userIdStr = (String) m.get("userId");
-		String useridStr = (String) m.get("userid");
-		if(userIdStr==null){
-			userIdStr = useridStr;
-		}
-		int parseInt = Integer.parseInt(userIdStr);
+	public ResultData<List<Userdata>> selectuserdata(@RequestBody DataRow map) {
 		ResultData<List<Userdata>> re = new ResultData<List<Userdata>>();
 		try {
-			List<Map<String, Object>> userdata = usereqservice
-					.selectuserdata(parseInt);
-			if (userdata != null && userdata.size() > 0) {
-				re.setCode(200);
-				re.setMessage("获取所有设备使用者信息成功！！！");
-				re.setData(userdata);
-			} else {
-				re.setCode(200);
-				re.setMessage("未有用户数据 ！！");
-			}
+			re = usereqservice .selectuserdata(map,re);
 			} catch (Exception e) {
 				re.setCode(200);
 				re.setMessage("未有用户数据 ！！！！");
-				e.printStackTrace();
+				logger.error("UserEqController>>>>>>>>>>>>>>>>>selectuserdata",e);
 			}
 			return re;
 	}

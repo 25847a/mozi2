@@ -11,19 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.common.JpushClientUtil;
+import com.sy.mapper.MessageMapper;
 import com.sy.mapper.PushMapper;
 import com.sy.mapper.PushRecordMapper;
-import com.sy.mapper.UserEqMapper;
 import com.sy.pojo.JfhealthNew;
+import com.sy.pojo.Message;
 import com.sy.pojo.Push;
 import com.sy.pojo.PushRecord;
 import com.sy.pojo.User;
-import com.sy.pojo.UserEq;
 import com.sy.service.PushRecordService;
 import com.sy.service.PushService;
+import com.sy.service.UseravatarService;
 
 @Service
 public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements PushService {
@@ -36,6 +36,10 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 	PushRecordService pushRecordService;
 	@Autowired
 	private PushRecordMapper pushRecordMapper;
+	@Autowired
+	MessageMapper messageMapper;
+	@Autowired
+	UseravatarService useravatarService;
 
 	/**
 	 * 查询推送表
@@ -90,6 +94,7 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 			for (Push push : pushList) {
 				if (push.getAllNotifyOn()) {// 总开关true开着
 					PushRecord pushRecord = new PushRecord();
+					Message me = new Message();//消息中心
 					pushRecord.setUserId(push.getUserId());
 					if (jfhealth.getHeartrate() < push.getHeartLowThd() || jfhealth.getHeartrate() > push.getHeartHigThd()) {
 						// 心率低了 或者 心率高了
@@ -97,6 +102,10 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 								"已经超过正常范围值" + push.getHeartLowThd() + "-" + push.getHeartHigThd(), "2","{\"userId\":\""+u.getId()+"\"}");
 						str = "1";
 						pushRecord.setHeartUnusual(jfhealth.getHeartrate());
+						me.setAlias(push.getAlias());
+						me.setTitle("预警通知");
+						me.setContent("u.getName()  心率异常    "+jfhealth.getHeartrate()+"次/分钟");
+						messageMapper.insert(me);
 					}
 					// 舒张压低了 或者 舒张压高了
 					if (jfhealth.getDbpAve() < push.getLbpstart() || jfhealth.getDbpAve() > push.getLbpend()) {
@@ -104,6 +113,10 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 										"已经超过预警范围值:" + push.getLbpstart() + "-" + push.getLbpend(), "3","{\"userId\":\""+u.getId()+"\"}");
 						str = "1";
 						pushRecord.setHighBloodUnusual(jfhealth.getDbpAve());
+						me.setAlias(push.getAlias());
+						me.setTitle("预警通知");
+						me.setContent("u.getName()  舒张压异常    "+jfhealth.getDbpAve()+"mmHg");
+						messageMapper.insert(me);
 					}
 					// 收缩压低了 或者 收缩压高了
 					if (jfhealth.getSbpAve() < push.getHbpstart() || jfhealth.getSbpAve() > push.getHbpend()) {
@@ -111,6 +124,10 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 										"已经超过预警范围值" + push.getHbpstart() + "-" + push.getHbpend(), "3","{\"userId\":\""+u.getId()+"\"}");
 						str = "1";
 						pushRecord.setLowBloodUnusual(jfhealth.getSbpAve());
+						me.setAlias(push.getAlias());
+						me.setTitle("预警通知");
+						me.setContent("u.getName()  收缩压异常    "+jfhealth.getHeartrate()+"mmHg");
+						messageMapper.insert(me);
 					}
 					if(pushRecord.getHeartUnusual()!=null || pushRecord.getHighBloodUnusual()!=null || pushRecord.getLowBloodUnusual()!=null){
 						if (pushRecordMapper == null) {

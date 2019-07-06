@@ -67,9 +67,6 @@ public class TcpController {
 	private static SensorstatusMapper sensorstatusmapper;
 	@Autowired
 	private static EquipmentMapper equipmentMapper;
-
-	//@Autowired
-	//private static JfhealthMapper jfhealthMapper;
 	@Autowired
 	private static JfhealthNewMapper jfhealthNewMapper;
 	@Autowired
@@ -90,9 +87,6 @@ public class TcpController {
 		if (jfhealthNewMapper == null) {
 			jfhealthNewMapper = (JfhealthNewMapper) webApplicationContext.getBean("jfhealthNewMapper");
 		}
-		//if (jfhealthMapper == null) {
-		//	jfhealthMapper = (JfhealthMapper) webApplicationContext.getBean("jfhealthMapper");
-		//}
 		if (waveformMapper == null) {
 			waveformMapper = (WaveformMapper) webApplicationContext.getBean("waveformMapper");
 		}
@@ -128,17 +122,17 @@ public class TcpController {
 			init();
 			Equipment equipment = eservice.selectquipmentimei(imei);
 			if (equipment != null) {
+				String[] texts = msg.split("\\|");
 				if (msg.contains("HEARD")) {
 					// 将imei通讯通道存储到map里面进行聊天通讯
 					NettyChannelMap.add(imei, (SocketChannel) channelHandlerContext.channel());
-					eservice.updateEqStatus("H:1", "1", imei, null, null, null,equipment);
+					eservice.updateEqStatus("H:1",imei,equipment);
 						
 				} else {
 
-					String[] texts = msg.split("\\|");
+				//	String[] texts = msg.split("\\|");
 					if (texts != null && texts.length != 0) {
-						
-						eservice.updateEqStatus("H:1", "1", imei, null, null, null,equipment);
+						eservice.updateEqStatus("H:1",imei,equipment);//这个的功能只是每次传T指令的之后,提示设备在线而已,不需要更改设备类型
 						// 将imei通讯通道存储到map里面进行聊天通讯
 						NettyChannelMap.add(imei, (SocketChannel) channelHandlerContext.channel());
 						//T01
@@ -215,7 +209,7 @@ public class TcpController {
 								e.setBluetoothType(bs[1]);
 								e.setBluetoothName(bs[2]);
 								e.setBluetoothmac(bs[3]);
-								equipmentMapper.updateByPrimaryKeySelective(e);
+								equipmentMapper.updateById(e);
 							} catch (Exception e2) {
 								e2.printStackTrace();
 							}
@@ -341,15 +335,6 @@ public class TcpController {
 		return content;
 	}
 
-	//
-	// public static void main(String[] args) throws
-	// UnsupportedEncodingException {
-	// String txt = "我";
-	// byte[] sour = txt.getBytes("utf-8");
-	// String dest = new String(sour, "gb2312");
-	// System.out.println(dest);
-	// }
-	//
 
 	public static void socketurl(String txt) throws IOException {
 		Socket s = new Socket("lanotec.iask.in", 38679);
@@ -439,7 +424,7 @@ public class TcpController {
 			
 			//更新设备数据
 			//主控上固定值 texts[3]H:1只要T01已发送表示设备在线
-			Equipment e = eservice.updateEqStatus("H:1", texts[2], imei,
+			Equipment e = eservice.updateEqStatus("H:1", Integer.valueOf(texts[2]), imei,
 					Integer.parseInt(lordpower), signalxhao, texts[8], equipment);
 
 			String model = e.getModel();
@@ -459,7 +444,7 @@ public class TcpController {
 						+ "|" + uploadDownload.getZhuversion() + "_" + uploadDownload.getZiversion()
 						+ "_" + uploadDownload.getCompilation() + "_"
 						+ uploadDownload.getVersiontype() + "\r\n");
-				eservice.equipmentstatus("H:1", "1", imei, null, null,
+				eservice.equipmentstatus("H:1", Integer.valueOf(texts[2]), imei, null, null,
 						uploadDownload.getZhuversion() + "_" + uploadDownload.getZiversion() + "_"
 								+ uploadDownload.getCompilation() + "_"
 								+ uploadDownload.getVersiontype());
@@ -483,7 +468,7 @@ public class TcpController {
 							+ "|" + uploadDownload.getZhuversion() + "_"
 							+ uploadDownload.getZiversion() + "_" + uploadDownload.getCompilation()
 							+ "_" + uploadDownload.getVersiontype() + "\r\n");
-					eservice.equipmentstatus("H:1", "1", imei, null, null,
+					eservice.equipmentstatus("H:1", Integer.valueOf(texts[2]), imei, null, null,
 							uploadDownload.getZhuversion() + "_" + uploadDownload.getZiversion()
 									+ "_" + uploadDownload.getCompilation() + "_"
 									+ uploadDownload.getVersiontype());
@@ -554,56 +539,13 @@ public class TcpController {
 					if (q.equals("Q")) {
 						equipment.setBluetoothElectricity(Integer.parseInt(text));
 					}
-
 					switch (h) {
-					/*case "H1":
-						edata.setHeartrate(Integer.parseInt(text));
-						break;
-					case "H2":
-						edata.setHighpressure(Integer.parseInt(text));
-						break;
-					case "H3":
-						edata.setBottompressure(Integer.parseInt(text));
-						break;
-					case "H4":
-						edata.setQxygen(Integer.parseInt(text));
-						break;
-					case "H5":
-						edata.setMocrocirculation(Integer.parseInt(text));
-						break;
-					case "H6":
-						edata.setHrv(Integer.parseInt(text));
-						break;
-					case "H7":
-						edata.setMood(Integer.parseInt(text));
-						break;
-					case "H8":
-						edata.setBreathe(Integer.parseInt(text));
-						break;*/
 					case "G1":
 						edata.setStepWhen(Integer.parseInt(text));
 						break;
-				/*	case "G2":
-						edata.setSleeping(Double.parseDouble(text));
-						break;*/
 					case "G3":
 						edata.setCarrieroad(Integer.parseInt(text));
 						break;
-			/*		case "G4":
-						edata.setSedentary(text);
-						break;
-					case "G5":
-						edata.setCrash(Integer.parseInt(text));
-						break;
-					case "G6":
-						edata.setMovementstate(Integer.parseInt(text));
-						break;
-					case "T1":
-						edata.setBodytemp(Integer.parseInt(text));
-						break;
-					case "T2":
-						edata.setHumidity(Integer.parseInt(text));
-						break;*/
 					case "M1":
 						equipment.setLordpower(Integer.parseInt(text));
 						break;
@@ -613,16 +555,8 @@ public class TcpController {
 					}
 				}
 				edata.setUserId(user.getId());
-				boolean stu = false;
-				stu = eqdataserive.addEquipmentData(edata);
-				if (stu) {
-				} else {
-				}
-				equipment.setUpdatetime(new Date());
-				boolean est = eservice.updateEquipment(equipment);
-				if (est) {
-				} else {
-				}
+				eqdataserive.addEquipmentData(edata);//查询健康数据
+				eservice.updateEquipment(equipment);//更新设备
 			} else {
 			}
 		} else {

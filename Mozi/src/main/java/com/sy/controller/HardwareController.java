@@ -36,14 +36,12 @@ public class HardwareController extends Thread implements ServletContextListener
 			  Integer port = Integer.valueOf(config.getString("port"));
 			NettyServerBootstrap bootstrap = new NettyServerBootstrap(port);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	        while (true){
 	            try {
 					TimeUnit.SECONDS.sleep(5);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	        }

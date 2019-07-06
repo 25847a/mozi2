@@ -1,9 +1,22 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Realhealth {
-
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.FieldFill;
+import com.baomidou.mybatisplus.enums.IdType;
+@TableName("realhealth")
+public class Realhealth extends Model<Realhealth>{
+	
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 编号id
+	 */
+	@TableId(value="id", type= IdType.AUTO)
 	private Integer id;
     private Integer HRV;
     private Integer sbpAve;
@@ -14,7 +27,9 @@ public class Realhealth {
     private Integer respirationrate;
     private String phone;
     private String imei;
+    @TableField(value = "createtime",fill = FieldFill.INSERT )
     private Date createtime;
+    
     private String amedicalreport;
 	public Integer getId() {
 		return id;
@@ -87,6 +102,11 @@ public class Realhealth {
 	}
 	public void setAmedicalreport(String amedicalreport) {
 		this.amedicalreport = amedicalreport;
+	}
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
 	}
     
     

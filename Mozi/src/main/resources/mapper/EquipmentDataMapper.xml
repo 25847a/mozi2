@@ -8,64 +8,6 @@
     <result column="carrieroad" property="carrieroad" jdbcType="INTEGER" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
   <sql id="Base_Column_List" >
     id, user_id, step_when, carrieroad, createtime
   </sql>
@@ -75,43 +17,6 @@
     from equipment_data
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <insert id="insertSelective" parameterType="com.sy.pojo.EquipmentData" >
-    insert into equipment_data
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>  
-      <if test="stepWhen != null" >
-        step_when,
-      </if>
-      <if test="carrieroad != null" >
-        carrieroad,
-      </if>
-      <if test="createtime != null" >
-        createtime,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="stepWhen != null" >
-        #{stepWhen,jdbcType=INTEGER},
-      </if>
-      <if test="carrieroad != null" >
-        #{carrieroad,jdbcType=INTEGER},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.EquipmentData" >
     update equipment_data
     <set >
@@ -153,15 +58,14 @@
   <delete id="deletedata" parameterType="java.lang.Integer" >
      delete from equipment_data  where user_id =#{userId}
   </delete>
-  <select id="selecttheycount" parameterType="java.util.Map" resultMap="BaseResultMap">
-  select * from equipment_data where  createtime  LIKE #{countdate}   and user_id=#{userid}
-  </select>
   <!-- 啊健写的获取卡里路提供给硬件 -->
   <select id="queryEquipmentDataInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   	SELECT * FROM equipment_data  WHERE user_id=#{userId} ORDER BY createtime DESC  LIMIT 0,1
   </select>
    <!-- 获取当天步数和卡里路总数 -->
   <select id="queryStepWhenCarrieroadSum" parameterType="java.lang.Integer" resultType="com.sy.utils.DataRow">
-  	SELECT SUM(step_when) as stepWhen,SUM(carrieroad) as carrieroad FROM equipment_data WHERE user_id=#{userId} AND DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')
+  	SELECT CASE WHEN SUM(step_when) IS NULL THEN 0 ELSE SUM(step_when) END as stepWhen,
+  		   CASE WHEN SUM(carrieroad) IS NULL THEN 0 ELSE SUM(carrieroad) END as carrieroad
+  	FROM equipment_data WHERE user_id=#{userId} AND DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')
   </select>
 </mapper>

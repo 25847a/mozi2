@@ -1,5 +1,6 @@
 package com.sy.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -481,8 +482,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			data.put("avatar",data.getString("avatar")==null? useravatarService.selectavartar().getAvatar():data.getString("avatar"));
 			DataRow row =equipmentMapper.queryEquipmentMember(data.getString("imei"));
 			if(row!=null){
-				row.put("eq_status", row.getString("eq_status").equals("H:0")?false:true);
-				row.put("bluetooth_type", row.getInt("bluetooth_type")==0?false:true);
+				row.put("eq_status", row.getString("eq_status").equals("H:0")?0:1);
+				row.put("bluetooth_type", row.getInt("bluetooth_type"));
 			}
 			data.put("equipment", row);
 			re.setCode(200);
@@ -512,6 +513,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}
 		return re;
 	}
-
-	
 }

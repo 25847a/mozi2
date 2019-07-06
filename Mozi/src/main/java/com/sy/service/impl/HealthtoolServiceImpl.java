@@ -3,7 +3,6 @@ package com.sy.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import com.sy.mapper.JfhealthMapper;
 import com.sy.mapper.JfhealthNewMapper;
 import com.sy.mapper.RealhealthMapper;
 import com.sy.mapper.UserEqMapper;
-import com.sy.pojo.EquipmentData;
 import com.sy.pojo.Jfhealth;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Jfhealthdao;
@@ -27,6 +25,7 @@ import com.sy.service.PushService;
 import com.sy.service.UserService;
 import com.sy.utils.BinaryReadWrite;
 import com.sy.utils.DataParsing;
+import com.sy.utils.DataRow;
 import com.sy.utils.HttpClientUtil;
 import com.sy.utils.Managementconstant;
 
@@ -38,8 +37,6 @@ public class HealthtoolServiceImpl {
 	private static UserEqMapper userEqMapper;
 	private static JfhealthMapper jfhealthmapper;
 	private static RealhealthMapper realhealthMapper;
-	// @Autowired
-	// private static JfhealthdaoMapper jfhealthdaoMapper;
 	private static JfhealthdaoService jfhealthdaoservice = new JfhealthdaoServiceImpl();
 	private static PushService pushService = new PushServiceImpl();
 	private static JfhealthNewMapper jfhealthNewMapper;
@@ -204,41 +201,24 @@ public class HealthtoolServiceImpl {
 				String respiration = respirationrate(account, "123456", stattime, device_id);
 				// 高低压
 				String[] bloodxygen = bloodr.split(",");
-				
-				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");// 设置日期格式
-				Map<String, Object> m = new HashMap<String, Object>();
-				m.put("countdate", df.format(new Date()) + "%");
-				m.put("userid", u.getId());
-
-				// 获取当天所有的步数和卡路里
-				List<EquipmentData> equipmentdaoList = equipmentDataMapper.selecttheycount(m);
-				Integer Step_whennum = 0;
-				Integer Carrieroadnum = 0;
-				if (equipmentdaoList != null && equipmentdaoList.size() > 0) {
-					for (EquipmentData eqcount : equipmentdaoList) {
-						if(eqcount.getStepWhen()!=null&&eqcount.getCarrieroad()!=null){
-							Step_whennum += eqcount.getStepWhen();
-							Carrieroadnum += eqcount.getCarrieroad();
-						}
-					}
-				}
+				//获取当天总步数和卡里路
+				DataRow row =equipmentDataMapper.queryStepWhenCarrieroadSum(u.getId());
 				String returnStr = null;
 
 				// 使用者的的校准数据
 				Jfhealthdao jfdao = jfhealthdaoservice.JfhealthdaoInfo(imei, account);
 
-				// t14表示硬件5分钟自动上传一次
+				// t14表示硬件5分钟自动上传一次健康数据
 				if (type.equals("T14")) {
 					if (jfdao != null) {
 						Realhealth record = new Realhealth();
 	                    record.setAmedicalreport(amedical);
 	                    record.setBloodoxygen(Integer.valueOf(bloodxy));
-	                    record.setHeartrate(Integer.valueOf(Integer.parseInt(heartr)));
-	                    record.setSbpAve(Integer.valueOf(Integer.parseInt(bloodxygen[0])));
-	                    record.setDbpAve(Integer.valueOf(Integer.parseInt(bloodxygen[1])));
-	                    record.setHRV(Integer.valueOf(Integer.parseInt(hrv)));
-	                    record.setMicrocirculation(Integer.valueOf(Integer.parseInt(microcir)));
-	                    record.setCreatetime(new Date());
+	                    record.setHeartrate(Integer.parseInt(heartr));
+	                    record.setSbpAve(Integer.parseInt(bloodxygen[0]));
+	                    record.setDbpAve(Integer.parseInt(bloodxygen[1]));
+	                    record.setHRV(Integer.parseInt(hrv));
+	                    record.setMicrocirculation(Integer.parseInt(microcir));
 	                    record.setPhone(account);
 	                    record.setImei(imei);
 	                	Jfhealth health = new Jfhealth();
@@ -255,14 +235,12 @@ public class HealthtoolServiceImpl {
 						health = DataParsing.DataMicrocirculation(health, jfdao, microcir);
 						//呼吸
 						health = DataParsing.respirationrate(health, jfdao, respiration);
-						// 创建时间
-						health.setCreatetime(new Date());
 						health.setPhone(account);
 						health.setImei(imei);
 						// 插入健康数据表
 						logger.info("才健准备插入数据:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-						jfhealthmapper.insertSelective(health);
-				//		realhealthMapper.insertRealhealth(record);
+						jfhealthmapper.insert(health);
+						realhealthMapper.insert(record);
 						// 插入最新数据表,供app接口查询
 						JfhealthNew jfhealthNew = new JfhealthNew();
 						jfhealthNew.setHRV(health.getHRV());
@@ -273,17 +251,16 @@ public class HealthtoolServiceImpl {
 						jfhealthNew.setMicrocirculation(health.getMicrocirculation());
 						jfhealthNew.setAmedicalreport(health.getAmedicalreport());
 						jfhealthNew.setRespirationrate(health.getRespirationrate());
-						jfhealthNew.setCreatetime(new Date());
 						jfhealthNew.setPhone(health.getPhone());
 						jfhealthNew.setImei(imei);
 						logger.info("才健获取最新数据:>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 						JfhealthNew newjfhealthNew = jfhealthNewMapper.newJfhealthNew(imei.toString());
 						if (newjfhealthNew != null) {
 							jfhealthNew.setId(newjfhealthNew.getId());
-							jfhealthNewMapper.updateByPrimaryKeyWithBLOBs(jfhealthNew);
+							jfhealthNewMapper.updateById(jfhealthNew);
 							logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>才健更新最新数据");
 						} else {
-							jfhealthNewMapper.insertSelective(jfhealthNew);
+							jfhealthNewMapper.insert(jfhealthNew);
 							logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>才健插入最新数据");
 						}
 						// 开启极光推送
@@ -294,7 +271,7 @@ public class HealthtoolServiceImpl {
 						String queryPushNews = pushService.queryPushNews(map, jfhealthNew);
 						returnStr = "$R05|H1:" + health.getHeartrate() + ",H2:" + health.getSbpAve() + ",H3:" + health.getDbpAve()
 								+ ",H4:" + health.getBloodoxygen() + ",H5:" + health.getMicrocirculation() + ",H6:" + health.getHRV() + ",H8:"
-								+ health.getRespirationrate() + ",H9:" + queryPushNews + ",G1:" + Step_whennum + ",G3:" + Carrieroadnum
+								+ health.getRespirationrate() + ",H9:" + queryPushNews + ",G1:" + row.getInt("stepWhen") + ",G3:" + row.getInt("carrieroad")
 								+ "\r\n";
 					} else {
 						returnStr = "nocalibration";
@@ -311,7 +288,7 @@ public class HealthtoolServiceImpl {
 					}
 					returnStr = "$R05|H1:" + jfdao.getHeartrate() + ",H2:" + jfdao.getSbpAve() + ",H3:" + jfdao.getDbpAve() + ",H4:"
 							+ jfdao.getBloodoxygen() + ",H5:" + jfdao.getMicrocirculation() + ",H6:" + jfdao.getHRV() + ",H8:" + jfdao.getRespirationrate() + ",H9:0,G1:"
-							+ Step_whennum + ",G3:" + Carrieroadnum + "\r\n";
+							+ row.getInt("stepWhen")  + ",G3:" + row.getInt("carrieroad") + "\r\n";
 				}
 				return returnStr;
 			}

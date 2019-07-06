@@ -124,6 +124,12 @@
 	<select id="ifObserved" parameterType="java.lang.Integer"   resultMap="BaseResultMap">
 	     select * from user_eq   where  eq_id=#{eqId}  and typeof=1  and user_id=#{userId}
 	</select>
+	<!-- 根据使用者ID查询监护者 -->
+	<select id="queryUserEqAlias" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		SELECT * FROM user_eq WHERE typeof=0 AND eq_id=(
+		SELECT eq_id FROM user_eq WHERE user_id=#{userId} AND typeof=2
+		)
+	</select>
 	<!-- 通过设备ID查询所有信息 -->
 	<select id="selelctequser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
 	  	 select * from user_eq   where  eq_id = #{eqId} 
@@ -157,7 +163,9 @@
 	</select>
 	<!-- 通过监护者ID查询首页需要的数据-->
 	<select id="queryUserEq" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,tv.positioning_data,td.avatar,tc.imei,td.age,tp.typeof as type_of FROM user_eq tp
+		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,tv.positioning_data,td.avatar,tc.imei,td.age,tp.typeof as type_of,
+		(SELECT COUNT(*) FROM message WHERE alias=#{userId}) as messageCount
+		FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id AND tp.typeof='2'
 		INNER JOIN user td
@@ -170,7 +178,7 @@
 	</select>
 	<!-- 查询关注人使用者列表-->
 	<select id="queryUserEqFollowUsersList" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.bluetooth_type,tp.typeof as type_of FROM user_eq tp
+		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.eqtype,td.bluetooth_type,tp.typeof as type_of FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE typeof=0 AND user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id and tp.typeof=2
 		INNER JOIN equipment td
@@ -181,7 +189,7 @@
 	</select>
 	<!-- 查询关注人观察者列表-->
 	<select id="queryUserEqFollowObserverList" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.bluetooth_type,tt.typeof as type_of FROM user_eq tp
+		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.eqtype,td.bluetooth_type,tt.typeof as type_of FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE  typeof=1 AND user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id and tp.typeof=2
 		INNER JOIN equipment td

@@ -52,6 +52,12 @@ public interface UserEqMapper extends BaseMapper<UserEq>{
      */
     UserEq selectByPrimaryKey(Integer id);
     /**
+     * 根据使用者ID查询监护者
+     * @param id
+     * @return
+     */
+    UserEq queryUserEqAlias(Integer userId);
+    /**
      * 更新数据
      * @param record
      * @return
