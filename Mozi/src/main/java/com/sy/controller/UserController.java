@@ -30,7 +30,6 @@ import com.sy.utils.MD5Util;
 import com.sy.vo.LoginReturn;
 import com.sy.vo.Loginuse;
 import com.sy.vo.Usermanagement;
-import io.netty.channel.Channel;
 import io.netty.channel.socket.SocketChannel;
 
 @Controller
@@ -242,7 +241,24 @@ public class UserController {
 		}
 		return re;
 	}
-
+	/**
+	 * 更新监护者用户信息
+	 * @param u
+	 * @return
+	 */
+	@RequestMapping("updateAliasUser")
+	@ResponseBody
+	public ResultBase updateAliasUser(@RequestBody User u) {
+		ResultBase re = new ResultBase();
+		try {
+			re = userService.updateAliasUser(u,re);
+		} catch (Exception e) {
+			re.setCode(400);
+			re.setMessage("修改异常,请联系管理员");
+			logger.error("UserController>>>>>>>>>>>>updateAliasUser",e);
+		}
+		return re;
+	}
 	/**
 	 * 更新密码
 	 * 

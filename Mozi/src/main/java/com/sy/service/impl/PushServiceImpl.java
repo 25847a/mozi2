@@ -162,7 +162,7 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 	public ResultBase testPush(DataRow map,ResultBase re) throws Exception {
 		UserEq eq =userEqMapper.queryUserEqAlias(map.getInt("userId"));//通过使用者ID查询监护者ID
 		
-		int row =JpushClientUtil.sendToAlias(String.valueOf(eq.getUserId()),"测试信息","小墨提醒","本条为预警测试信息，可忽略","","{\"userId\":\""+map.getInt("userId")+"\"}");
+		int row =JpushClientUtil.sendToAlias(String.valueOf(eq.getUserId()),"小墨提醒","本条为预警测试信息,可忽略","","3","{\"userId\":\""+map.getInt("userId")+"\"}");
 		if(row==1){
 			re.setCode(200);
 			re.setMessage("发送成功,如未收到请检查手机通知消息是否开启");

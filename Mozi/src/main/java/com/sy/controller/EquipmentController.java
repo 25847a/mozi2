@@ -7,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.pojo.Equipment;

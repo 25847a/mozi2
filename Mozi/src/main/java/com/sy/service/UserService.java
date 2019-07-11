@@ -77,7 +77,12 @@ public interface UserService  extends IService<User>{
 	 * @return
 	 */
 	public ResultBase updateUser(User u,ResultBase re)throws Exception;
-	
+	/**
+	 * 更新监护者用户信息
+	 * @param u
+	 * @return
+	 */
+	public ResultBase updateAliasUser(User u,ResultBase re)throws Exception;
 	/**修改用戶
 	 * @param password
 	 * @param newpassword

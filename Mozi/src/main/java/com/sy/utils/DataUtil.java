@@ -113,15 +113,15 @@ public class DataUtil {
 	public static DataRow hrvData(String name,String desc,int category,String unit,int lastestValue,int age){
 		int type=1;
 		if(age>Constant.childLow &&  age<Constant.childHig){
-			if(lastestValue>Constant.childHRVLow && lastestValue>Constant.childHRVHig){
+			if(lastestValue>=Constant.childHRVLow && lastestValue<=Constant.childHRVHig){
 				type=0;
 			}
 		}else if(age>Constant.youthLow && age<Constant.youthHig){
-			if(lastestValue>Constant.youthHRVLow && lastestValue>Constant.youthHRVHig){
+			if(lastestValue>=Constant.youthHRVLow && lastestValue<=Constant.youthHRVHig){
 				type=0;
 			}
 		}else if(age>Constant.elderlyLow && age<Constant.elderlyHig){
-			if(lastestValue>Constant.elderlyHRVLow && lastestValue>Constant.elderlyHRVHig){
+			if(lastestValue>=Constant.elderlyHRVLow && lastestValue<=Constant.elderlyHRVHig){
 				type=0;
 			}
 		}
@@ -152,7 +152,7 @@ public class DataUtil {
 	 */
 	public static DataRow mocrocirculationData(String name,String desc,int category,String unit,int lastestValue){
 		int type=1;
-		if(lastestValue>Constant.microcirculationLow && lastestValue<Constant.microcirculationHig){
+		if(lastestValue>Constant.microcirculationLow){
 			type=0;
 		}
 		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);
@@ -184,7 +184,7 @@ public class DataUtil {
 	 */
 	public static DataRow breatheData(String name,String desc,int category,String unit,int lastestValue){
 		int type=1;
-		if(lastestValue>Constant.respirationrateLow && lastestValue<Constant.respirationrateHig){
+		if(lastestValue>=Constant.respirationrateLow && lastestValue<=Constant.respirationrateHig){
 			type=0;
 		}
 		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);
@@ -385,15 +385,15 @@ public class DataUtil {
 	public static ResultData<DataRow> warmSecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,Float healthData,ResultData<DataRow> re){
 		String index = ReadProperties.getValue("warmIntroduce");
 		String range = ReadProperties.getValue("warmRange");
-		float low =ReadProperties.getFloatValue("warmLow");//36.3
+		/*float low =ReadProperties.getFloatValue("warmLow");//36.3
 		float just = ReadProperties.getFloatValue("warmJust");//37.5
 		float in = ReadProperties.getFloatValue("warmIn");//38
 		float inHigh = ReadProperties.getFloatValue("warmInHigh");//39
 		float higt = ReadProperties.getFloatValue("warmHigh");//41
-		int type=1;
+*/		int type=1;
 		
 		type=0;
-		re=micro(category,"--",index,range,"体温","℃",ReadProperties.getValue("warmAnalyB"),ReadProperties.getValue("warmProposalB"),"",type,age,data,jfhealth,re);
+		re=micro(category,"--",index,range,"体温","℃","当前没有数据","当前没有数据","",type,age,data,jfhealth,re);
 		/*if(healthData<low){
 			re=micro(category,String.valueOf(healthData),index,range,"体温","℃",ReadProperties.getValue("warmAnalyA"),ReadProperties.getValue("warmProposalA"),"低温",type,age,data,jfhealth,re);
 		}else if(healthData>=low && healthData<just){
@@ -417,7 +417,7 @@ public class DataUtil {
 	public static ResultData<DataRow> humiditySecondary(int category,DataRow data,JfhealthNew jfhealth,Integer age,String healthData,ResultData<DataRow> re){
 		String index = ReadProperties.getValue("humIntroduce");
 		String range = ReadProperties.getValue("humIntroduce");
-		re=micro(category,"--",index,range,"湿度","%RH",ReadProperties.getValue("humAnaly"),ReadProperties.getValue("humProposal"),"",0,age,data,jfhealth,re);
+		re=micro(category,"--",index,range,"湿度","%RH","当前没有数据","当前没有数据","",0,age,data,jfhealth,re);
 	//	re=micro(category,healthData,index,range,"湿度","%RH",ReadProperties.getValue("humAnaly"),ReadProperties.getValue("humProposal"),"正常",0,age,data,jfhealth,re);
 		return re;
 	}

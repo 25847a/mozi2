@@ -113,7 +113,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 				re.setMessage("修改紧急联系成功!!!");
 					Channel c = NettyChannelMap.get(equipment.getImei());
 					c.writeAndFlush("$R24|" + phone1[1] + ","
-							+ getCode(phone1[0]) + ":" + phone1[1] + ","
+							+ getCode(phone1[0]) + ":" + phone2[1] + ","
 							+ getCode(phone2[0]) + "\r\n");
 			re.setCode(200);
 			re.setMessage("修改成功");

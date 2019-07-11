@@ -270,6 +270,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	 */
 	@Override
 	public ResultBase updateUser(User u,ResultBase re) throws Exception{
+		if(u.getBorn()!=null){
+			u.setAge(DateUtil.getAgeByBirth(u.getBorn()));
+		}
 		int num =userMapper.updateById(u);
 		if (num != 0) {
 			if(u.getAddress()!=null||u.getName()!=null || u.getCity()!=null|| u.getProvince()!=null|| u.getArea()!=null){
@@ -282,9 +285,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 					c.writeAndFlush(R06);
 				}
 			}
+			
 			re.setCode(200);
 			re.setMessage("修改成功");
 		} else {
+			re.setCode(400);
+			re.setMessage("修改失败");
+		}
+		return re;
+	}
+	/**
+	 * 更新监护者用户信息
+	 * @param u
+	 * @return
+	 */
+	public ResultBase updateAliasUser(User u,ResultBase re)throws Exception{
+		int row = userMapper.updateById(u);
+		if(row>0){
+			re.setCode(200);
+			re.setMessage("修改成功");
+		}else{
 			re.setCode(400);
 			re.setMessage("修改失败");
 		}
