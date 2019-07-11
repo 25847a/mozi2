@@ -117,7 +117,7 @@
 	</select>
 	<!-- 通过监护者ID查询首页需要的数据-->
 	<select id="queryUserEq" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,td.avatar,tc.imei,td.age,tp.typeof as type_of,
+		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,td.avatar,tc.imei,td.age,CASE tt.typeof WHEN 0 THEN 2 ELSE tt.typeof END as type_of,
 		(SELECT COUNT(*) FROM message WHERE alias=#{alias} and `read`=0 and DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')) as messageCount,td.calibration,tc.bluetooth_list as bluetoothList
 		FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{alias}) tt
