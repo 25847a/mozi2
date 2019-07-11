@@ -137,7 +137,7 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 						me.setAlias(push.getAlias());
 						me.setUserId(u.getId());
 						me.setTitle("预警通知");
-						me.setContent(u.getName()+"  收缩压异常    "+jfhealth.getHeartrate()+"mmHg");
+						me.setContent(u.getName()+"  收缩压异常    "+jfhealth.getSbpAve()+"mmHg");
 						messageMapper.insert(me);
 					}
 					if(pushRecord.getHeartUnusual()!=null || pushRecord.getHighBloodUnusual()!=null || pushRecord.getLowBloodUnusual()!=null){

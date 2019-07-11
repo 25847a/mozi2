@@ -561,6 +561,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			user.setWeight(u.getWeight());
 			user.setHeight(u.getHeight());
 			user.setBorn(u.getBorn());
+			user.setProvince(u.getProvince());
+			user.setArea(u.getArea());
 			user.setCity(u.getCity());
 			user.setIllness(u.getIllness());
 			userService.insert(user);

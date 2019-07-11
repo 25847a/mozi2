@@ -27,6 +27,8 @@ public class Usermanagement {
 	//imei号
 	private String imei;
 	//省市区
+	private String province;
+	private String area;
 	private String city;
 	//病史
 	private String illness;
@@ -53,6 +55,22 @@ public class Usermanagement {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
 	}
 
 	public String getAccount() {
