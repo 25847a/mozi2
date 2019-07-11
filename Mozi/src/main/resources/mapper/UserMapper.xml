@@ -17,7 +17,9 @@
     <result column="age" property="age" jdbcType="INTEGER" />
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
     <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
     <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="weight" property="weight" jdbcType="REAL" />
     <result column="born" property="born" jdbcType="TIMESTAMP" />
@@ -30,7 +32,7 @@
     <result column="illness" property="illness" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, role, account, password, isDelete,name, age, gender, phone, calibration,city,address, avatar,
+    id, role, account, password, isDelete,name, age, gender, phone, calibration,province,city,area,address, avatar,
     createtime, weight, height, born, code,imei,walkCount,love,bedId,nurseId,liveTime,illness
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -45,7 +47,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="ifUser" parameterType="java.lang.String" resultMap="BaseResultMap">
-      select * from  user where  account = #{account} and isDelete=0
+      select * from  user where  account = #{account} and isDelete=0 limit 0,1
   </select>
   <select id="landingUser" parameterType="com.sy.pojo.User" resultMap="BaseResultMap">
   			select * from user where  account = #{account} and password = #{password} and isDelete=0
@@ -53,25 +55,21 @@
   <select id="getpassword" parameterType="java.util.Map" resultMap="BaseResultMap">
       select * from  User  where password = #{password} and  id=#{id} and isDelete=0
   </select>
-   
-  <!-- 获取想要的页面数据 -->
-  <select id="list" parameterType="java.util.Map" resultType="java.lang.Object">
-   SELECT * FROM  User where isDelete=0
-   		<if test="keyWord != null and keyWord != '' ">
-   			 and  CONCAT(account,name,address,wechat)  LIKE concat(concat('%',#{keyWord}),'%')
-  		</if> 
-   limit #{pageNo},#{pageSize} 
-  </select>
   <select id="phoenselectuser" parameterType="java.lang.String" resultMap="BaseResultMap">
   		select * from user where phone = #{phone} and isDelete=0
   </select>
   <!-- 查询个人资料 -->
   <select id="queryUserInfo" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-  	SELECT id,name,imei,gender,height,weight,DATE_FORMAT(born,'%Y-%m-%d') as born,city,
-  	CASE WHEN phone IS NULL THEN '' ELSE phone END as phone,
-	CASE WHEN illness IS NULL THEN '' ELSE illness END as illness,
-	CASE WHEN address IS NULL THEN '' ELSE address END as address
-  	FROM user WHERE id=#{userId} and isDelete=0
+		  SELECT tp.id,tt.id as eqId,tp.name,tp.imei,gender,height,weight,DATE_FORMAT(born,'%Y-%m-%d') as born,province,city,area,
+		CASE WHEN phone IS NULL THEN '' ELSE phone END as phone,
+		CASE WHEN illness IS NULL THEN '' ELSE illness END as illness,
+		CASE WHEN address IS NULL THEN '' ELSE address END as address,
+		CASE WHEN phone1 IS NULL THEN '' ELSE phone1 END as phone1,
+		CASE WHEN phone2 IS NULL THEN '' ELSE phone2 END as phone2 
+		FROM user tp
+		INNER JOIN equipment tt
+		ON tp.imei=tt.imei
+		WHERE tp.id=#{userId} and isDelete=0
   </select>
   <select id="selectaccount" parameterType="java.lang.String" resultMap="BaseResultMap">
   		select * from user where account = #{account} and isDelete=0
@@ -83,9 +81,14 @@
   <select id="getUser"  parameterType="java.lang.String" resultMap="BaseResultMap">
 	 SELECT * from user  WHERE imei = #{imei} and isDelete=0 limit 0,1
   </select>
-  <!-- 个人中心页面数据 -->
+  <!-- 个人中心页面数据这个估计要删除的 -->
   <select id="queryPersonalCenter" parameterType="java.lang.Integer" resultType="com.sy.vo.LoginReturn">
  	SELECT id,name,avatar,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=0) as aliasCount,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=1) as observerCount,
+	(SELECT COUNT(*) FROM group_relation WHERE relationUserId=#{userId}) as groupCount FROM user WHERE id=#{userId}
+  </select>
+   <!-- 个人中心页面数据 -->
+  <select id="queryPersonalCenter2" parameterType="java.lang.Integer" resultType="com.sy.vo.Personal">
+ 	SELECT id as alias,name,avatar,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=0) as aliasCount,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=1) as observerCount,
 	(SELECT COUNT(*) FROM group_relation WHERE relationUserId=#{userId}) as groupCount FROM user WHERE id=#{userId}
   </select>
   <!--  点击卡片查询 -->
@@ -104,10 +107,10 @@
   </select>
   <!-- 通过使用者ID查询首页需要的数据-->
 	<select id="queryUsersInfo" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.id as userId,tt.id as eq_id,tp.name,tt.eq_status,tv.positioning_data,tp.avatar,tp.imei,tp.age,2 as type_of FROM user tp
+		SELECT tp.id as userId,tt.id as eq_id,tp.name,tt.eq_status,tv.positioning_data,tp.avatar,tp.imei,tp.age,tp.calibration,tt.bluetooth_list as bluetoothList FROM user tp
 		INNER JOIN equipment tt
 		ON tp.imei=tt.imei
-		INNER JOIN (SELECT * FROM positionig WHERE imei=(SELECT imei from user WHERE id=#{userId}) ORDER BY cratetime DESC LIMIT 1) tv
+		INNER JOIN (SELECT * FROM positionig WHERE imei=(SELECT imei from user WHERE id=#{userId}) ORDER BY createtime DESC LIMIT 1) tv
 		WHERE tp.id=#{userId} and isDelete=0
 	</select>
 </mapper>

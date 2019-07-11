@@ -1,15 +1,12 @@
 package com.sy.Quartz;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import com.sy.pojo.Equipment;
 import com.sy.pojo.GroupPhone;
 import com.sy.pojo.User;
@@ -19,7 +16,6 @@ import com.sy.service.UserService;
 import com.sy.service.impl.EquipmentServiceImpl;
 import com.sy.service.impl.GroupPhoneServiceImpl;
 import com.sy.service.impl.UserServiceImpl;
-import com.sy.service.impl.UseravatarServiceImpl;
 
 /**
  * 判断设备是否在线
@@ -45,7 +41,7 @@ public class QuartzTask {
                     if (user != null) {
                         long d1 = new Date().getTime();
                          long d2 = e.getUpdatetime().getTime();
-                        if (d1 - d2 <= Integer.valueOf(user.getJfdataUpdateTime()) * 1000 * 60) {
+                        if (d1 - d2 >= Integer.valueOf(user.getJfdataUpdateTime()) * 1000 * 60) {
                         	e.setEqStatus("H:0");
                             e.setLordpower(Integer.valueOf(0));
                             e.setBluetoothStatus("0");

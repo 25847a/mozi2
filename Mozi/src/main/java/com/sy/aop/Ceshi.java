@@ -1,5 +1,6 @@
 package com.sy.aop;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sy.utils.DataRow;
+
 public class Ceshi {
 	static Connection con = null;
 	public static void main(String[] args) {
@@ -22,15 +25,16 @@ public class Ceshi {
 			// 加载墨子数据库;
 			MZ = Mozi();
 			
-		//	List<Map<String,String>> list =Query(MZ);
+		//	List<DataRow> list =Query(MZ);
 			//更新数据
 		//	update(MZ, list);
 			//插入数据
 		//	insert(MZ);//惊凡数据表
-			insetequipmentRecord(MZ);
-		//	insetequipmentdata(MZ);
-			//步数、卡里路
-			//insetequipmentdata(MZ, list);
+		//	insetequipmentRecord(MZ);
+	//		insetequipmentdata(MZ);
+		  insetequipmentdata(MZ);//步数、卡里路
+		//	insertMember(list,MZ);
+		//	updateInsertUserEq(list,MZ);
 			System.out.println("加载成功");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -59,13 +63,13 @@ public class Ceshi {
 				 cd.add(Calendar.MINUTE, 5);
 			  String sql = "insert into equipment_data ( user_id, step_when,carrieroad,createtime)values(?,?,?,?)";  
 			PreparedStatement ten = ZX.prepareStatement(sql);
-			ten.setInt(1,28704);
+			ten.setInt(1,28920);
 			ten.setInt(2,(int) (0+Math.random()*(140-0+1)));
 			ten.setInt(3,(int) (0+Math.random()*(140-0+1)));
 			String time = sf.format(cd.getTime());
 			ten.setString(4, time);
 			ten.executeUpdate();
-			 if(time.equals("2018-06-30 23:55:00")) {
+			 if(time.equals("2018-08-30 23:55:00")) {
 				 fag=false;
 				 System.out.println("OK");
 			 }
@@ -98,7 +102,7 @@ public class Ceshi {
 			String time = sf.format(cd.getTime());
 			ten.setString(4, time);
 			ten.executeUpdate();
-			 if(time.equals("2018-07-30 23:55:00")) {
+			 if(time.equals("2019-08-30 23:55:00")) {
 				 fag=false;
 				 System.out.println("OK");
 			 }
@@ -115,18 +119,18 @@ public class Ceshi {
 	 * @return
 	 * @throws SQLException
 	*/
-		public static List<Map<String,String>> Query(Connection ZX){
-			List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		public static List<DataRow> Query(Connection ZX){
+			List<DataRow> list = new ArrayList<DataRow>();
 			
-			String sql = "SELECT * from jfhealth";
+			String sql = "SELECT id FROM user WHERE role='管理者' OR role='管理员'";
 			Statement con;
 			try {
 				con = ZX.createStatement();
 				ResultSet res = con.executeQuery(sql);
 			
 				while(res.next()){
-					Map<String,String> map = new HashMap<String, String>();
-					map.put("id", res.getString("id"));
+					DataRow map = new DataRow();
+					map.put("id", res.getInt("id"));
 					list.add(map);
 			}
 			} catch (SQLException e) {
@@ -135,6 +139,22 @@ public class Ceshi {
 			return list;
 			
 		} 
+		
+	public static void updateInsertUserEq(List<DataRow> list,Connection ZX) throws SQLException{
+		String querySql = "SELECT * from user_eq WHERE user_id=?";
+		//String updateSql = "update user_eq set follow=0 where user_id=?";
+		PreparedStatement ten = ZX.prepareStatement(querySql);
+		DataRow map = new DataRow();
+		for(int i =0;i<list.size();i++){
+			ten.setInt(1, list.get(i).getInt("id"));
+			ResultSet res =ten.executeQuery();
+			while(res.next()){
+				
+				map.put("id", res.getInt("id"));
+		}
+		}
+		System.out.println(map);
+	}
 	/**
 	 * 更新数据
 	 * @throws SQLException 
@@ -194,7 +214,7 @@ public class Ceshi {
 						"5、如有病理性的低血压，请到正规医院就诊。");
 				ten.setString(8,String.valueOf((int)(70+Math.random()*(85-70+1))));
 				String time = sf.format(cd.getTime());
-				ten.setString(9,"mozistar28704");
+				ten.setString(9,"mozistar28920");
 				ten.setString(10,time);
 				ten.executeUpdate();
 				System.out.println("插入成功");
@@ -209,6 +229,31 @@ public class Ceshi {
 			}
 			
 		} 
+		
+	/**
+	 * 插入数据会员制度
+	* @throws SQLException 
+	*/	
+	public static void insertMember(List<DataRow> list,Connection ZX){
+		try {
+		String sql = "INSERT INTO member(userId,charges,integral,member,endTime)"
+				+ "VALUES(?,?,?,?,?)";
+		PreparedStatement ten = ZX.prepareStatement(sql);
+		for(int i=0;i<list.size();i++){
+			
+			ten.setInt(1,list.get(i).getInt("id"));
+		ten.setBigDecimal(2, BigDecimal.valueOf(20.0));
+		
+		ten.setInt(3,0);
+		ten.setInt(4,0);
+		String a = "2019-07-09 10:02:46";
+		ten.setString(5,a);
+		ten.executeUpdate();
+		}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * 插入数据
 	 * @throws SQLException 

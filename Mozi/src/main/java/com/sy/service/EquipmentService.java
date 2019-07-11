@@ -15,10 +15,15 @@ public interface EquipmentService extends IService<Equipment>{
 	 */
 	public ResultData<DataRow> selectdata(DataRow map,ResultData<DataRow> re)throws Exception;
 	/**
-	 * 修改设备紧急联系人
+	 * 修改设备紧急联系人旧
 	 * @return
 	 */
 	public ResultBase updateurgent(DataRow map,ResultBase re)throws Exception;
+	/**
+	 * 修改设备紧急联系人新
+	 * @return
+	 */
+	public ResultBase updateurgentInfo(Equipment equipment,ResultBase re)throws Exception;
 	/**
 	 * 获取智能服饰信息
 	 * @return
@@ -35,6 +40,12 @@ public interface EquipmentService extends IService<Equipment>{
 	 * @return
 	 */
 	public ResultBase updateBluetoothList(DataRow map,ResultBase re)throws Exception;
+	/**
+	 * 删除蓝牙
+	 * @param bluetoothList
+	 * @return
+	 */
+	public ResultBase deleteBluetoothList(DataRow map,ResultBase re)throws Exception;
 	/**
 	 * 发送学习指令
 	 * @param map

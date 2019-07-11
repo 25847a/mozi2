@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.sy.pojo.Message" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="alias" property="alias" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="title" property="title" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="VARCHAR" />
@@ -12,11 +13,18 @@
 	
   </resultMap>
   <sql id="Base_Column_List" >
-    id, alias,image,title, content,read,createtime
+    id, alias,userId,image,title, content,read,createtime
   </sql>
   <!-- 消息中心 -->
-  <select id="queryMessageCenter"  parameterType="com.sy.utils.DataRow" resultType="com.sy.pojo.Message">
-  		SELECT id,type,alias,title,`read`,content,DATE_FORMAT(createtime,'%H:%m:%d') as createtime FROM message
+  <select id="queryMessageCenter"  parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
+  		SELECT id,type,alias,userId,title,`read`,content,DATE_FORMAT(createtime,'%H:%m:%d') as createtime FROM message
   		where alias=#{alias} and DATE_FORMAT(createTime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')
   </select>
+   <!-- 消息中心总数 -->
+  <select id="queryMessageCount"  parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  		SELECT COUNT(*) FROM message WHERE alias=#{alias} and `read`=0 and DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')
+  </select>
+  
+  
+  
 </mapper>

@@ -8,12 +8,32 @@ html {
     padding-left: calc(100vw - 100%);  
   }  
 #app{
-	padding: 0 .5rem;
+	/* padding: 0 .5rem; */
 	max-width: 677px;
     margin-left: auto;
     margin-right: auto;
     min-width: 300px;
 }
+.header{
+    display: flex;
+    background: #009ce8;
+    padding: .7rem 1rem;
+}
+.header .img{
+    width: 14px;
+    height: 24px;
+}
+.header .img img{
+    width: 100%;
+}
+
+.header h2{
+    flex:1;
+    text-align: center;
+    font-size: 22px;
+    color: #ffffff;
+}
+
 .top{
     overflow:auto hidden;
     width: 100%;
@@ -26,7 +46,7 @@ html {
 .top li{
     display: inline-block;
     text-align: center;
-    width: 18.9%;
+    width: 19.9%;
 }
 .all{
     height: 3.5rem;
@@ -222,4 +242,16 @@ html {
     line-height: 15px;
     font-size: 13px;
     color: #8f8f94;
+}
+.news{
+    position: absolute;
+    width: 100vw;
+    height: 100%;
+    overflow: hidden;
+
+}
+#iframe{
+    width:100%;
+    height:100%;
+    overflow: hidden;
 }

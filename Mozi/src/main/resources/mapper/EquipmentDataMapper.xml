@@ -66,6 +66,6 @@
   <select id="queryStepWhenCarrieroadSum" parameterType="java.lang.Integer" resultType="com.sy.utils.DataRow">
   	SELECT CASE WHEN SUM(step_when) IS NULL THEN 0 ELSE SUM(step_when) END as stepWhen,
   		   CASE WHEN SUM(carrieroad) IS NULL THEN 0 ELSE SUM(carrieroad) END as carrieroad
-  	FROM equipment_data WHERE user_id=#{userId} AND DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')
+  	FROM equipment_data WHERE user_id=#{userId} AND createtime BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-%d'),' 00:00:00') AND CONCAT(DATE_FORMAT(NOW(),'%Y-%m-%d'),' 59:59:59')
   </select>
 </mapper>

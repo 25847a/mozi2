@@ -104,12 +104,6 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.sy.pojo.Sensorstatus" >
-    insert into sensorstatus (id, imei, h, 
-      g, adddate)
-    values (#{id,jdbcType=INTEGER}, #{imei,jdbcType=VARCHAR}, #{h,jdbcType=VARCHAR}, 
-      #{g,jdbcType=VARCHAR}, #{adddate,jdbcType=TIMESTAMP})
-  </insert>
   <insert id="insertSelective" parameterType="com.sy.pojo.Sensorstatus" >
     insert into sensorstatus
     <trim prefix="(" suffix=")" suffixOverrides="," >

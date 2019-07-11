@@ -12,6 +12,8 @@ public interface WaveformMapper {
 	
 	@Select("select * from waveform where imei = #{imei}")
 	public Waveform getWaveform(String imei);
+	@Select("select * from waveform where userId=#{userId}")
+	public Waveform getWaveform1(int userId);
 	public void update(Waveform w);
 	/**
 	 * 查询波形图数据

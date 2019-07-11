@@ -249,6 +249,18 @@ public class DataParsing {
 		
 	}
 	/**
+	 * 情绪值算法
+	 * @param health
+	 * @param healthdao
+	 * @param respiration
+	 * @return
+	 */
+	public static Jfhealth mood(Jfhealth health,String hrv){
+		//情绪无算法, 情绪=hrv=RMSSD
+		health.setMood(Integer.valueOf(hrv));
+		return health;
+	}
+	/**
 	 * 校准值算法
 	 * @param h
 	 * @param heartRate

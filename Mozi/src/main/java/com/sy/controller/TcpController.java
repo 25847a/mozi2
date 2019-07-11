@@ -5,9 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +100,6 @@ public class TcpController {
 		if(msg.contains("R27")){
 			BluetoothMap.addBs(imei, msg);
 		}
-		// System.out.println("硬件请求数据>>>>>>>>>>"+msg);
 		// 正常访问
 		logger.info(">>>>>>>>>>>>>>硬件数据" + msg);
 		operating(channelHandlerContext, msg, imei);
@@ -121,6 +117,7 @@ public class TcpController {
 		try {
 			init();
 			Equipment equipment = eservice.selectquipmentimei(imei);
+			System.out.println("dddddddddddddddddddddddddddddddddddddddddddddddddddd"+equipment);
 			if (equipment != null) {
 				String[] texts = msg.split("\\|");
 				if (msg.contains("HEARD")) {
@@ -166,7 +163,7 @@ public class TcpController {
 							String[] hs = texts[2].split(",");
 							Positionig p = new Positionig();
 
-							p.setCratetime(new Date());
+							p.setCreatetime(new Date());
 							p.setImei(imei);
 							
 							p.setPositioningS(hs[0].split(":")[1]);
@@ -219,11 +216,7 @@ public class TcpController {
 						} else if (instruction.equals("T09")) {
 
 						}else if(instruction.equals("T10")){
-							
-							Map<String,Object> map = new HashMap<>();
-							map.put("imei", imei);
-							Waveform data = waveformMapper.getWaveform(imei);
-							
+							Waveform data = waveformMapper.getWaveform1(user.getId());
 							StringBuilder sb = new StringBuilder();
 							byte[] fromBASE64 = Base64Utils.decodeFromString(texts[2].trim());
 							for (byte b : fromBASE64) {
@@ -292,7 +285,7 @@ public class TcpController {
 				}
 			}
 		} catch (Exception e) {
-			logger.info(e.getMessage());
+			logger.info("operating>>>>>>>>>>>>>>>>>>>>",e);
 		}
 	}
 

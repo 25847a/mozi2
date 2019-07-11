@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @author 黄才健
  * 
  */
-@Service("readProperties")
+@Service
 public class ReadProperties {
 	private static Properties prop = new Properties();
 	public static Log log = LogFactory.getLog(ReadProperties.class);

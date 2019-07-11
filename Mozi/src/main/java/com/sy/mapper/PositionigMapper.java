@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.Positionig;
 import com.sy.pojo.PositionigExample;
 
-public interface PositionigMapper {
+public interface PositionigMapper extends BaseMapper<Positionig>{
     int countByExample(PositionigExample example);
 
     int deleteByExample(PositionigExample example);
@@ -15,8 +16,6 @@ public interface PositionigMapper {
     int deleteByPrimaryKey(Integer id);
     //根据IMEI删除数据
     int deletePositionigInfo(String imei);
-    
-    int insert(Positionig record);
 
     int insertSelective(Positionig record);
 

@@ -25,52 +25,6 @@
 		delete from user_eq
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
-	<!-- 插入数据 -->
-	<insert id="insert" parameterType="com.sy.pojo.UserEq">
-		insert into user_eq (id, user_id, eq_id,
-		typeof, authorized)
-		values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
-		#{eqId,jdbcType=INTEGER},
-		#{typeof,jdbcType=INTEGER}, #{authorized,jdbcType=VARCHAR})
-	</insert>
-	<!-- 插入数据 -->
-	<insert id="insertSelective" parameterType="com.sy.pojo.UserEq">
-		insert into user_eq
-		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				id,
-			</if>
-			<if test="userId != null">
-				user_id,
-			</if>
-			<if test="eqId != null">
-				eq_id,
-			</if>
-			<if test="typeof != null">
-				typeof,
-			</if>
-			<if test="authorized != null">
-				authorized,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null">
-				#{id,jdbcType=INTEGER},
-			</if>
-			<if test="userId != null">
-				#{userId,jdbcType=INTEGER},
-			</if>
-			<if test="eqId != null">
-				#{eqId,jdbcType=INTEGER},
-			</if>
-			<if test="typeof != null">
-				#{typeof,jdbcType=INTEGER},
-			</if>
-			<if test="authorized != null">
-				#{authorized,jdbcType=VARCHAR},
-			</if>
-		</trim>
-	</insert>
 	<!-- 更新数据 -->
 	<update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.UserEq">
 		update user_eq
@@ -163,22 +117,20 @@
 	</select>
 	<!-- 通过监护者ID查询首页需要的数据-->
 	<select id="queryUserEq" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,tv.positioning_data,td.avatar,tc.imei,td.age,tp.typeof as type_of,
-		(SELECT COUNT(*) FROM message WHERE alias=#{userId}) as messageCount
+		SELECT tp.user_id as userId,tp.eq_id,td.name,tc.eq_status,td.avatar,tc.imei,td.age,tp.typeof as type_of,
+		(SELECT COUNT(*) FROM message WHERE alias=#{alias} and `read`=0 and DATE_FORMAT(createtime,'%Y-%m-%d')=DATE_FORMAT(NOW(),'%Y-%m-%d')) as messageCount,td.calibration,tc.bluetooth_list as bluetoothList
 		FROM user_eq tp
-		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId}) tt
+		INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{alias}) tt
 		ON tp.eq_id=tt.eq_id AND tp.typeof='2'
 		INNER JOIN user td
 		ON tp.user_id=td.id
 		INNER JOIN equipment tc
 		ON td.imei=tc.imei
-		LEFT JOIN (SELECT * FROM positionig ORDER BY cratetime DESC LIMIT 1) tv
-		ON tc.imei=tv.imei
 		WHERE tt.follow=1 and isDelete=0
 	</select>
 	<!-- 查询关注人使用者列表-->
 	<select id="queryUserEqFollowUsersList" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.eqtype,td.bluetooth_type,tp.typeof as type_of FROM user_eq tp
+		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.eqtype,td.bluetooth_type,tp.typeof as type_of,td.id as eqId FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE typeof=0 AND user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id and tp.typeof=2
 		INNER JOIN equipment td
@@ -189,7 +141,7 @@
 	</select>
 	<!-- 查询关注人观察者列表-->
 	<select id="queryUserEqFollowObserverList" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.eqtype,td.bluetooth_type,tt.typeof as type_of FROM user_eq tp
+		SELECT tp.user_id,td.imei,tc.name,tc.avatar,tt.follow,td.lordpower,td.eq_status,td.eqtype,td.bluetooth_type,tt.typeof as type_of,td.id as eqId FROM user_eq tp
 		INNER JOIN (SELECT * FROM user_eq WHERE  typeof=1 AND user_id=#{userId}) tt
 		ON tp.eq_id=tt.eq_id and tp.typeof=2
 		INNER JOIN equipment td

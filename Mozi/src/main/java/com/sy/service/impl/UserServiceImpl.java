@@ -1,6 +1,7 @@
 package com.sy.service.impl;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
@@ -30,7 +33,9 @@ import com.sy.mapper.JfhealthMapper;
 import com.sy.mapper.JfhealthNewMapper;
 import com.sy.mapper.JfhealthdaoMapper;
 import com.sy.mapper.MemberMapper;
+import com.sy.mapper.PositionigMapper;
 import com.sy.mapper.PushMapper;
+import com.sy.mapper.SensorstatusMapper;
 import com.sy.mapper.UserMapper;
 import com.sy.nettyulit.NettyChannelMap;
 import com.sy.pojo.Equipment;
@@ -39,21 +44,30 @@ import com.sy.pojo.Jfhealth;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Jfhealthdao;
 import com.sy.pojo.Member;
+import com.sy.pojo.Positionig;
 import com.sy.pojo.Push;
+import com.sy.pojo.Sensorstatus;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
+import com.sy.pojo.Useravatar;
+import com.sy.pojo.Usercode;
 import com.sy.service.EquipmentService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.service.UseravatarService;
+import com.sy.service.UsercodeService;
 import com.sy.utils.DataRow;
 import com.sy.utils.DateUtil;
+import com.sy.utils.DeleteFileUtil;
 import com.sy.utils.GB2312Utils;
+import com.sy.utils.ImageUtil;
+import com.sy.utils.JfUtil;
 import com.sy.utils.MD5Util;
 import com.sy.utils.Managementconstant;
 import com.sy.vo.LoginReturn;
+import com.sy.vo.Loginuse;
+import com.sy.vo.Personal;
 import com.sy.vo.Usermanagement;
-
 import io.netty.channel.Channel;
 import io.netty.channel.socket.SocketChannel;
 import net.sf.json.JSONObject;
@@ -85,7 +99,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	EquipmentMapper equipmentMapper;
 	@Autowired
 	MemberMapper memberMapper;
-
+	@Autowired
+	private UsercodeService usercodeservic;
+	@Autowired
+	SensorstatusMapper sensorstatusMapper;
+	@Autowired
+	PositionigMapper positionigMapper;
 	@Override
 	public boolean ifUser(String account) {
 		User u = userMapper.ifUser(account);
@@ -95,6 +114,82 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			return false;
 		}
 		
+	}
+	/**
+	 * 注册用户
+	 * @param data
+	 * @return
+	 */
+	public ResultData<Loginuse> addUser(User u,ResultData<Loginuse> re)throws Exception{
+		if (u.getAccount() != null && u.getAccount().length() > 4
+				&& u.getAccount().length() < 12) {
+			if (u.getPassword() != null && u.getPassword() != ""
+					&& !u.getPassword().equals("")) {
+				if (userService.ifUser(u.getAccount())) {
+					u.setRole("管理者");
+					if (u.getName() == null || u.getName() == "") {
+						u.setName(u.getAccount());
+					}
+					Usercode uservode = new Usercode();
+					uservode.setCode(u.getCode());
+					uservode.setPhoen(u.getPhone());
+					if (usercodeservic.ifusercode(uservode)) {
+						u.setPassword(MD5Util.MD5(u.getPassword()));
+						boolean status = userService.insert(u);
+						if (status) {
+							EntityWrapper<User> ew = new EntityWrapper<User>();
+							ew.eq("password", MD5Util.MD5(u.getPassword()));
+							ew.eq("account", u.getAccount());
+							ew.eq("isDelete", 0);
+							User ulog = userService.selectOne(ew);
+							Loginuse luser = new Loginuse(ulog.getId(),
+									ulog.getRole(), ulog.getName(),
+									ulog.getAge(), ulog.getGender(),
+									ulog.getPhone(), ulog.getAddress(),
+									ulog.getAvatar(), 
+									 ulog.getCreatetime(),
+									 ulog.getWeight(),
+									ulog.getHeight(), ulog.getBorn());
+							re.setData(luser);
+							re.setMessage("添加成功！！！");
+							re.setCode(200);
+						} else {
+							re.setMessage("添加失败！！！");
+							re.setCode(400);
+						}
+					} else {
+						re.setMessage("验证码有误！！！");
+						re.setCode(405);
+					}
+
+				} else {
+					re.setMessage("该账号存在！！！");
+					re.setCode(405);
+				}
+			} else {
+				re.setMessage("密码格式有错！！！");
+				re.setCode(405);
+			}
+		} else {
+			re.setMessage("账号格式有错误！！！");
+			re.setCode(350);
+		}
+		return re;
+	}
+	/**
+	 * 注册用户
+	 * @param data
+	 * @return
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	@Override
+	public ResultData<Loginuse> addUser111(User user,ResultData<Loginuse> re)throws Exception{
+		Useravatar u = new Useravatar();
+		u.setAvatar("ddddddd");
+		useravatarService.insert(u);
+		Useravatar uuu =null;
+		System.out.println(uuu.getAvatar());
+		return re;
 	}
 	/**
 	 * 用户登陆
@@ -177,14 +272,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 	public ResultBase updateUser(User u,ResultBase re) throws Exception{
 		int num =userMapper.updateById(u);
 		if (num != 0) {
-			if(u.getAddress()!=null||u.getName()!=null){
+			if(u.getAddress()!=null||u.getName()!=null || u.getCity()!=null|| u.getProvince()!=null|| u.getArea()!=null){
+				u=userMapper.selectById(u.getId());
 				Channel c =	NettyChannelMap.get(u.getImei());
-					String R06 = "$R06|";
-					R06 += GB2312Utils.gb2312eecode(u.getName()) + ":";
-					R06 += GB2312Utils.gb2312eecode(u.getCity()+u.getAddress()) + "\r\n";
-					if(c!=null){
-						c.writeAndFlush(R06);
-					}
+				String R06 = "$R06|";
+				R06 += GB2312Utils.gb2312eecode(u.getName()) + ":";
+				R06 += GB2312Utils.gb2312eecode(u.getProvince()+u.getCity()+u.getArea()+u.getAddress()) + "\r\n";
+				if(c!=null){
+					c.writeAndFlush(R06);
+				}
 			}
 			re.setCode(200);
 			re.setMessage("修改成功");
@@ -194,7 +290,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}
 		return re;
 	}
+	/**
+	 * 更新头像
+	 * @param avatar
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public ResultData<String> updateavatar(CommonsMultipartFile avatar ,Integer id,ResultData<String> re)throws Exception{
+		 User u = userService.getUser(id);
+		 String[] st = u.getAvatar().split("/");
+		 DeleteFileUtil.deleteFile("E:/Project/" + st[3] + "/" + st[4]);
+			File file = new File("E:\\Project\\avatars");
+			if (!file.exists()) { //文件不存在 创建文件
+				file.mkdirs();
+	        }
+		new File("E:\\Project\\avatars").mkdirs();
+		String imageName =System.currentTimeMillis()+avatar.getOriginalFilename().substring(avatar.getOriginalFilename().indexOf("."),avatar.getOriginalFilename().length());
+		ImageUtil.createThumbnail(avatar.getInputStream(), "E:\\Project\\avatars"+File.separator+imageName, 500, 600);
+		u.setAvatar(baseUrl + "avatars/" + imageName);
+		boolean status =userService.updateById(u);
+		if (status) {
+			re.setData(u.getAvatar());
+			re.setCode(200);
+			re.setMessage("修改头像成功！！!");
+		} else {
+			re.setMessage("修改头像失败！！！");
+			re.setCode(400);
 
+		}
+		return re;
+	}
 	@Override
 	public boolean updatepassword(String password, String newpassword,Integer id) {
 	
@@ -395,6 +521,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				re.setMessage("该设备监护者已经存在！！！");
 				return re;
 			}
+			user2=userMapper.ifUser(u.getAccount());
+			if(user2!=null){
+				re.setCode(350);
+				re.setMessage("该注册手机号码已存在");
+				return re;
+			}
 			User user = new User();
 			user.setRole("使用者");
 			user.setImei(u.getImei());
@@ -417,11 +549,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			me.setUserId(user.getId());
 			me.setEndTime(DateUtil.getNextDay(20));
 			memberMapper.insert(me);
-			boolean jfstatus = HealthtoolServiceImpl.registered(Managementconstant.channel_id + String.valueOf(user.getId()),"12345", "123456");
+			boolean jfstatus = JfUtil.registered(Managementconstant.channel_id + String.valueOf(user.getId()),"12345", "123456");
 			//在惊凡注册成功
 			if (jfstatus) {
 			EntityWrapper<UserEq> ew = new EntityWrapper<UserEq>();
 			ew.eq("user_id", u.getMid());
+			ew.eq("follow", 1);
 			UserEq eq =userEqService.selectOne(ew);
 			UserEq ue = new UserEq();
 			if(eq==null){
@@ -431,14 +564,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				ue.setEqId(e.getId());
 				ue.setTypeof(0);
 				ue.setFollow(1);
+			}else{
+				//设备与监护人的关联关系
+				//就是mid
+				ue.setUserId(u.getMid());
+				ue.setEqId(e.getId());
+				ue.setTypeof(0);
+				ue.setFollow(0);
 			}
-			userEqService.addUserEq(ue);
+			userEqService.insert(ue);
 			//设备与使用者的关联关系
 			ue.setUserId(user.getId());
 			ue.setEqId(e.getId());
 			ue.setTypeof(2);
 			ue.setFollow(0);
-			userEqService.addUserEq(ue);
+			userEqService.insert(ue);
 			EquipmentData data = new EquipmentData();
 			data.setUserId(user.getId());
 			equipmentDataMapper.insert(data);
@@ -458,6 +598,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			jfhealthdao.setPhone("mozistar"+user.getId());
 			jfhealthdao.setImei(e.getImei());
 			jfhealthdaoMapper.insert(jfhealthdao);
+			Positionig p = new Positionig();
+			p.setImei(user.getImei());
+			p.setPositioningData("39.9134905988:116.4072638138");
+			p.setPositioningS("0");
+			positionigMapper.insert(p);
+			Sensorstatus s = new Sensorstatus();
+			s.setImei(user.getImei());
+			s =sensorstatusMapper.selectOne(s);
+			if(s==null){
+				s = new Sensorstatus();
+				s.setImei(user.getImei());
+				s.setH("H:1");
+				s.setG("G:1");
+				s.setAdddate(new Date());
+				sensorstatusMapper.insert(s);
+			}
+			
 						re.setCode(200);
 						re.setMessage("添加设备使用者成功！！！");
 						if(c!=null){
@@ -482,7 +639,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 			data.put("avatar",data.getString("avatar")==null? useravatarService.selectavartar().getAvatar():data.getString("avatar"));
 			DataRow row =equipmentMapper.queryEquipmentMember(data.getString("imei"));
 			if(row!=null){
+				if(row.get("bluetoothList")==null || row.getString("bluetoothList").equals("") || row.getString("bluetoothList").equals("[]")){
+					row.put("bluetooth_name", "");
+					row.put("bluetoothList", 0);
+				}else{
+					if(row.getInt("bluetooth_type")==0){
+						String bluetooths = row.getString("bluetoothList").substring(1, row.getString("bluetoothList").length() - 1).replace("\"", "");
+						String[] bluetoothList = bluetooths.split(",");
+						row.put("bluetooth_name", bluetoothList[0]);
+					}
+					row.put("bluetoothList", 1);
+					
+				}
 				row.put("eq_status", row.getString("eq_status").equals("H:0")?0:1);
+				
 				row.put("bluetooth_type", row.getInt("bluetooth_type"));
 			}
 			data.put("equipment", row);
@@ -513,4 +683,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}
 		return re;
 	}
+	/**
+	 * 个人中心数据
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public ResultData<DataRow> queryPersonalCenter(DataRow map, ResultData<DataRow> re) throws Exception {
+		Personal personal =userMapper.queryPersonalCenter2(map.getInt("alias"));
+		if(personal!=null){
+			personal.setAvatar(personal.getAvatar()==null?useravatarService.selectavartar().getAvatar():personal.getAvatar());
+			re.setCode(200);
+			re.setData(personal);
+			re.setMessage("获取成功");
+		}else{
+			re.setCode(400);
+			re.setMessage("获取失败,请重新登录APP尝试下");
+		}
+		return re;
+	}
+
 }

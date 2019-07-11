@@ -13,17 +13,21 @@ import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.common.JpushClientUtil;
+import com.sy.common.ResultBase;
 import com.sy.mapper.MessageMapper;
 import com.sy.mapper.PushMapper;
 import com.sy.mapper.PushRecordMapper;
+import com.sy.mapper.UserEqMapper;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Message;
 import com.sy.pojo.Push;
 import com.sy.pojo.PushRecord;
 import com.sy.pojo.User;
+import com.sy.pojo.UserEq;
 import com.sy.service.PushRecordService;
 import com.sy.service.PushService;
 import com.sy.service.UseravatarService;
+import com.sy.utils.DataRow;
 
 @Service
 public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements PushService {
@@ -40,6 +44,8 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 	MessageMapper messageMapper;
 	@Autowired
 	UseravatarService useravatarService;
+	@Autowired
+	UserEqMapper userEqMapper;
 
 	/**
 	 * 查询推送表
@@ -72,7 +78,6 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 		}
 		return row;
 	}
-
 	/**
 	 * 推送消息
 	 * 
@@ -86,6 +91,9 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 		if (pushMapper == null) {
 			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
 			pushMapper = (PushMapper) webApplicationContext.getBean("pushMapper");
+		}if (messageMapper == null) {
+			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+			messageMapper = (MessageMapper) webApplicationContext.getBean("messageMapper");
 		}
 		User u = (User) map.get("user");
 		List<Push> pushList = pushMapper.selectPushList(u.getId());// 这个使用者的所有开关数据,使用者的ID
@@ -103,8 +111,9 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 						str = "1";
 						pushRecord.setHeartUnusual(jfhealth.getHeartrate());
 						me.setAlias(push.getAlias());
+						me.setUserId(u.getId());
 						me.setTitle("预警通知");
-						me.setContent("u.getName()  心率异常    "+jfhealth.getHeartrate()+"次/分钟");
+						me.setContent(u.getName()+"  心率异常    "+jfhealth.getHeartrate()+"次/分钟");
 						messageMapper.insert(me);
 					}
 					// 舒张压低了 或者 舒张压高了
@@ -114,8 +123,9 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 						str = "1";
 						pushRecord.setHighBloodUnusual(jfhealth.getDbpAve());
 						me.setAlias(push.getAlias());
+						me.setUserId(u.getId());
 						me.setTitle("预警通知");
-						me.setContent("u.getName()  舒张压异常    "+jfhealth.getDbpAve()+"mmHg");
+						me.setContent(u.getName()+"  舒张压异常    "+jfhealth.getDbpAve()+"mmHg");
 						messageMapper.insert(me);
 					}
 					// 收缩压低了 或者 收缩压高了
@@ -125,8 +135,9 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 						str = "1";
 						pushRecord.setLowBloodUnusual(jfhealth.getSbpAve());
 						me.setAlias(push.getAlias());
+						me.setUserId(u.getId());
 						me.setTitle("预警通知");
-						me.setContent("u.getName()  收缩压异常    "+jfhealth.getHeartrate()+"mmHg");
+						me.setContent(u.getName()+"  收缩压异常    "+jfhealth.getHeartrate()+"mmHg");
 						messageMapper.insert(me);
 					}
 					if(pushRecord.getHeartUnusual()!=null || pushRecord.getHighBloodUnusual()!=null || pushRecord.getLowBloodUnusual()!=null){
@@ -142,6 +153,24 @@ public class PushServiceImpl extends ServiceImpl<PushMapper, Push> implements Pu
 			}
 		}
 		return str;
+	}
+	/**
+	 * 测试推送接口
+	 * @return
+	 */
+	@Override
+	public ResultBase testPush(DataRow map,ResultBase re) throws Exception {
+		UserEq eq =userEqMapper.queryUserEqAlias(map.getInt("userId"));//通过使用者ID查询监护者ID
+		
+		int row =JpushClientUtil.sendToAlias(String.valueOf(eq.getUserId()),"测试信息","小墨提醒","本条为预警测试信息，可忽略","","{\"userId\":\""+map.getInt("userId")+"\"}");
+		if(row==1){
+			re.setCode(200);
+			re.setMessage("发送成功,如未收到请检查手机通知消息是否开启");
+		}else{
+			re.setCode(400);
+			re.setMessage("发送失败,请检查手机通知消息是否开启");
+		}
+		return re;
 	}
 
 }

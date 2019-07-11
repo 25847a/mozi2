@@ -56,14 +56,70 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 			map.put("version", e.getVersion());
 			// 获取imei设备最新的传感器状态
 			Sensorstatus sen = sensorstatusMapper.selecttimesensorstatus(e.getImei());
-			map.put("H", sen.getH().equals("H:1") ? "正常" : "错误");
-			map.put("G", sen.getG().equals("G:1") ? "正常" : "错误");
+			if(sen!=null){
+				map.put("H", sen.getH().equals("H:1") ? "正常" : "错误");
+				map.put("G", sen.getG().equals("G:1") ? "正常" : "错误");
+			}else{
+				sen =new Sensorstatus();
+				sen.setG("G:1");
+				sen.setH("H:1");
+				sen.setImei(e.getImei());
+				sen.setAdddate(new Date());
+				sensorstatusMapper.insert(sen);
+				map.put("H", sen.getH().equals("H:1") ? "正常" : "错误");
+				map.put("G", sen.getG().equals("G:1") ? "正常" : "错误");
+			}
+			
 			re.setCode(200);
 			re.setData(map);
 			re.setMessage("获取设备基本信息成功");
 		} else {
 			re.setCode(400);
 			re.setMessage("获取不到设备基本信息");
+		}
+		return re;
+	}
+	/**
+	 * 修改设备紧急联系人
+	 * 
+	 * @return
+	 */
+	@Override
+	public ResultBase updateurgentInfo(Equipment equipment, ResultBase re) throws Exception {
+		EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
+		ew.eq("imei", equipment.getImei());
+		int row =equipmentMapper.update(equipment, ew);
+		equipment = this.selectOne(ew);
+		String[] phone1 = null;
+		String[] phone2 = null;
+		if(row>0){
+			if (equipment.getPhone1() != null && !equipment.getPhone1().equals("")) {
+				 phone1 = equipment.getPhone1().split(",");
+			} else {
+				phone1=new String[2];
+				phone1[0]="0";
+				phone1[1]="0";
+			}
+
+			if (equipment.getPhone2() != null && !equipment.getPhone2().equals("")) {
+				 phone2 = equipment.getPhone2().split(",");
+			} else {
+				phone2=new String[2];
+				phone2[0]="0";
+				phone2[1]="0";
+			}
+
+				re.setCode(200);
+				re.setMessage("修改紧急联系成功!!!");
+					Channel c = NettyChannelMap.get(equipment.getImei());
+					c.writeAndFlush("$R24|" + phone1[1] + ","
+							+ getCode(phone1[0]) + ":" + phone1[1] + ","
+							+ getCode(phone2[0]) + "\r\n");
+			re.setCode(200);
+			re.setMessage("修改成功");
+		}else{
+			re.setCode(400);
+			re.setMessage("修改失败");
 		}
 		return re;
 	}
@@ -175,6 +231,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 		Equipment e = equipmentMapper.selectById(equipment.getId());
 		BluetoothMap.deletesb(e.getImei());
 		SocketChannel c = (SocketChannel) NettyChannelMap.get(e.getImei());
+		System.out.println(e.getBluetoothType());
+		System.out.println(equipment.getBluetoothmac());
+		System.out.println(equipment.getBluetoothName());
 		ChannelFuture writeAndFlush = c.writeAndFlush("$R18|" + e.getBluetoothType() + ":"
 				+ equipment.getBluetoothName() + ":" + equipment.getBluetoothmac() + "\r\n");
 		writeAndFlush.addListener(new ChannelFutureListener() {
@@ -241,23 +300,84 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 	 */
 	@Override
 	public ResultBase updateBluetoothList(DataRow map,ResultBase re) {
-		equipmentMapper.updateBluetoothList(map);
-		SocketChannel c = (SocketChannel) NettyChannelMap.get(map.getString("imei"));
-		if (c != null) {
+		Equipment equipment = equipmentMapper.selectById(map.getInt("eqId"));
+		if(equipment!=null){
 			String bluetoothList = map.getString("bluetoothList");
-			if (StringUtils.isNotBlank(bluetoothList)) {
-				bluetoothList = bluetoothList.substring(1, bluetoothList.length() - 1).replace("\"", "");
-			} else {
-				bluetoothList = "";
+			if(equipment.getBluetoothList() != null && !equipment.getBluetoothList().equals("[]") && !equipment.getBluetoothList().equals("")){//整个两件衣服
+				String bluetoothA = equipment.getBluetoothList().substring(1,equipment.getBluetoothList().length()-1).replace("\"", "");
+				bluetoothList = "[\""+bluetoothA+"\",\""+bluetoothList+"\"]";
+			}else{//整合一件衣服
+				bluetoothList = "[\""+bluetoothList+"\"]";
 			}
-			c.writeAndFlush("$R28|" + bluetoothList + "\r\n");
-			re.setCode(200);
-			re.setMessage("操作成功");
-		} else {
-			re.setCode(200);
-			re.setMessage("操作成功!");
+			equipment.setBluetoothList(bluetoothList);
+			equipmentMapper.updateById(equipment);
+			SocketChannel c = (SocketChannel) NettyChannelMap.get(equipment.getImei());
+			if (c != null) {
+				
+				if (StringUtils.isNotBlank(bluetoothList)) {
+					bluetoothList = bluetoothList.substring(1, bluetoothList.length() - 1).replace("\"", "");
+				} else {
+					bluetoothList = "";
+				}
+				c.writeAndFlush("$R28|" + bluetoothList + "\r\n");
+				re.setCode(200);
+				re.setMessage("操作成功");
+			} else {
+				re.setCode(200);
+				re.setMessage("操作成功!");
+			}
+		}else{
+			re.setCode(400);
+			re.setMessage("查询不到设备");
+		}
+		
+		return re;
+	}
+	/**
+	 * 删除蓝牙
+	 * @param bluetoothList
+	 * @return
+	 */
+	public ResultBase deleteBluetoothList(DataRow map,ResultBase re)throws Exception{
+		Equipment equipment = equipmentMapper.selectById(map.getInt("eqId"));
+		if(equipment!=null){
+			String bluetooth = map.getString("bluetoothList");
+			if(equipment.getBluetoothList() != null && !equipment.getBluetoothList().equals("[]") && !equipment.getBluetoothList().equals("")){// 证明有衣服
+				String bluetoothA = equipment.getBluetoothList().substring(1,equipment.getBluetoothList().length()-1).replace("\"", "");
+				String[] bluetoothList = bluetoothA.split(",");
+				if(bluetoothList.length==1){
+					bluetooth = "[]";
+				}else{
+					if(bluetooth.equals(bluetoothList[0])){
+						bluetooth = "[\""+bluetoothList[1]+"\"]";
+					}else{
+						bluetooth = "[\""+bluetoothList[0]+"\"]";
+					}
+				}
+			}
+			equipment.setBluetoothList(bluetooth);
+			equipmentMapper.updateById(equipment);
+			SocketChannel c = (SocketChannel) NettyChannelMap.get(equipment.getImei());
+			if (c != null) {
+				
+				if (StringUtils.isNotBlank(bluetooth)) {
+					bluetooth = bluetooth.substring(1, bluetooth.length() - 1).replace("\"", "");
+				} else {
+					bluetooth = "";
+				}
+				c.writeAndFlush("$R28|" + bluetooth + "\r\n");
+				re.setCode(200);
+				re.setMessage("操作成功");
+			} else {
+				re.setCode(200);
+				re.setMessage("操作成功!");
+			}
+		}else{
+			re.setCode(400);
+			re.setMessage("查询不到设备");
 		}
 		return re;
+		
 	}
 	/**
 	 * 发送学习指令
@@ -371,11 +491,9 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
 			equipmentMapper = (EquipmentMapper) webApplicationContext.getBean("equipmentMapper");
 		}
-		Equipment eq = null;
+		Equipment eq = new Equipment();
 		try {
-			EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
-			ew.eq("imei", imei);
-			eq = this.selectOne(ew);
+			eq =equipmentMapper.getequipment(imei);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -436,9 +554,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 			WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
 			equipmentMapper = (EquipmentMapper) webApplicationContext.getBean("equipmentMapper");
 		}
-		EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
-		ew.eq("imei", imei);
-		Equipment e = this.selectOne(ew);
+		Equipment e = equipmentMapper.getequipment(imei);
 		if (signalxhao != null) {
 			e.setSignalxhao(signalxhao);
 			e.setLordpower(lordpower);
@@ -462,8 +578,14 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 	 */
 	@Override
 	public Equipment updateEqStatus(String eqStatus, String imei, Equipment e) {
+		e.setEqStatus(eqStatus);
 		e.setUpdatetime(new Date());
-		equipmentMapper.updateById(e);
+		int i =equipmentMapper.updateById(e);
+		if(i>0){
+			System.out.println("更改成功>>>>>>>>>>>>>>>在线状态"+i);
+		}else{
+			System.out.println("更改失败>>>>>>>>>>>>>>>>>"+i);
+		}
 		return e;
 	}
 
@@ -484,6 +606,7 @@ public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper, Equipment
 		equipmentMapper.updateById(e);
 		return e;
 	}
+	
 
 	
 

@@ -10,9 +10,11 @@
     <result column="Bloodoxygen" property="bloodoxygen" jdbcType="INTEGER" />
     <result column="microcirculation" property="microcirculation" jdbcType="INTEGER" />
     <result column="respirationrate" property="respirationrate" jdbcType="INTEGER" />
+    <result column="mood" property="mood" jdbcType="INTEGER" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="imei" property="imei" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.sy.pojo.JfhealthNew" extends="BaseResultMap" >
     <result column="Amedicalreport" property="amedicalreport" jdbcType="LONGVARCHAR" />
@@ -97,8 +99,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate, 
-    phone, imei, createtime
+    id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate, mood
+    phone, imei, createtime,updatetime
   </sql>
   <sql id="Blob_Column_List" >
     Amedicalreport
@@ -180,13 +182,13 @@
   <select id="newJfhealthNew" parameterType="java.lang.String"  resultMap="BaseResultMap">
  SELECT *  
 		FROM jfhealth_new where imei=#{imei}
-		ORDER BY createtime desc 
+		ORDER BY updatetime desc 
 		LIMIT 0, 1
   
   </select>
   <!-- 啊健(极光推送获取惊凡最新健康数据) -->
   <select id="pushJfhealthNew" parameterType="java.lang.String"  resultMap="BaseResultMap">
-  	SELECT *FROM jfhealth_new WHERE phone =#{alias} ORDER BY createtime LIMIT 0,1
+  	SELECT *FROM jfhealth_new WHERE phone =#{alias} ORDER BY updatetime LIMIT 0,1
   </select>
   
   <delete id="deletejfhealth" parameterType="java.lang.String" >

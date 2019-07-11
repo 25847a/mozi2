@@ -17,31 +17,30 @@
 
 <body>
     <div id="app">
+        
+        <router-view class="header" name="header"></router-view>
         <router-view class="use" name="use"></router-view>
-        <router-view class="prot" name="prot"></router-view>
-        <router-view class="hearts" name="hearts"></router-view>
-        <router-view class="brains" name="brains"></router-view>
-        <router-view class="copds" name="copds"></router-view>
         <router-view class="asidebar" name="asidebar"></router-view>
         <router-view class="content" name="content"></router-view>
-        <!-- <router-view class="footer" name="footer"></router-view> -->
+        <!-- <router-view class="news" name="news"></router-view> -->
+
     </div>
     <template id="a">
         <ul class="top">
-            <li>
-                <router-link to="/user">
+            <li v-for="item in list" @click="clickitem(item)">
+                <!-- <router-link to="/user"> -->
                     <div class="all">
-                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300018278&di=422d1f21016198ada2f82d716618b148&imgtype=0&src=http%3A%2F%2Fpic1.cmt.com.cn%2Fnewspic%2Fimages%2F20161018_163103.jpg"
+                        <img :src="item.imgUrl"
                             alt="">
 
                     </div>
-                    <h2>高血压</h2>
-                </router-link>
+                    <h2>{{item.text}}</h2>
+                <!-- </router-link> -->
             </li>
-            <li>
+            <!-- <li>
                 <router-link to="/pro">
                     <div class="all">
-                        <img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2776001902,2501302300&fm=26&gp=0.jpg"
+                        <img src="../img/02.png"
                             alt="">
 
                     </div>
@@ -51,7 +50,7 @@
             <li>
                 <router-link to="/heart">
                     <div class="all">
-                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300197053&di=8ab8adf2e1275d6642d4bacdc8ea9084&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn%2F20171121%2F60a0-fynwxum7974273.jpg"
+                        <img src="../img/03.png"
                             alt="">
 
                     </div>
@@ -61,7 +60,7 @@
             <li>
                 <router-link to="/brain">
                     <div class="all">
-                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300237552&di=d35333385603c5bd0976c481d480fe24&imgtype=0&src=http%3A%2F%2F07imgmini.eastday.com%2Fmobile%2F20190226%2F20190226145445_844b0cab3019de5d121cf4a416feaadd_1_mwpm_03201609.jpg"
+                        <img src="../img/04.png"
                             alt="">
 
                     </div>
@@ -71,13 +70,13 @@
             <li>
                 <router-link to="/copd">
                     <div class="all">
-                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1562300278941&di=fe13599a417fb43ac049fc763e8bbba7&imgtype=0&src=http%3A%2F%2F03imgmini.eastday.com%2Fmobile%2F20181214%2F20181214195505_874b9d656eaef3e375be097da82675a8_1.jpeg"
+                        <img src="../img/05.png"
                             alt="">
 
                     </div>
                     <h2>慢阻肺</h2>
                 </router-link>
-            </li>
+            </li> -->
         </ul>
     </template>
     <template id="b">
@@ -176,12 +175,21 @@
         </div>
     </template>
     <template id="c">
-        <p>这是底部</p>
+        <div>
+            <div class="img" @click="back">
+                <img src="../img/left.png" alt="">
+            </div>
+            
+            <h2>{{this.text}}</h2>
+        </div>
     </template>
     <template id="d">
         <div>
-            <div v-for="item in highlist">
+            <div v-for="item in list">
                 <div class="public">
+                    <div>
+                        <img :src="item.imageurl" alt="">
+                    </div>
                     <h3>{{item.title}}</h3>
                 </div>
                 <div v-for="(mesg,index) in item.message" class="common">
@@ -193,60 +201,52 @@
     </template>
     <template id="e">
         <div>
-            <div v-for="item in highlist">
-                <div class="public">
-                    <h3>{{item.title}}</h3>
-                </div>
-                <div v-for="(mesg,index) in item.message" class="common">
-                    <span v-if="item.message.length>1">{{index+1}}.</span>
-                    <p>{{mesg.msg}}</p>
-                </div>
-            </div>
+            <iframe :src="this.url" ref="iframe" frameborder="0" id="iframe"></iframe>
         </div>
     </template>
-    <template id="f">
-        <div>
-            <div v-for="item in highlist">
-                <div class="public">
-                    <h3>{{item.title}}</h3>
-                </div>
-                <div v-for="(mesg,index) in item.message" class="common">
-                    <span v-if="item.message.length>1">{{index+1}}.</span>
-                    <p>{{mesg.msg}}</p>
-                </div>
-            </div>
-        </div>
-    </template>
-    <template id="g">
-        <div>
-            <div v-for="item in highlist">
-                <div class="public">
-                    <h3>{{item.title}}</h3>
-                </div>
-                <div v-for="(mesg,index) in item.message" class="common">
-                    <span v-if="item.message.length>1">{{index+1}}.</span>
-                    <p>{{mesg.msg}}</p>
-                </div>
-            </div>
-        </div>
-    </template>
-    <template id="h">
-        <div>
-            <div v-for="item in highlist">
-                <div class="public">
-                    <h3>{{item.title}}</h3>
-                </div>
-                <div v-for="(mesg,index) in item.message" class="common">
-                    <span v-if="item.message.length>1">{{index+1}}.</span>
-                    <p>{{mesg.msg}}</p>
-                </div>
-            </div>
-        </div>
-    </template>
+    
     <script>
 
         var asidebar = {
-            template: "#a"
+            template: "#a",
+            data(){
+                return{
+                    list:[
+                        {
+                            id:"1",
+                            imgUrl:"../img/01.png",
+                            text:"高血压"
+                        },
+                        {
+                            id:"2",
+                            imgUrl:"../img/02.png",
+                            text:"冠心病"
+                        },
+                        {
+                            id:"3",
+                            imgUrl:"../img/03.png",
+                            text:"心梗"
+                        },
+                        {
+                            id:"4",
+                            imgUrl:"../img/04.png",
+                            text:"脑梗"
+                        },
+                        {
+                            id:"5",
+                            imgUrl:"../img/05.png",
+                            text:"慢阻肺"
+                        }
+                    ]
+                }
+            },
+            methods: {
+                clickitem(uid){
+                    //console.log(uid)
+                    router.push({name:'跳转' ,params:{userId:uid}});
+                    
+                }
+            },
         }
         var content = {
             template: "#b",
@@ -585,8 +585,9 @@
             methods: {
                 //点击那一条
                 point(item){
-                    console.log(item.Jumpurl)
+                    //console.log(item.Jumpurl)
                     window.open(item.Jumpurl)
+                    //router.push({name:"新开",params:{url:item.Jumpurl}})
                 },
 
                 //点击滑动第几个
@@ -635,15 +636,39 @@
 
             },
         }
-        var footer = {
-            template: "#c"
+        var header = {
+            template: "#c",
+            data(){
+                return{
+                    text:"健康手册"
+                }
+            },
+            methods: {
+                back(){
+                    this.$router.back(-1)
+                    this.text = "健康手册"
+                }
+            },
+            watch: {
+                $route: function (to, from) {
+                    if(to.path == "/user" ){
+                        //console.log(to.params.userId.text)
+                       this.text =  to.params.userId.text
+                    }
+                    
+                }
+            },
         }
         var use = {
             template: "#d",
             data() {
                 return {
+                    uid:this.$route.params.userId,
+                    list: [
+                    ],
                     highlist: [
                         {   
+                            imageurl: "../img/001.png",
                             title: "疾病介绍",
                             message: [
                                 {
@@ -654,7 +679,8 @@
 
                         },
                         {
-                         title: "临床表现",
+                            imageurl: "../img/002.png",
+                            title: "临床表现",
                             message: [
                                 {
                                     msg: "早期可能无症状或症状不明显，常见的是头晕、头痛、颈项板紧、疲劳、心悸等。仅仅会在劳累、精神紧张、情绪波动后发生血压升高，并在休息后恢复正常。"
@@ -667,7 +693,8 @@
 
                         },
                         {
-                        title: "治疗方法",
+                            imageurl: "../img/003.png",
+                            title: "治疗方法",
                             message: [
                                 {
                                     msg: "减轻并控制体重"
@@ -687,21 +714,11 @@
                             ]
 
                         }
-                    ]
-
-                }
-            },
-            methods: {
-
-            }
-        }
-        var prot = {
-            template: "#e",
-            data() {
-                return {
-                    highlist: [
-                        {
-                         title: "疾病介绍",
+                    ],
+                    heartlist:[
+                    {
+                            imageurl: "../img/001.png",
+                            title: "疾病介绍",
                             message: [
                                 {
                                     msg: "冠状动脉粥样硬化性心脏病是冠状动脉血管发生动脉粥样硬化病变而引起血管腔狭窄或阻塞，造成心肌缺血、缺氧或坏死而导致的心脏病，常常被称为“冠心病”。"
@@ -711,7 +728,8 @@
 
                         },
                         {
-                         title: "临床表现",
+                            imageurl: "../img/002.png",
+                            title: "临床表现",
                             message: [
                                 {
                                     msg: "典型胸痛，因体力活动、情绪激动等诱发，突感心前区疼痛，多为发作性绞痛或压榨痛，也可为憋闷感。"
@@ -730,7 +748,8 @@
 
                         },
                         {
-                          title: "治疗方法",
+                            imageurl: "../img/003.png",
+                            title: "治疗方法",
                             message: [
                                 {
                                     msg: "药物治疗"
@@ -744,21 +763,11 @@
                             ]
 
                         }
-                    ]
-
-                }
-            },
-            methods: {
-
-            }
-        }
-        var hearts = {
-            template: "#f",
-            data() {
-                return {
-                    highlist: [
-                        {
-                          title: "疾病介绍",
+                    ],
+                    cardiaclist:[
+                    {
+                            imageurl: "../img/001.png",
+                            title: "疾病介绍",
                             message: [
                                 {
                                     msg: "心肌梗死在病理上被定义为长时间缺血导致的心肌细胞死亡。"
@@ -768,7 +777,8 @@
 
                         },
                         {
-                           title: "临床表现",
+                            imageurl: "../img/002.png",
+                            title: "临床表现",
                             message: [
                                 {
                                     msg: "最常见的是胸骨后或心前区的疼痛，疼痛向左肩、左臂放射，疼痛有时在上腹部，同时胸骨后有憋闷不适，疼痛剧烈时间久，伴大汗、恶心呕吐等。"
@@ -778,7 +788,8 @@
 
                         },
                         {
-                          title: "治疗方法",
+                            imageurl: "../img/003.png",
+                            title: "治疗方法",
                             message: [
                                 {
                                     msg: "药物治疗"
@@ -801,21 +812,11 @@
                             ]
 
                         }
-                    ]
-
-                }
-            },
-            methods: {
-
-            }
-        }
-        var brains = {
-            template: "#g",
-            data() {
-                return {
-                    highlist: [
-                        {
-                          title: "疾病介绍",
+                    ],
+                    brainslist:[
+                    {
+                            imageurl: "../img/001.png",
+                            title: "疾病介绍",
                             message: [
                                 {
                                     msg: "脑梗死是指血液中的各种栓子（如心脏内的附壁血栓、动脉粥样硬化的斑块、脂肪、肿瘤细胞、纤维软骨或空气等）随血流进入脑动脉而阻塞血管，当侧支循环不能代偿时，引起该动脉供血区脑组织缺血性坏死，出现局灶性神经功能缺损。"
@@ -825,7 +826,8 @@
 
                         },
                         {
-                           title: "临床表现",
+                            imageurl: "../img/002.png",
+                            title: "临床表现",
                             message: [
                                 {
                                     msg: "腔隙性梗死 脑梗死的梗死面积小于1.5厘米，表现为：亚急性起病、头昏、头晕、步态不稳、肢体无力，少数有饮水呛咳，吞咽困难；也可有偏瘫、偏身感觉减退，部分患者没有定位体征。"
@@ -841,6 +843,7 @@
 
                         },
                         {
+                            imageurl: "../img/003.png",
                             title: "治疗方法",
                             message: [
                                 {
@@ -862,21 +865,11 @@
                             ]
 
                         }
-                    ]
-
-                }
-            },
-            methods: {
-
-            }
-        }
-        var copds = {
-            template: "#h",
-            data() {
-                return {
-                    highlist: [
-                        {
-                           title: "疾病介绍",
+                    ],
+                    copdslist:[
+                    {
+                            imageurl: "../img/001.png",
+                            title: "疾病介绍",
                             message: [
                                 {
                                     msg: "慢性阻塞性肺疾病是一种具有气流阻塞特征的慢性支气管炎和（或）肺气肿，可进一步发展为肺心病和呼吸衰竭的常见慢性疾病。"
@@ -886,7 +879,8 @@
 
                         },
                         {
-                           title: "临床表现",
+                            imageurl: "../img/002.png",
+                            title: "临床表现",
                             message: [
                                 {
                                     msg: "慢性咳嗽，常为最早出现的症状，随病程发展可终身不愈，常晨间咳嗽明显，夜间有阵咳或排痰。"
@@ -908,7 +902,8 @@
 
                         },
                         {
-                          title: "治疗方法",
+                            imageurl: "../img/003.png",
+                            title: "治疗方法",
                             message: [
                                 {
                                     msg: "戒烟、运动或肺康复训练，接种流感疫苗与肺炎疫苗。"
@@ -929,50 +924,63 @@
 
                         }
                     ]
-
                 }
             },
             methods: {
-
-            }
+                idx(){
+                    //console.log(this.uid)
+                    if(this.uid.id == 1){
+                        this.list = this.highlist
+                    }else if(this.uid.id == 2){
+                        this.list = this.heartlist
+                    }else if(this.uid.id == 3){
+                        this.list = this.cardiaclist
+                    }else if(this.uid.id == 4){
+                        this.list = this.brainslist
+                    }else if(this.uid.id == 5){
+                        this.list = this.copdslist
+                    }
+                }
+            },
+            mounted() {
+                this.idx();
+            },
         }
+        var news = {
+            template: "#e",
+            data(){
+                return{
+                    url:this.$route.params.url,
+                }
+            },
+            mounted() {
+                console.log(this.url)
+            },
+        }
+
         var routes = [
             {
                 path: "/",
                 components: {
                     asidebar: asidebar,
                     content: content,
-                    footer: footer
+                    header: header
                 }
             },
             {
                 path: "/user",
+                name:"跳转",
                 components: {
+                    header: header,
                     use: use
                 }
             },
             {
-                path: "/pro",
+                path: "/new",
+                name:"新开",
                 components: {
-                    prot: prot
-                }
-            },
-            {
-                path: "/heart",
-                components: {
-                    hearts: hearts
-                }
-            },
-            {
-                path: "/brain",
-                components: {
-                    brains: brains
-                }
-            },
-            {
-                path: "/copd",
-                components: {
-                    copds: copds
+                    header: header,
+                    news: news
                 }
             }
         ]
@@ -982,7 +990,12 @@
         })
         var app = new Vue({
             el: "#app",
-            router: router
+            router: router,
+            data(){
+                return{
+                    
+                }
+            }
         })
 
     </script>

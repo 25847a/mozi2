@@ -54,7 +54,7 @@
 		resultType="com.sy.utils.DataRow">
 		SELECT
 		tp.id,tp.lordpower,tp.eq_status,tp.eqtype,tp.bluetooth_type,tp.bluetooth_name,DATE_FORMAT(td.endTime,'%Y-%m-%d
-		%H:%m:%s') as endTime FROM equipment tp
+		%H:%m:%s') as endTime,tp.bluetooth_list as bluetoothList FROM equipment tp
 		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tt
 		ON tp.imei=tt.imei
 		INNER JOIN member td

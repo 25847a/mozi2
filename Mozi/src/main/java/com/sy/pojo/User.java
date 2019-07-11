@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
 
 @TableName("user")
-public class User  extends Model<Config>{
+public class User extends Model<Config>{
 	private static final long serialVersionUID = 1L;
 	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
@@ -31,8 +31,13 @@ public class User  extends Model<Config>{
     private String gender;
 
     private String phone;
-    //省市区
+    //省
+    private String province;
+    //市
     private String city;
+    //区
+    private String area;
+    
     private String address;
 
     private String avatar;
@@ -66,52 +71,6 @@ public class User  extends Model<Config>{
     //病史
     private String illness;
 
-    
-    public User(Integer id, String role, String account, String password,
-			String name, Integer age, String gender, String phone,
-			String address, String avatar,
-			Date createtime, Float weight, Float height,
-			Date born) {
-		super();
-		this.id = id;
-		this.role = role;
-		this.account = account;
-		this.password = password;
-		this.name = name;
-		this.age = age;
-		this.gender = gender;
-		this.phone = phone;
-		this.address = address;
-		this.avatar = avatar;
-		this.createtime = createtime;
-		this.weight = weight;
-		this.height = height;
-		this.born = born;
-	}
-    public User(Integer id, String role, String account, String password,
-    		String name, Integer age, String gender, String phone,
-    		String address, String avatar,
-    		Date createtime, Float weight, Float height,
-    		Date born, String imei
-    		) {
-    	super();
-    	this.id = id;
-    	this.role = role;
-    	this.account = account;
-    	this.password = password;
-    	this.name = name;
-    	this.age = age;
-    	this.gender = gender;
-    	this.phone = phone;
-    	this.address = address;
-    	this.avatar = avatar;
-    	this.createtime = createtime;
-    	this.weight = weight;
-    	this.height = height;
-    	this.born = born;
-    	this.imei = imei;
-    }
-
 	public String getWalkCount() {
 		return walkCount;
 	}
@@ -136,7 +95,19 @@ public class User  extends Model<Config>{
         return role;
     }
 
-    public void setRole(String role) {
+    public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
+	public void setRole(String role) {
         this.role = role == null ? null : role.trim();
     }
 

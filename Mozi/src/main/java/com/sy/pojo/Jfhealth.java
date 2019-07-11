@@ -14,29 +14,61 @@ import com.baomidou.mybatisplus.enums.IdType;
 public class Jfhealth extends Model<UserEq>{
 	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 主键ID
+	 */
 	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
-
+	/**
+	 * HRV
+	 */
     private Integer HRV;
+    /**
+	 * 收缩压
+	 */
     @TableField(value="sbp_ave")
     private Integer sbpAve;
+    /**
+	 * 舒张压
+	 */
     @TableField(value="dbp_ave")
     private Integer dbpAve;
-
+    /**
+	 * 心率
+	 */
     private Integer heartrate;
-
+    /**
+	 * 血氧
+	 */
     private Integer bloodoxygen;
-
+    /**
+	 * 微循环
+	 */
     private Integer microcirculation;
-
+    /**
+	 * 呼吸频率
+	 */
     private Integer respirationrate;
-
+    /**
+	 * 情绪
+	 */
+    private Integer mood;
+    /**
+	 * 手机号码
+	 */
     private String phone;
-
+    /**
+	 * 设备号
+	 */
     private String imei;
+    /**
+	 * 数据上传时间
+	 */
     @TableField(value = "createtime",fill = FieldFill.INSERT )
     private Date createtime;
-
+    /**
+	 * 体检报告
+	 */
     private String amedicalreport;
 
     public Integer getId() {
@@ -104,7 +136,15 @@ public class Jfhealth extends Model<UserEq>{
         this.respirationrate = respirationrate;
     }
 
-    public String getPhone() {
+    public Integer getMood() {
+		return mood;
+	}
+
+	public void setMood(Integer mood) {
+		this.mood = mood;
+	}
+
+	public String getPhone() {
         return phone;
     }
 

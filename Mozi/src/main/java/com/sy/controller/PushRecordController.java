@@ -1,7 +1,5 @@
 package com.sy.controller;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sy.common.ResultData;
 import com.sy.service.PushRecordService;
+import com.sy.utils.DataRow;
 
 @Controller
 @RequestMapping("/pushRecord")
@@ -30,8 +29,8 @@ public class PushRecordController {
 	 */
 	@RequestMapping(value = "/queryPushRecord")
 	@ResponseBody
-	public ResultData<Map<String,Object>> queryPushRecordInfo(@RequestBody Map<String,String> map) {
-		ResultData<Map<String,Object>> re= new ResultData<Map<String,Object>>();
+	public ResultData<DataRow> queryPushRecordInfo(@RequestBody DataRow map) {
+		ResultData<DataRow> re= new ResultData<DataRow>();
 		try {
 			re = pushRecordService.queryPushRecordInfo(map,re);
 		} catch (Exception e) {

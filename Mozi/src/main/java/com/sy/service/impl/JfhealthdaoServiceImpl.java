@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.sy.common.ResultBase;
 import com.sy.mapper.JfhealthdaoMapper;
 import com.sy.mapper.PushMapper;
 import com.sy.pojo.Jfhealthdao;
@@ -115,16 +117,29 @@ public class JfhealthdaoServiceImpl extends ServiceImpl<JfhealthdaoMapper, Jfhea
 
 	@Override
 	public void delectjfhealthdao(String phone) {
-		jfhealthdaoMapper.delectjfhealthdao(phone);
-		
+		EntityWrapper<Jfhealthdao> ew = new EntityWrapper<Jfhealthdao>();
+		ew.eq("phone", phone);
+		int aa = jfhealthdaoMapper.delete(ew);
+			System.out.println("aa"+aa);
 	}
-
+	/**
+	 * 修改人工学习
+	 * @return
+	 */
 	@Override
-	public void updateByPhone(Map map) {
-		
-		String userId = (String)map.get("userId");
-		map.put("phone", "mozistar"+userId);
-		jfhealthdaoMapper.updateByPhone(map);
+	public ResultBase updateJfhealthdao(Jfhealthdao jfhealthdao,ResultBase re)throws Exception{
+		jfhealthdao.setPhone("mozistar"+jfhealthdao.getPhone());
+		EntityWrapper<Jfhealthdao> ew = new EntityWrapper<Jfhealthdao>();
+		ew.eq("phone", jfhealthdao.getPhone());
+		int row =jfhealthdaoMapper.update(jfhealthdao, ew);
+		if(row>0){
+			re.setCode(200);
+			re.setMessage("修改成功");
+		}else{
+			re.setCode(400);
+			re.setMessage("修改失败");
+		}
+		return re;
 		
 	}
 }

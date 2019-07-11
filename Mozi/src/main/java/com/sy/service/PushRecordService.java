@@ -1,10 +1,9 @@
 package com.sy.service;
 
 import java.sql.SQLException;
-import java.util.Map;
-
 import com.sy.common.ResultData;
 import com.sy.pojo.PushRecord;
+import com.sy.utils.DataRow;
 
 /**
  * 
@@ -26,5 +25,5 @@ public interface PushRecordService {
 	 * @param map
 	 * @return
 	 */
-	public ResultData<Map<String,Object>> queryPushRecordInfo(Map<String,String> map,ResultData<Map<String,Object>> re)throws Exception;
+	public ResultData<DataRow> queryPushRecordInfo(DataRow map,ResultData<DataRow> re)throws Exception;
 }

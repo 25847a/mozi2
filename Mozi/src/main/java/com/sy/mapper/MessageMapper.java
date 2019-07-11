@@ -16,5 +16,12 @@ public interface MessageMapper extends BaseMapper<Message>{
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Message> queryMessageCenter(DataRow map)throws SQLException;
+	public List<DataRow> queryMessageCenter(DataRow map)throws SQLException;
+	/**
+	 * 消息中心总数
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public int queryMessageCount(int alias)throws SQLException;
 }

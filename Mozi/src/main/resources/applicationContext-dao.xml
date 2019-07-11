@@ -90,14 +90,12 @@
      <!-- 这里可以指定默认的数据源 -->
      <property name="defaultTargetDataSource" ref="dataSource" />  
 </bean>  
+
+
 	<!-- 事务管理器 对 mybatis连接数据库事务控制，spring 使用jdbc的事务控制类 -->
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-
-
-	
 	
 	
 	<!-- SqlSessionFactory -->

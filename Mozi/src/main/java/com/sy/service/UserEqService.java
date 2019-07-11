@@ -49,14 +49,6 @@ public interface UserEqService extends IService<UserEq>{
 	 * @return
 	 */
 	public Integer geteqid(Integer userid);
-
-	/**
-	 * 添加观察者
-	 * 
-	 * @param u
-	 * @return
-	 */
-	public boolean addUserEq(UserEq u);
 	/**
 	 * 判断该设备是否有监护者
 	 * 

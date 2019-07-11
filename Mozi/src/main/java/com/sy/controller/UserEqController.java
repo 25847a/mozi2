@@ -73,7 +73,7 @@ public class UserEqController {
 		return re;
 	}
 	/**
-	 * 删除设备操作者
+	 * 删除设备操作者、观察者
 	 * @param map
 	 * @return
 	 */
@@ -126,7 +126,7 @@ public class UserEqController {
 				u.setTypeof(1);
 				u.setAuthorized("已授权");
 				if (usereqservice.ifObserved(u)) {
-					usereqservice.addUserEq(u);
+					usereqservice.insert(u);
 					Push push = new Push();
 				    push.setUserId(user.getId());
 				    push.setAlias(mid);
@@ -160,8 +160,8 @@ public class UserEqController {
 		try {
 			re = usereqservice .selectuserdata(map,re);
 			} catch (Exception e) {
-				re.setCode(200);
-				re.setMessage("未有用户数据 ！！！！");
+				re.setCode(400);
+				re.setMessage("查询错误,请联系管理员");
 				logger.error("UserEqController>>>>>>>>>>>>>>>>>selectuserdata",e);
 			}
 			return re;
@@ -208,14 +208,14 @@ public class UserEqController {
 				usereq2.setUserId(userid);
 				usereq2.setEqId(equip.getId());
 				usereq2.setTypeof(2);
-				boolean status = usereqservice.addUserEq(usereq2);
+				boolean status = usereqservice.insert(usereq2);
 				
 				//创建监护者和设备的关联关系
 				UserEq usereq0 = new UserEq();
 				usereq0.setUserId(user0.getId());
 				usereq0.setEqId(equip.getId());
 				usereq0.setTypeof(0);
-				status = usereqservice.addUserEq(usereq0);
+				status = usereqservice.insert(usereq0);
 				
 				//删除旧设备的关联数据
 				status = usereqservice.deleteEqUser(e.getId());

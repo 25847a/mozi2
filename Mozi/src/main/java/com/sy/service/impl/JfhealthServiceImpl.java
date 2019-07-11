@@ -39,41 +39,41 @@ public class JfhealthServiceImpl extends ServiceImpl<JfhealthMapper, Jfhealth> i
 	public ResultData<DataRow> querySecondaryData(DataRow map, ResultData<DataRow> re) throws Exception {
 		User  user = userMapper.selectById(map.getInt("userId"));
 		JfhealthNew jfhealth = jfhealthNewMapper.newJfhealthNew(user.getImei());
-		DataRow data =  equipmentDataMapper.queryStepWhenCarrieroadSum(map.getInt("userId"));
+		DataRow data =  equipmentDataMapper.queryStepWhenCarrieroadSum(map.getInt("userId"));//获取步数,卡里路
 		// =new DataRow();//获取数据库
 		switch(map.getInt("category")){
 		case 1:
-			re =DataUtil.heartSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,心率
+			re =DataUtil.heartSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,心率
 			break;
 		case 2:
-			re =DataUtil.bloodSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,血氧
+			re =DataUtil.bloodSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,血氧
 			break;
 		case 3:
-			re =DataUtil.microcSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,微循环
+			re =DataUtil.microcSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,微循环
 			break;
 		case 4:
-			re =DataUtil.breathSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,呼吸
+			re =DataUtil.breathSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,呼吸
 			break;
 		case 5:
-			re =DataUtil.stepWhenSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,步数
+			re =DataUtil.stepWhenSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,步数
 			break;
 		case 6:
-			re =DataUtil.pressureSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,血压
+			re =DataUtil.pressureSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,血压
 			break;
 		case 7:
-			re =DataUtil.warmSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),Float.valueOf(17),re);//获取数据库,体温
+			re =DataUtil.warmSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),Float.valueOf(17),re);//获取数据库,体温
 			break;
 		case 8:
-			re =DataUtil.humiditySecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),"偏高",re);//获取数据库,湿度
+			re =DataUtil.humiditySecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),"偏高",re);//获取数据库,湿度
 			break;
 		case 9:
-			re =DataUtil.hrvSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,hrv
+			re =DataUtil.hrvSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,hrv
 			break;
 		case 10:
-			re =DataUtil.emotionSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),17,re);//获取数据库,情绪
+			re =DataUtil.moodSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,情绪
 			break;
 		case 11:
-			re =DataUtil.carrieroadSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()),re);//获取数据库,卡里路
+			re =DataUtil.carrieroadSecondary(map.getInt("category"),data,jfhealth,Integer.valueOf(user.getAge()==null?30:user.getAge()),re);//获取数据库,卡里路
 			break;
 		}
 		

@@ -11,11 +11,11 @@
     <result column="heartLowThd" property="heartLowThd" jdbcType="INTEGER" />
     <result column="heartHigThd" property="heartHigThd" jdbcType="INTEGER" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
-    <result column="t" property="updatetime" jdbcType="TIMESTAMP" />
-    <result column="lbpstart" property="heartHigThd" jdbcType="INTEGER" />
-    <result column="lbpend" property="heartHigThd" jdbcType="INTEGER" />
-    <result column="hbpstart" property="heartHigThd" jdbcType="INTEGER" />
-    <result column="hbpend" property="heartHigThd" jdbcType="INTEGER" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="lbpstart" property="lbpstart" jdbcType="INTEGER" />
+    <result column="lbpend" property="lbpend" jdbcType="INTEGER" />
+    <result column="hbpstart" property="hbpstart" jdbcType="INTEGER" />
+    <result column="hbpend" property="hbpend" jdbcType="INTEGER" />
 	
   </resultMap>
   <sql id="Base_Column_List" >

@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
-import com.sy.mapper.GroupPhoneMapper;
+import com.sy.pojo.Message;
 import com.sy.service.MessageService;
 import com.sy.utils.DataRow;
 
@@ -44,4 +44,21 @@ public class MessageController {
 		}
 		return re;
 	}
+	/**
+	 * 修改为已读状态
+	 * @return
+	 * @throws Exception 
+	 */
+	@RequestMapping("updateMessageRead")
+	@ResponseBody
+	public ResultBase updateMessageRead(@RequestBody Message message){
+		ResultBase re = new ResultBase();
+		try{
+			re=messageService.updateMessageRead(message,re);
+		}catch (Exception e) {
+			logger.error("MessageController>>>>>>>>>>>>>>>>updateMessageRead",e);
+		}
+		return re;
+	}
+	
 }

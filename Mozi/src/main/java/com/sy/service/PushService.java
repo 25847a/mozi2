@@ -5,8 +5,10 @@ import java.text.ParseException;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.service.IService;
+import com.sy.common.ResultBase;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Push;
+import com.sy.utils.DataRow;
 
 /**
  * 
@@ -33,5 +35,10 @@ public interface PushService extends IService<Push>{
 	 * @throws SQLException
 	 */
 	public String queryPushNews(Map<String,Object> map,JfhealthNew jfhealthNew)throws SQLException;
+	/**
+	 * 测试推送接口
+	 * @return
+	 */
+	public ResultBase testPush(DataRow map,ResultBase re)throws Exception;
 	
 }

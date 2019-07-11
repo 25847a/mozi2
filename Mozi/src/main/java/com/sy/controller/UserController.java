@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.GroupPhoneMapper;
@@ -27,7 +26,6 @@ import com.sy.service.EquipmentService;
 import com.sy.service.UserService;
 import com.sy.service.UsercodeService;
 import com.sy.utils.DataRow;
-import com.sy.utils.DeleteFileUtil;
 import com.sy.utils.MD5Util;
 import com.sy.vo.LoginReturn;
 import com.sy.vo.Loginuse;
@@ -90,63 +88,33 @@ public class UserController {
 	@ResponseBody
 	public ResultData<Loginuse> addUser(@RequestBody User u) {
 		ResultData<Loginuse> re = new ResultData<Loginuse>();
-		if (u.getAccount() != null && u.getAccount().length() > 4
-				&& u.getAccount().length() < 12) {
-			if (u.getPassword() != null && u.getPassword() != ""
-					&& !u.getPassword().equals("")) {
-				if (userService.ifUser(u.getAccount())) {
-					u.setRole("管理者");
-					if (u.getName() == null || u.getName() == "") {
-						u.setName(u.getAccount());
-					}
-					Usercode uservode = new Usercode();
-					uservode.setCode(u.getCode());
-					uservode.setPhoen(u.getPhone());
-					if (usercodeservic.ifusercode(uservode)) {
-						u.setPassword(MD5Util.MD5(u.getPassword()));
-						boolean status = userService.insert(u);
-						if (status) {
-							EntityWrapper<User> ew = new EntityWrapper<User>();
-							ew.eq("password", MD5Util.MD5(u.getPassword()));
-							ew.eq("account", u.getAccount());
-							ew.eq("isDelete", 0);
-							User ulog = userService.selectOne(ew);
-							Loginuse luser = new Loginuse(ulog.getId(),
-									ulog.getRole(), ulog.getName(),
-									ulog.getAge(), ulog.getGender(),
-									ulog.getPhone(), ulog.getAddress(),
-									ulog.getAvatar(), 
-									 ulog.getCreatetime(),
-									 ulog.getWeight(),
-									ulog.getHeight(), ulog.getBorn());
-							re.setData(luser);
-							re.setMessage("添加成功！！！");
-							re.setCode(200);
-						} else {
-							re.setMessage("添加失败！！！");
-							re.setCode(400);
-						}
-					} else {
-						re.setMessage("验证码有误！！！");
-						re.setCode(405);
-					}
-
-				} else {
-					re.setMessage("该账号存在！！！");
-					re.setCode(405);
-				}
-			} else {
-				re.setMessage("密码格式有错！！！");
-				re.setCode(405);
-			}
-		} else {
-			re.setMessage("账号格式有错误！！！");
-			re.setCode(350);
+		try {
+			re = userService.addUser(u,re);
+		} catch (Exception e) {
+			logger.error("UserController>>>>>>>>>>>>>>>>>>>>addUser",e);
 		}
-
 		return re;
-
 	}
+	
+	
+	/**
+	 * 注册用户1111
+	 * @param u
+	 * @return
+	 */
+	@RequestMapping("addUser111")
+	@ResponseBody
+	public ResultData<Loginuse> addUser111(@RequestBody User u) {
+		ResultData<Loginuse> re = new ResultData<Loginuse>();
+		try {
+			re = userService.addUser111(u,re);
+		} catch (Exception e) {
+			logger.error("UserController>>>>>>>>>>>>>>>>>>>>addUser",e);
+		}
+		return re;
+	}
+	
+	
 	/**
 	 * 用户登陆
 	 * @param data
@@ -232,41 +200,21 @@ public class UserController {
 
 	/**
 	 * 更新头像
-	 * 
 	 * @param avatar
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping("updateavatar")
 	@ResponseBody
-	public ResultData<String> updateavatar(
-			@RequestParam(value = "avatar", required = false) CommonsMultipartFile avatar,
-			Integer id) {
+	public ResultData<String> updateavatar(@RequestParam(value = "avatar", required = false) CommonsMultipartFile avatar,Integer id) {
 		ResultData<String> re = new ResultData<String>();
-		User u = userService.getUser(id);
 		 try {
-		 String[] st = u.getAvatar().split("/");
-		 DeleteFileUtil.deleteFile("E:/Project/" + st[3] + "/" + st[4]);
-		 } catch (Exception e) {
-			 logger.info(e.getMessage());
+			 re = userService.updateavatar(avatar,id,re);
+		 }catch(Exception e){
+			 re.setMessage("头像上传失败,请检查图片格式");
+			 re.setCode(400);
+			 logger.error("UserController>>>>>>>>>>>>updateavatar",e);
 		 }
-
-		new File("E:\\Project\\avatars").mkdirs();
-		com.sy.utils.StringUtil.arrayUploadFile("E:\\Project\\avatars", avatar);
-		boolean status = userService.uploadavatar(
-				"avatars/" + avatar.getOriginalFilename(), id);
-		if (status) {
-			String url = baseUrl + "avatars/" + avatar.getOriginalFilename();
-			u.setAvatar(url);
-			userService.updateById(u);
-			re.setData(url);
-			re.setCode(200);
-			re.setMessage("修改头像成功！！!");
-		} else {
-			re.setMessage("修改头像失败！！！");
-			re.setCode(400);
-
-		}
 		return re;
 	}
 
@@ -278,18 +226,18 @@ public class UserController {
 	 */
 	@RequestMapping("updateUser")
 	@ResponseBody
-	public ResultBase updateUser(@RequestBody User u) {
+	public ResultBase updateUser(@RequestBody User u,Integer phone1,Integer phone2) {
 		ResultBase re = new ResultBase();
 		try {
 			re = userService.updateUser(u,re);
 		} catch (Exception e) {
-			String R06 = "$R06|ERR\r\n";
+			/*String R06 = "$R06|ERR\r\n";
 			Channel c =	NettyChannelMap.get(u.getImei());
 			if(c!=null){
 				c.writeAndFlush(R06);
-			}
+			}*/
 			re.setCode(400);
-			re.setMessage("修改失败,可能设备未启动导致");
+			re.setMessage("修改成功,硬件未修改,请检查硬件是否在线");
 			logger.error("UserController>>>>>>>>>>>>updateUser",e);
 		}
 		return re;
@@ -490,5 +438,20 @@ public class UserController {
 		}
 		return re;
 	}
-	
+	/**
+	 * 个人中心数据
+	 * @param m
+	 * @return
+	 */
+	@RequestMapping("queryPersonalCenter")
+	@ResponseBody
+	public ResultData<DataRow> queryPersonalCenter(@RequestBody DataRow map){
+		ResultData<DataRow> re = new ResultData<DataRow>();
+		try {
+			re = userService.queryPersonalCenter(map,re);
+		} catch (Exception e) {
+			logger.info("UserController>>>>>>>>>>>>>>>queryPersonalCenter",e);
+		}
+		return re;
+	}
 }

@@ -10,6 +10,7 @@
     <result column="Bloodoxygen" property="bloodoxygen" jdbcType="INTEGER" />
     <result column="microcirculation" property="microcirculation" jdbcType="INTEGER" />
     <result column="respirationrate" property="respirationrate" jdbcType="INTEGER" />
+    <result column="mood" property="mood" jdbcType="INTEGER" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="imei" property="imei" jdbcType="VARCHAR" />
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
@@ -98,7 +99,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate, 
+    id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate,mood 
     phone, imei, createtime
   </sql>
   <sql id="Blob_Column_List" >

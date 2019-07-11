@@ -1,11 +1,14 @@
 package com.sy.service;
 
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import com.baomidou.mybatisplus.service.IService;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.pojo.User;
 import com.sy.utils.DataRow;
 import com.sy.vo.LoginReturn;
+import com.sy.vo.Loginuse;
 import com.sy.vo.Usermanagement;
 
 public interface UserService  extends IService<User>{
@@ -15,6 +18,18 @@ public interface UserService  extends IService<User>{
 	 * @return
 	 */
 	public boolean ifUser(String account);
+	/**
+	 * 注册用户
+	 * @param data
+	 * @return
+	 */
+	public ResultData<Loginuse> addUser(User user,ResultData<Loginuse> re)throws Exception;
+	/**
+	 * 注册用户
+	 * @param data
+	 * @return
+	 */
+	public ResultData<Loginuse> addUser111(User user,ResultData<Loginuse> re)throws Exception;
 	/**
 	 * 用户登陆
 	 * @param data
@@ -38,6 +53,13 @@ public interface UserService  extends IService<User>{
 	 * @throws Exception 
 	 */
 	public ResultBase addUsermanagement(Usermanagement u,ResultBase re)throws Exception;
+	/**
+	 * 更新头像
+	 * @param avatar
+	 * @param id
+	 * @return
+	 */
+	public ResultData<String> updateavatar(CommonsMultipartFile avatar ,Integer id,ResultData<String> re)throws Exception;
 	/**头像上传
 	 * @param avatar
 	 * @param id
@@ -74,7 +96,8 @@ public interface UserService  extends IService<User>{
 	 * @return
 	 */
 	public  User  phoenselectuser(String phoen);
-	/**通过账号获取用户数据
+	/**
+	 * 通过账号获取用户数据
 	 * @param account
 	 * @return
 	 */
@@ -85,5 +108,10 @@ public interface UserService  extends IService<User>{
 	public Integer deleteUser(Integer userId);
 	
 	public Integer selectId(String imei);
-
+	/**
+	 * 个人中心数据
+	 * @param map
+	 * @return
+	 */
+	public ResultData<DataRow> queryPersonalCenter(DataRow map,ResultData<DataRow> re)throws Exception;
 }

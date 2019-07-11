@@ -3,14 +3,13 @@ package com.sy.mapper;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.User;
 import com.sy.utils.DataRow;
 import com.sy.vo.LoginReturn;
+import com.sy.vo.Personal;
 
 public interface UserMapper extends BaseMapper<User>{
 
@@ -35,7 +34,6 @@ public interface UserMapper extends BaseMapper<User>{
 
 	public User getpassword(Map m);
 
-	public List<Object> list(Map map);
 
 	public List<User> phoenselectuser(String phone);
 	
@@ -64,28 +62,28 @@ public interface UserMapper extends BaseMapper<User>{
 	 * @param User.imei User.id
 	 * @return 
 	 */
-	@Update("update user set imei = #{imei} where id = #{id}")
+	@Update("update user set imei = #{imei} where id = #{id}  and isDelete=0")
 	public Integer updateImei(User user);
 	/**
 	 *   给用户set校准状态
 	 * @param User.calibration User.id
 	 * @return
 	 */ 
-	@Update("update user set  calibration = #{calibration} where id = #{id}")
+	@Update("update user set  calibration = #{calibration} where id = #{id}  and isDelete=0")
 	public Integer updateCalibration(User user);
 	
 	/**
 	 * 设置手机号码
 	 * @param User.phone User.id
 	 */
-	@Update("update user set phone = #{phone} where id = #{id}")
+	@Update("update user set phone = #{phone} where id = #{id}  and isDelete=0")
 	void setPhone(User m);
 
 	/**
 	 * 健康数据上传时间(分钟) 2 3 5 8 15
 	 * @param User.jfdataUpdateTime User.id
 	 */
-	@Update("update user set jfdataUpdateTime = #{jfdataUpdateTime} where id = #{id}")
+	@Update("update user set jfdataUpdateTime = #{jfdataUpdateTime} where imei = #{imei} and isDelete=0")
 	void jfdataUpdateTime(User user);
 	/**
 	 * 根据ID查询用户信息
@@ -111,6 +109,13 @@ public interface UserMapper extends BaseMapper<User>{
 	 */
 	public LoginReturn queryPersonalCenter(Integer userId)throws SQLException;
 	/**
+	 * 个人中心页面数据
+	 * @param data
+	 * @return
+	 * @throws SQLException
+	 */
+	public Personal queryPersonalCenter2(int alias)throws SQLException;
+	/**
 	 * 点击卡片查询
 	 * @param userId
 	 * @return
@@ -122,5 +127,5 @@ public interface UserMapper extends BaseMapper<User>{
 	 * @param map
 	 * @return
 	 */
-	public DataRow queryUsersInfo(DataRow map);
+	public DataRow queryUsersInfo(DataRow map)throws SQLException;
 }

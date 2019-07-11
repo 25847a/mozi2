@@ -1,8 +1,18 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Sensorstatus {
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
+@TableName("sensorstatus")
+public class Sensorstatus extends Model<Sensorstatus>{
+	private static final long serialVersionUID = 1L;
+	
+	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
 
     private String imei;
@@ -52,4 +62,10 @@ public class Sensorstatus {
     public void setAdddate(Date adddate) {
         this.adddate = adddate;
     }
+
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
+	}
 }

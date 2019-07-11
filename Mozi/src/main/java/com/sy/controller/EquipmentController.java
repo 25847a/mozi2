@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.pojo.Equipment;
@@ -53,7 +55,22 @@ public class EquipmentController {
 		}
 		return re;
 	}
-
+	/**
+	 * 修改设备紧急联系人
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "updateurgentInfo")
+	@ResponseBody
+	public ResultBase updateurgentInfo(@RequestBody Equipment equipment) {
+		ResultBase re = new ResultBase();
+		try {
+			re = equipmentservice.updateurgentInfo(equipment,re);
+		} catch (Exception e) {
+			logger.info("EquipmentController>>>>>>>>>>>>>>>updateurgentInfo", e);
+		}
+		return re;
+	}
 	/**
 	 * 获取智能服饰信息
 	 * 
@@ -85,7 +102,7 @@ public class EquipmentController {
 		} catch (Exception e) {
 			re.setCode(350);
 			re.setMessage("设备不在线！！");
-			logger.info("EquipmentController>>>>>>>>>>>>>>>updateEquipment", e);
+			logger.info("EquipmentController>>>>>>>>>>>>>>>updatebluetooth", e);
 		}
 		return re;
 	}
@@ -110,6 +127,26 @@ public class EquipmentController {
 		return re;
 	}
 	/**
+	 * 删除蓝牙
+	 * 
+	 * @param map
+	 * bluetoothList 删除蓝牙
+	 * @return
+	 */
+	@RequestMapping(value = "deleteBluetoothList")
+	@ResponseBody
+	public ResultBase deleteBluetoothList(@RequestBody DataRow map) {
+		ResultBase re = new ResultBase();
+		try {
+			re = equipmentservice.deleteBluetoothList(map, re);
+		} catch (Exception e) {
+			re.setCode(400);
+			re.setMessage("设备不在线");
+			logger.info("EquipmentController>>>>>>>>>>>>>>>deleteBluetoothList", e);
+		}
+		return re;
+	}
+	/**
 	 * 发送学习指令
 	 * @param map
 	 * @return
@@ -123,7 +160,7 @@ public class EquipmentController {
 		} catch (Exception e) {
 			re.setCode(350);
 			re.setMessage("学习失败");
-			logger.info("EquipmentController>>>>>>>>>>>>>>>updateBluetoothList", e);
+			logger.info("EquipmentController>>>>>>>>>>>>>>>healthcali", e);
 		}
 		return re;
 	}

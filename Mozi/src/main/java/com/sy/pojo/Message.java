@@ -1,6 +1,8 @@
 package com.sy.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -19,6 +21,10 @@ public class Message extends Model<Message>{
 	 * 登录 的mid做为alias
 	 */
 	private Integer alias;
+	/**
+	 * 使用者ID
+	 */
+	private Integer userId;
 	/**
 	 * 消息类型 0.预警信息   (其他的后续添加)
 	 */
@@ -39,7 +45,7 @@ public class Message extends Model<Message>{
 	 * 创建时间
 	 */
 	@TableField(value = "createtime",fill = FieldFill.INSERT )
-	private String createtime;
+	private Date createtime;
 
 
 	public Integer getAlias() {
@@ -51,11 +57,19 @@ public class Message extends Model<Message>{
 	}
 
 
-	public String getCreatetime() {
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Date getCreatetime() {
 		return createtime;
 	}
 
-	public void setCreatetime(String createtime) {
+	public void setCreatetime(Date createtime) {
 		this.createtime = createtime;
 	}
 

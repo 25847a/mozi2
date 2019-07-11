@@ -36,16 +36,6 @@ public interface UserEqMapper extends BaseMapper<UserEq>{
 	 */
     int deleteByPrimaryKey(Integer id);
     /**
-     * 插入数据
-     */
-    Integer insert(UserEq record);
-    /**
-     * 插入数据
-     * @param record
-     * @return
-     */
-    int insertSelective(UserEq record);
-    /**
      * 根据ID查询数据 
      * @param id
      * @return

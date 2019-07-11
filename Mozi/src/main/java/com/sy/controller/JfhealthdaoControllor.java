@@ -5,17 +5,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.JfhealthdaoMapper;
 import com.sy.mapper.UserMapper;
-import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Jfhealthdao;
 import com.sy.pojo.User;
 import com.sy.service.JfhealthdaoService;
@@ -24,6 +24,7 @@ import com.sy.utils.Managementconstant;
 @Controller
 @RequestMapping(value = "jfhealthdao")
 public class JfhealthdaoControllor {
+	private final static Logger logger = LoggerFactory.getLogger(JfhealthdaoControllor.class);
 	@Autowired
 	private JfhealthdaoService jfhealthdaoservice;
 	@Autowired
@@ -34,6 +35,20 @@ public class JfhealthdaoControllor {
 	public String jfhealthdao() {
 		return "jfhealthdao";
 	}
+	/**
+	 * 新增人工学习
+	 * @param HRV
+	 * @param sbpAve
+	 * @param dbpAve
+	 * @param heartrate
+	 * @param bloodoxygen
+	 * @param microcirculation
+	 * @param respirationrate
+	 * @param phone
+	 * @param imei
+	 * @param amedicalreport
+	 * @return
+	 */
 	@RequestMapping("addjfhealthdao")
 	public String addjfhealthdao(Integer HRV,Integer sbpAve,Integer dbpAve,Integer heartrate,Integer bloodoxygen,Integer microcirculation,
 	Integer respirationrate,String phone,String imei,String amedicalreport) {
@@ -53,21 +68,23 @@ public class JfhealthdaoControllor {
 		jfhealthdaoservice.addJfhealthdao(health);
 		return "jfhealthdao";
 	}
-	
+	/**
+	 * 修改人工学习
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("updateJfhealthdao")
-	public ResultBase updateJfhealthdao( @RequestBody Map m) {
-		ResultBase r = new ResultBase();
-		
+	public ResultBase updateJfhealthdao( @RequestBody Jfhealthdao jfhealthdao) {
+		ResultBase re = new ResultBase();
 		try{
-			jfhealthdaoservice.updateByPhone(m);
-			r.setCode(200);
-			r.setMessage("修改成功");
+			re=jfhealthdaoservice.updateJfhealthdao(jfhealthdao,re);
 		}catch (Exception e) {
-			r.setCode(400);
-			r.setMessage("修改失败");
+			re.setCode(400);
+			re.setMessage("修改失败");
+			logger.error("JfhealthdaoControllor>>>>>>>>>>>>>>>>>>updateJfhealthdao",e);
+			
 		}
-		return r;
+		return re;
 	}
 	@RequestMapping("getinfo")
 	@ResponseBody

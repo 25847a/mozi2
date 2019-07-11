@@ -6,12 +6,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.mapper.PositionigMapper;
 import com.sy.pojo.Positionig;
 import com.sy.service.PositionigService;
@@ -19,7 +18,7 @@ import com.sy.service.PositionigService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 @Service
-public class PositionigServiceImpl implements PositionigService{
+public class PositionigServiceImpl extends ServiceImpl<PositionigMapper, Positionig> implements PositionigService{
 	@Autowired
 	private PositionigMapper positionigMapper;
 

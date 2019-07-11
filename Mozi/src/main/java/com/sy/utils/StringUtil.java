@@ -25,6 +25,20 @@ import redis.clients.jedis.Jedis;
 
 public class StringUtil {
 	/**
+	 * @param byte[]数组转String字符串
+	 */
+	public static String Bytes2HexString(byte[] b) {
+		String ret = "";
+		for (int i = 0; i < b.length; i++) {
+			String hex = Integer.toHexString(b[i] & 0xFF);
+			if (hex.length() == 1) {
+				hex = '0' + hex;
+			}
+			ret += hex.toUpperCase();
+		}
+		return ret;
+	}
+	/**
 	 * 生成随机字符串
 	 * 
 	 * @param length

@@ -2,9 +2,10 @@ package com.sy.service;
 
 import java.util.Map;
 
+import com.baomidou.mybatisplus.service.IService;
 import com.sy.pojo.Positionig;
 
-public interface PositionigService {
+public interface PositionigService  extends IService<Positionig>{
 
 	
 	/**添加设备的定位信息

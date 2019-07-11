@@ -1,8 +1,7 @@
 package com.sy.service;
 
-import java.util.Map;
-
 import com.baomidou.mybatisplus.service.IService;
+import com.sy.common.ResultBase;
 import com.sy.pojo.Jfhealthdao;
 
 public interface JfhealthdaoService extends IService<Jfhealthdao>{
@@ -21,7 +20,11 @@ public interface JfhealthdaoService extends IService<Jfhealthdao>{
 	public Jfhealthdao  getjfhealthdao(String phone);
 	
 	public void  updatajf(Jfhealthdao bean);
-	public void  updateByPhone(Map map);
+	/**
+	 * 修改人工学习
+	 * @return
+	 */
+	public ResultBase updateJfhealthdao(Jfhealthdao jfhealthdao,ResultBase re)throws Exception;
 	
 	public void  delectjfhealthdao(String phone);
 	

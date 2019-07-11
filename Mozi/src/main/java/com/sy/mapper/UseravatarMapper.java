@@ -3,18 +3,18 @@ package com.sy.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.Useravatar;
 import com.sy.pojo.UseravatarExample;
 
-public interface UseravatarMapper {
+public interface UseravatarMapper extends BaseMapper<Useravatar>{
     int countByExample(UseravatarExample example);
 
     int deleteByExample(UseravatarExample example);
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(Useravatar record);
+    Integer insert(Useravatar record);
 
     int insertSelective(Useravatar record);
 

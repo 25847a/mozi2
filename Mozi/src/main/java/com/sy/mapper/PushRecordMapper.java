@@ -2,9 +2,8 @@ package com.sy.mapper;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
-
 import com.sy.pojo.PushRecord;
+import com.sy.utils.DataRow;
 
 public interface PushRecordMapper {
 	
@@ -22,11 +21,11 @@ public interface PushRecordMapper {
 	 * @param map
 	 * @return
 	 */
-	public Map<String,Object> queryPushRecordCount(Map<String,String> map)throws SQLException;
+	public DataRow queryPushRecordCount(DataRow map)throws SQLException;
 	/**
 	 * 查询预警记录的记录数
 	 * @param map
 	 * @return
 	 */
-	public List<Map<String,String>> queryPushRecordList(Map<String,String> map)throws SQLException;
+	public List<DataRow> queryPushRecordList(DataRow map)throws SQLException;
 }

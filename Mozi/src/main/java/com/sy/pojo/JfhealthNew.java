@@ -11,98 +11,144 @@ import com.baomidou.mybatisplus.enums.FieldFill;
 import com.baomidou.mybatisplus.enums.IdType;
 @TableName("jfhealth_new")
 public class JfhealthNew extends Model<JfhealthNew>{
+	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 主键ID
+	 */
 	@TableId(value="id", type= IdType.AUTO)
-    private Integer id;
-
-    private Integer HRV;
-
-    private Integer sbpAve;
-
-    private Integer dbpAve;
-
-    private Integer heartrate;
-
-    private Integer bloodoxygen;
-
-    private Integer microcirculation;
-
-    private Integer respirationrate;
-
+    private int id;
+	/**
+	 * HRV
+	 */
+    private int HRV;
+    /**
+	 * 收缩压
+	 */
+    @TableField(value="sbp_ave")
+    private int sbpAve;
+    /**
+	 * 舒张压
+	 */
+    @TableField(value="dbp_ave")
+    private int dbpAve;
+    /**
+   	 * 心率
+   	 */
+    private int heartrate;
+    /**
+	 * 血氧
+	 */
+    private int bloodoxygen;
+    /**
+	 * 微循环
+	 */
+    private int microcirculation;
+    /**
+	 * 呼吸频率
+	 */
+    private int respirationrate;
+    /**
+	 * 情绪
+	 */
+    private int mood;
+    /**
+	 * 手机号码
+	 */
     private String phone;
-
+    /**
+	 * 设备号
+	 */
     private String imei;
+    /**
+	 * 数据创建时间
+	 */
     @TableField(value = "createtime",fill = FieldFill.INSERT )
     private Date createtime;
-
+    /**
+   	 * 数据更新时间
+   	 */
+    @TableField(value = "updatetime",fill = FieldFill.UPDATE )
+    private Date updatetime;
+    /**
+	 * 体检报告
+	 */
     private String amedicalreport;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     
-    public Integer getHRV() {
+    public int getHRV() {
 		return HRV;
 	}
 
-	public void setHRV(Integer hRV) {
+	public void setHRV(int hRV) {
 		HRV = hRV;
 	}
 
-	public Integer getSbpAve() {
+	public int getSbpAve() {
         return sbpAve;
     }
 
-    public void setSbpAve(Integer sbpAve) {
+    public void setSbpAve(int sbpAve) {
         this.sbpAve = sbpAve;
     }
 
-    public Integer getDbpAve() {
+    public int getDbpAve() {
         return dbpAve;
     }
 
-    public void setDbpAve(Integer dbpAve) {
+    public void setDbpAve(int dbpAve) {
         this.dbpAve = dbpAve;
     }
 
-    public Integer getHeartrate() {
+    public int getHeartrate() {
         return heartrate;
     }
 
-    public void setHeartrate(Integer heartrate) {
+    public void setHeartrate(int heartrate) {
         this.heartrate = heartrate;
     }
 
-    public Integer getBloodoxygen() {
+    public int getBloodoxygen() {
         return bloodoxygen;
     }
 
-    public void setBloodoxygen(Integer bloodoxygen) {
+    public void setBloodoxygen(int bloodoxygen) {
         this.bloodoxygen = bloodoxygen;
     }
 
-    public Integer getMicrocirculation() {
+    public int getMicrocirculation() {
         return microcirculation;
     }
 
-    public void setMicrocirculation(Integer microcirculation) {
+    public void setMicrocirculation(int microcirculation) {
         this.microcirculation = microcirculation;
     }
 
-    public Integer getRespirationrate() {
+    public int getRespirationrate() {
         return respirationrate;
     }
 
-    public void setRespirationrate(Integer respirationrate) {
+    public void setRespirationrate(int respirationrate) {
         this.respirationrate = respirationrate;
     }
 
-    public String getPhone() {
+    public int getMood() {
+		return mood;
+	}
+
+	public void setMood(int mood) {
+		this.mood = mood;
+	}
+
+	public String getPhone() {
         return phone;
     }
 
@@ -122,7 +168,15 @@ public class JfhealthNew extends Model<JfhealthNew>{
         return createtime;
     }
 
-    public void setCreatetime(Date createtime) {
+    public Date getUpdatetime() {
+		return updatetime;
+	}
+
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
+	}
+
+	public void setCreatetime(Date createtime) {
         this.createtime = createtime;
     }
 

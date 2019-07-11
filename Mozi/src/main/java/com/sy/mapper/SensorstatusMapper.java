@@ -4,10 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.Sensorstatus;
 import com.sy.pojo.SensorstatusExample;
 
-public interface SensorstatusMapper {
+public interface SensorstatusMapper extends BaseMapper<Sensorstatus>{
     int countByExample(SensorstatusExample example);
 
     int deleteByExample(SensorstatusExample example);
@@ -19,7 +20,6 @@ public interface SensorstatusMapper {
      * @return
      */
     int deleteSensorstatusInfo(String imei);
-    int insert(Sensorstatus record);
 
     int insertSelective(Sensorstatus record);
 
