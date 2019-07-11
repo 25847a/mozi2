@@ -88,8 +88,17 @@
   </select>
    <!-- 个人中心页面数据 -->
   <select id="queryPersonalCenter2" parameterType="java.lang.Integer" resultType="com.sy.vo.Personal">
- 	SELECT id as alias,name,avatar,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=0) as aliasCount,(SELECT COUNT(*) FROM user_eq WHERE user_id=#{userId} AND typeof=1) as observerCount,
-	(SELECT COUNT(*) FROM group_relation WHERE relationUserId=#{userId}) as groupCount FROM user WHERE id=#{userId}
+  		SELECT id as alias,name,avatar,(SELECT COUNT(*) FROM user_eq tp
+		INNER JOIN (SELECT * FROM user_eq WHERE typeof=0 AND user_id=#{userId}) tt
+		ON tp.eq_id=tt.eq_id and tp.typeof=2
+		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tc
+		ON tp.user_id=tc.id) as aliasCount,
+		(SELECT COUNT(*) FROM user_eq tp
+		INNER JOIN (SELECT * FROM user_eq WHERE typeof=1 AND user_id=#{userId}) tt
+		ON tp.eq_id=tt.eq_id and tp.typeof=2
+		INNER JOIN (SELECT * FROM user WHERE isDelete=0) tc
+		ON tp.user_id=tc.id) as observerCount,
+		(SELECT COUNT(*) FROM group_relation WHERE relationUserId=#{userId}) as groupCount FROM user WHERE id=#{userId}
   </select>
   <!--  点击卡片查询 -->
   <select id="queryUserData" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">

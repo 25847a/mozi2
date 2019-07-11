@@ -19,6 +19,7 @@ import com.sy.mapper.EquipmentMapper;
 import com.sy.mapper.EquipmentRecordMapper;
 import com.sy.mapper.JfhealthNewMapper;
 import com.sy.mapper.JfhealthdaoMapper;
+import com.sy.mapper.MessageMapper;
 import com.sy.mapper.PositionigMapper;
 import com.sy.mapper.PushMapper;
 import com.sy.mapper.SensorstatusMapper;
@@ -31,6 +32,7 @@ import com.sy.pojo.Equipment;
 import com.sy.pojo.EquipmentRecord;
 import com.sy.pojo.JfhealthNew;
 import com.sy.pojo.Message;
+import com.sy.pojo.Push;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.pojo.Waveform;
@@ -87,7 +89,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	@Autowired
 	UseravatarService useravatarService;
 	@Autowired
-	MessageService messageService;
+	MessageMapper messageMapper;
 	@Autowired
 	EquipmentRecordMapper equipmentRecordMapper;
 	/**
@@ -202,18 +204,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		}
 		return eqMapper.geteqiduse(userid);
 	}
-
-	@Override
-	public boolean addUserEq(UserEq u) {
-		Integer num = eqMapper.insertSelective(u);
-		if (num != 0) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
 	@Override
 	public boolean ifguardianship(Integer eqId) {
 		UserEq ue = eqMapper.ifguardianship(eqId);
@@ -305,25 +295,56 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 */
 	@Override
 	public ResultData<List<Userdata>> selectuserdata(DataRow map,ResultData<List<Userdata>> re) throws Exception {
-		User user = userservice.selectById(map.getInt("userId"));
+	//	User user = userservice.selectById(map.getInt("userId"));
 		DataRow detail = new DataRow();
-		if(user.getRole().equals("使用者")){
+		
+		//if(user.getRole().equals("使用者")){
+		if(map.containsKey("eqId")){
+			Equipment equipment= equipmentMapper.selectById(map.getInt("eqId"));
+			User user =usermapper.getUser(equipment.getImei());
+			map.put("userId", user.getId());
 			detail=usermapper.queryUsersInfo(map);
-			UserEq  userEq =eqMapper.queryUserEqAlias(user.getId());
-			EntityWrapper<Message> ew = new EntityWrapper<Message>();
-			ew.eq("alias", userEq.getUserId());
-			int messageCount =messageService.selectCount(ew);
+			EntityWrapper<UserEq> ewq = new EntityWrapper<UserEq>();
+			ewq.eq("user_id", map.getInt("alias"));
+			ewq.eq("eq_id", map.getInt("eqId"));
+			UserEq eq = this.selectOne(ewq);
+			if(eq.getTypeof()==0){
+				detail.put("type_of", 2);
+			}else{
+				detail.put("type_of", eq.getTypeof());
+			}
+		//	UserEq  userEq =eqMapper.queryUserEqAlias(user.getId());
+			/*EntityWrapper<Message> ew = new EntityWrapper<Message>();
+			ew.eq("alias", map.getInt("alias"));
+			ew.eq("`read`", 0);
+			ew.eq("DATE_FORMAT(createtime,'%Y-%m-%d')", "DATE_FORMAT(NOW(),'%Y-%m-%d')");*/
+			int messageCount =messageMapper.queryMessageCount(map.getInt("alias"));
+			System.out.println(messageCount);
 			detail.put("messageCount", messageCount);
 		}else{
 			 detail =eqMapper.queryUserEq(map);
+			 if(detail!=null){
+				 String positioning_data=positionigMapper.selectimeiPositionig(detail.getString("imei"));
+				 if(positioning_data==null){
+					 detail.put("positioning_data", "0,0");
+				 }else{
+					 detail.put("positioning_data", positioning_data);
+				 }
+			 }
 		}
-		
 		if(detail!=null){
+			if(detail.get("bluetoothList")==null || detail.getString("bluetoothList").equals("") || detail.getString("bluetoothList").equals("[]")){
+				detail.put("bluetoothList", 0);
+			}else{
+				detail.put("bluetoothList", 1);
+			}
+			String[] positioning = detail.getString("positioning_data").split(":");
+			detail.put("positioning_data", positioning[0]+","+positioning[1]);
 			JfhealthNew jfhealth = jMapperNew.newJfhealthNew(String.valueOf(detail.get("imei")));
 			if(jfhealth!=null){
 				EquipmentRecord record=equipmentRecordMapper.queryEquipmentRecord(map.getInt("userId"));
 				SimpleDateFormat updatetimedf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 设置日期格式
-				detail.put("updatetime", updatetimedf.format(jfhealth.getCreatetime()));
+				detail.put("updatetime", updatetimedf.format(jfhealth.getUpdatetime()));
 				detail.put("amedicalreport", jfhealth.getAmedicalreport() == null ? "" : jfhealth.getAmedicalreport());
 				detail.put("avatar", detail.get("avatar")==null?useravatarservice.selectavartar().getAvatar():detail.get("avatar"));
 				detail.put("eq_status", detail.get("eq_status").equals("H:0")?false:true);
@@ -331,23 +352,23 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				DataRow equipmentData =  equipmentDataMapper.queryStepWhenCarrieroadSum(Integer.valueOf(String.valueOf(detail.get("userId"))));
 				List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 				//心率
-				map=DataUtil.heartrateData("heartrate","心率",1, "次/分",jfhealth.getHeartrate()==null?0:jfhealth.getHeartrate());
+				map=DataUtil.heartrateData("heartrate","心率",1, "次/分",jfhealth.getHeartrate());
 				list.add(map);
 				//血氧
-				map=DataUtil.mocrocirculationData("qxygen","血氧",2, "%",jfhealth.getBloodoxygen()==null?0:jfhealth.getBloodoxygen());
+				map=DataUtil.qxygenData("qxygen","血氧",2, "%",jfhealth.getBloodoxygen());
 				list.add(map);
 				//微循环
-				map=DataUtil.mocrocirculationData("mocrocirculation","微循环",3, "%",jfhealth.getMicrocirculation()==null?0:jfhealth.getMicrocirculation());
+				map=DataUtil.mocrocirculationData("mocrocirculation","微循环",3, "%",jfhealth.getMicrocirculation());
 				list.add(map);
 				//呼吸
-				map=DataUtil.mocrocirculationData("breathe","呼吸",4, "次/分钟",jfhealth.getRespirationrate()==null?0:jfhealth.getRespirationrate());
+				map=DataUtil.breatheData("breathe","呼吸",4, "次/分",jfhealth.getRespirationrate());
 				list.add(map);
 				//步数
 				map=DataUtil.stepWhenData("Step_when","计步",5, "步",equipmentData==null?0: equipmentData.getInt("stepWhen"));
 				list.add(map);
 				
 				//血压
-				map=DataUtil.bloodData("pressure","血压",6, "mmHg",jfhealth.getSbpAve()==null?0:jfhealth.getSbpAve(),jfhealth.getDbpAve()==null?0:jfhealth.getDbpAve());
+				map=DataUtil.bloodData("pressure","血压",6, "mmHg",jfhealth.getSbpAve(),jfhealth.getDbpAve());
 				list.add(map);
 				//体温
 				map=DataUtil.temperatureData("temperature","体温",7, "℃",record==null?(float)36.5:record.getTemperature());
@@ -355,24 +376,14 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				//湿度
 				map=DataUtil.humidityData("humidity","湿度",8, "%RH",record==null?(float)36.5:record.getTemperature());
 				list.add(map);
-				/*map=new DataRow();
-				map.put("lastestValue", "偏高");
-				map.put("type", 1);
-				list.add(map);*/
 				//hrv
-				map=DataUtil.hrvData("hrv","心率变异性HRV",9, "ms",jfhealth.getHRV()==null?0:jfhealth.getHRV(),detail.get("age")==null?30:(int) detail.get("age"));
+				map=DataUtil.hrvData("hrv","心率变异性",9, "ms",jfhealth.getHRV(),detail.get("age")==null?30:(int) detail.get("age"));
 				list.add(map);
 				//情绪
-				map=new DataRow();
-				map.put("name", "emotion");
-				map.put("desc", "情绪");
-				map.put("category",10);
-				map.put("unit", "无");
-				map.put("lastestValue", "激动");
-				map.put("type", 1);
+				map=DataUtil.moodData("mood","情绪",10, "",jfhealth.getMood());
 				list.add(map);
 				//卡路里
-				map=DataUtil.mocrocirculationData("carrieroad","卡路里",11, "焦耳/天",equipmentData==null?0:equipmentData.getInt("carrieroad"));
+				map=DataUtil.carrieroadData("carrieroad","卡路里",11, "焦耳/天",equipmentData==null?0:equipmentData.getInt("carrieroad"));
 				list.add(map);
 				
 				detail.put("detail", list);
@@ -406,8 +417,10 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				eqMapper.deleteequse(u);//删除关系表数据
 				pushMapper.removePush(userId,mid);//删除通知数据
 				eq=eqMapper.queryUserEqLimit(mid);
-				eq.setFollow(1);
-				eqMapper.updateById(eq);
+				if(eq!=null){
+					eq.setFollow(1);
+					eqMapper.updateById(eq);
+				}
 			}else{
 				eqMapper.deleteequse(u);//删除关系表数据
 				pushMapper.removePush(userId,mid);//删除通知数据
@@ -425,31 +438,48 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer mid){
 			try {
 			//判断是否删除默认者
-			UserEq eq =eqMapper.ifuse(eqId);
+			UserEq eq =eqMapper.ifguardianship(eqId);
 			if(eq.getFollow()==1){//  是默认者
-				positionigMapper.deletePositionigInfo(imei);
-				pushMapper.deletePushInfo(userId);//执行这个,删除所有的预警关联
-				eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
-				userservice.deleteUser(userId);    //更改用户OK
+				int a = positionigMapper.deletePositionigInfo(imei);
+				System.out.println("默认者a"+a);
+				int a1 =pushMapper.deletePushInfo(userId);//执行这个,删除所有的预警关联
+				System.out.println("a1"+a1);
+				int a2 =eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
+				System.out.println("a2"+a2);
+				int a3 =userservice.deleteUser(userId);    //更改用户OK
+				System.out.println("a3"+a3);
 				jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
-				chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
-				jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
-				sensorstatusMapper.deleteSensorstatusInfo(imei);
+				int a4 =chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
+				System.out.println("a4"+a4);
+				int a5 =jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
+				System.out.println("a5"+a5);
+				int a6 =sensorstatusMapper.deleteSensorstatusInfo(imei);
+				System.out.println("a5"+a6);
 				eq=eqMapper.queryUserEqLimit(mid);
-				eq.setFollow(1);
-				eqMapper.updateById(eq);
+				if(eq!=null){
+					eq.setFollow(1);
+					eqMapper.updateById(eq);	
+				}
 			}else{
-				positionigMapper.deletePositionigInfo(imei);
-				pushMapper.deletePushInfo(userId);//执行这个,删除所有的预警关联
-				eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
-				userservice.deleteUser(userId);    //更改用户OK
+				int a = positionigMapper.deletePositionigInfo(imei);
+				System.out.println("不默认者a"+a);
+				int a1 = pushMapper.deletePushInfo(userId);//执行这个,删除所有的预警关联
+				System.out.println("a1"+a1);
+				int a2 = eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
+				System.out.println("a2"+a2);
+				int a3 = userservice.deleteUser(userId);    //更改用户OK
+				System.out.println("a3"+a3);
 				jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
-				chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
-				jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
-				sensorstatusMapper.deleteSensorstatusInfo(imei);
+				int a4 = chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
+				System.out.println("a4"+a4);
+				int a5 = jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
+				System.out.println("a5"+a5);
+				int a6 = sensorstatusMapper.deleteSensorstatusInfo(imei);
+				System.out.println("a6"+a6);
 			}
 			return true;
 		} catch (Exception e) {
+			System.out.println(e);
 			return false;
 		}
 	}
@@ -538,8 +568,5 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		}
 		return re;
 	}
-
-	
-
 
 }

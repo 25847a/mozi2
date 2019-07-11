@@ -24,7 +24,7 @@ public class Constant {
 	public final static int temperatureHig = 37;
 	public final static int temperatureLow = 36;
 	/**呼吸**/
-	public final static int respirationrateHig = 20;
+	public final static int respirationrateHig = 24;
 	public final static int respirationrateLow = 16;
 	/**0岁-29岁HRV**/
 	public final static int childHig = 29;

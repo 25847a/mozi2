@@ -81,7 +81,7 @@ public class DataUtil {
 		return map;
 	}
 	/**
-	 * 体温type=0(正常) type=1(异常)
+	 *  湿度type=0(正常) type=1(异常)
 	 * @return
 	 */
 	public static DataRow humidityData(String name,String desc,int category,String unit,float lastestValue){
@@ -152,7 +152,7 @@ public class DataUtil {
 	 */
 	public static DataRow mocrocirculationData(String name,String desc,int category,String unit,int lastestValue){
 		int type=1;
-		if(lastestValue<Constant.microcirculationLow && lastestValue>Constant.microcirculationHig){
+		if(lastestValue>Constant.microcirculationLow && lastestValue<Constant.microcirculationHig){
 			type=0;
 		}
 		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);
@@ -164,7 +164,7 @@ public class DataUtil {
 	 */
 	public static DataRow qxygenData(String name,String desc,int category,String unit,int lastestValue){
 		int type=1;
-		if(lastestValue<Constant.bloodOxygenLow && lastestValue>Constant.bloodOxygenHig){
+		if(lastestValue>Constant.bloodOxygenLow && lastestValue<Constant.bloodOxygenHig){
 			type=0;
 		}
 		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);
@@ -184,7 +184,7 @@ public class DataUtil {
 	 */
 	public static DataRow breatheData(String name,String desc,int category,String unit,int lastestValue){
 		int type=1;
-		if(lastestValue<Constant.respirationrateLow && lastestValue>Constant.respirationrateHig){
+		if(lastestValue>Constant.respirationrateLow && lastestValue<Constant.respirationrateHig){
 			type=0;
 		}
 		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);
