@@ -3,7 +3,7 @@
 <mapper namespace="com.sy.mapper.JfhealthdaoMapper" >
   <resultMap id="BaseResultMap" type="com.sy.pojo.Jfhealthdao" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="HRV" property="HRV" jdbcType="INTEGER" />
+    <result column="hrv" property="hrv" jdbcType="INTEGER" />
     <result column="sbp_ave" property="sbpAve" jdbcType="INTEGER" />
     <result column="dbp_ave" property="dbpAve" jdbcType="INTEGER" />
     <result column="Heartrate" property="heartrate" jdbcType="INTEGER" />
@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate, 
+    id, hrv, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate, 
     phone, imei, createtime
   </sql>
   <sql id="Blob_Column_List" >
@@ -104,8 +104,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="HRV != null" >
-        HRV,
+      <if test="hrv != null" >
+        hrv,
       </if>
       <if test="sbpAve != null" >
         sbp_ave,
@@ -142,8 +142,8 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="HRV != null" >
-        #{HRV,jdbcType=INTEGER},
+      <if test="hrv != null" >
+        #{hrv,jdbcType=INTEGER},
       </if>
       <if test="sbpAve != null" >
         #{sbpAve,jdbcType=INTEGER},
@@ -180,8 +180,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Jfhealthdao" >
     update jfhealthdao
     <set >
-      <if test="HRV != null" >
-        HRV = #{HRV,jdbcType=INTEGER},
+      <if test="hrv != null" >
+        hrv = #{hrv,jdbcType=INTEGER},
       </if>
       <if test="sbpAve != null" >
         sbp_ave = #{sbpAve,jdbcType=INTEGER},
@@ -217,8 +217,8 @@
   <update id="updateByPhone" parameterType="java.util.Map" >
     update jfhealthdao
     <set >
-      <if test="HRV != null" >
-        HRV = #{HRV,jdbcType=INTEGER},
+      <if test="hrv != null" >
+        hrv = #{hrv,jdbcType=INTEGER},
       </if>
       <if test="sbpAve != null" >
         sbp_ave = #{sbpAve,jdbcType=INTEGER},
@@ -244,7 +244,7 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.sy.pojo.Jfhealthdao" >
     update jfhealthdao
-    set HRV = #{HRV,jdbcType=INTEGER},
+    set hrv = #{hrv,jdbcType=INTEGER},
       sbp_ave = #{sbpAve,jdbcType=INTEGER},
       dbp_ave = #{dbpAve,jdbcType=INTEGER},
       Heartrate = #{heartrate,jdbcType=INTEGER},
@@ -259,7 +259,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.sy.pojo.Jfhealthdao" >
     update jfhealthdao
-    set HRV = #{HRV,jdbcType=INTEGER},
+    set hrv = #{hrv,jdbcType=INTEGER},
       sbp_ave = #{sbpAve,jdbcType=INTEGER},
       dbp_ave = #{dbpAve,jdbcType=INTEGER},
       Heartrate = #{heartrate,jdbcType=INTEGER},

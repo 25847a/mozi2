@@ -181,7 +181,7 @@ public class HealthtoolServiceImpl {
 						jfhealthdaoservice.updatajf(jfdao);
 					}
 					returnStr = "$R05|H1:" + jfdao.getHeartrate() + ",H2:" + jfdao.getSbpAve() + ",H3:" + jfdao.getDbpAve() + ",H4:"
-							+ jfdao.getBloodoxygen() + ",H5:" + jfdao.getMicrocirculation() + ",H6:" + jfdao.getHRV() + ",H8:" + jfdao.getRespirationrate() + ",H9:0,G1:"
+							+ jfdao.getBloodoxygen() + ",H5:" + jfdao.getMicrocirculation() + ",H6:" + jfdao.getHrv() + ",H8:" + jfdao.getRespirationrate() + ",H9:0,G1:"
 							+ row.getInt("stepWhen")  + ",G3:" + row.getInt("carrieroad") + "\r\n";
 				}
 				return returnStr;

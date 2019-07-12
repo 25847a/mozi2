@@ -59,7 +59,7 @@ public class JfhealthdaoControllor {
 		health.setDbpAve(dbpAve);
 		health.setCreatetime(new Date());
 		health.setHeartrate(heartrate);
-		health.setHRV(HRV);
+		health.setHrv(HRV);
 		health.setMicrocirculation(microcirculation);
 		health.setRespirationrate(respirationrate);
 		health.setPhone(Managementconstant.channel_id
@@ -74,7 +74,7 @@ public class JfhealthdaoControllor {
 	 */
 	@ResponseBody
 	@RequestMapping("updateJfhealthdao")
-	public ResultBase updateJfhealthdao( @RequestBody Jfhealthdao jfhealthdao) {
+	public ResultBase updateJfhealthdao(@RequestBody Jfhealthdao jfhealthdao) {
 		ResultBase re = new ResultBase();
 		try{
 			re=jfhealthdaoservice.updateJfhealthdao(jfhealthdao,re);
@@ -108,7 +108,7 @@ public class JfhealthdaoControllor {
 			jfhealthdao.setImei(user.getImei());
 			jfhealthdao.setHeartrate(80);//心率
 			jfhealthdao.setBloodoxygen(97);//血氧
-			jfhealthdao.setHRV(59);//Hrv
+			jfhealthdao.setHrv(59);//Hrv
 			jfhealthdao.setMicrocirculation(85);//微循环
 			jfhealthdao.setRespirationrate(16);//呼吸
 			jfhealthdao.setSbpAve(120);//高压
@@ -120,7 +120,7 @@ public class JfhealthdaoControllor {
 		Map<String,Object> data = new HashMap<>();
 			data.put("createtime", createtime);
 			data.put("calibration", user.getCalibration());
-			data.put("HRV", jfhealthdao.getHRV()==null?59:jfhealthdao.getHRV());
+			data.put("HRV", jfhealthdao.getHrv()==null?59:jfhealthdao.getHrv());
 			data.put("Heartrate", jfhealthdao.getHeartrate()==null?80:jfhealthdao.getHeartrate());
 			data.put("Bloodoxygen", jfhealthdao.getBloodoxygen()==null?97:jfhealthdao.getBloodoxygen());
 			data.put("microcirculation", jfhealthdao.getMicrocirculation()==null?85:jfhealthdao.getMicrocirculation());

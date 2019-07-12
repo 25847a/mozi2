@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.GroupPhoneMapper;
@@ -31,6 +34,8 @@ import com.sy.vo.LoginReturn;
 import com.sy.vo.Loginuse;
 import com.sy.vo.Usermanagement;
 import io.netty.channel.socket.SocketChannel;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "user", method = RequestMethod.POST)
@@ -51,6 +56,25 @@ public class UserController {
 	private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	
+	/**
+	 * 测试接口
+	 * @param u
+	 * @return
+	 */
+	@RequestMapping("forcedUpdate")
+	@ResponseBody
+	public JSONObject forcedUpdate() {
+		JSONObject json = new JSONObject();
+		try {
+			int forcedUpdate=0;
+			json.put("code", 200);
+			json.put("message", "获取成功");
+			json.put("forcedUpdate", forcedUpdate);
+		} catch (Exception e) {
+			logger.error("UserController>>>>>>>>>>>>>>>>>>>>addUser",e);
+		}
+		return json;
+	}
 	@RequestMapping(value = "selectImei")
 	@ResponseBody
 	public ResultBase selectImei(@RequestBody DataRow map) {
@@ -366,7 +390,7 @@ public class UserController {
 			String jfdataUpdateTime = (String) user.getJfdataUpdateTime();
 			SocketChannel c = (SocketChannel) NettyChannelMap.get(imei);
 			if(c!=null){
-				c.writeAndFlush("$R27|" + jfdataUpdateTime + "\r\n");
+				c.writeAndFlush("$R27|" + 2 + "\r\n");
 			int i = 0;
 			while (true) {
 				i++;

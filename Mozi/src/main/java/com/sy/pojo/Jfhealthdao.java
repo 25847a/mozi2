@@ -14,19 +14,24 @@ public class Jfhealthdao extends Model<Jfhealthdao>{
 	private static final long serialVersionUID = 1L;
 	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
-
-    private Integer HRV;
-
+	
+	 @TableField(value="HRV")
+    private Integer hrv;
+    
+    @TableField(value="sbp_ave")
     private Integer sbpAve;
-
+    
+    @TableField(value="dbp_ave")
     private Integer dbpAve;
-
+    
+    @TableField(value="Heartrate")
     private Integer heartrate;
-
+    
+    @TableField(value="Bloodoxygen")
     private Integer bloodoxygen;
 
     private Integer microcirculation;
-
+    
     private Integer respirationrate;
 
     private String phone;
@@ -47,12 +52,12 @@ public class Jfhealthdao extends Model<Jfhealthdao>{
 
    
 
-    public Integer getHRV() {
-		return HRV;
+	public Integer getHrv() {
+		return hrv;
 	}
 
-	public void setHRV(Integer hRV) {
-		HRV = hRV;
+	public void setHrv(Integer hrv) {
+		this.hrv = hrv;
 	}
 
 	public Integer getSbpAve() {

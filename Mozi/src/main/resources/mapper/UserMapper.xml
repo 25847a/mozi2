@@ -102,7 +102,7 @@
   </select>
   <!--  点击卡片查询 -->
   <select id="queryUserData" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-	SELECT tp.id,tp.imei,tp.name,tp.avatar,tt.charges,tt.integral,tt.member,tp.calibration,tp.jfdataUpdateTime,td.allNotifyOn,
+	SELECT tp.id,tp.imei,tp.name,tp.avatar,CONCAT(tt.charges,'元') AS charges,tt.integral,tt.member,tp.calibration,tp.jfdataUpdateTime,td.allNotifyOn,
 	(SELECT tp.typeof FROM user_eq tp
 	INNER JOIN (SELECT * FROM user_eq WHERE user_id=#{userId}) tt
 	ON tp.eq_id=tt.eq_id

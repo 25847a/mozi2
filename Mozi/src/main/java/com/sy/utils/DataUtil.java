@@ -152,7 +152,7 @@ public class DataUtil {
 	 */
 	public static DataRow mocrocirculationData(String name,String desc,int category,String unit,int lastestValue){
 		int type=1;
-		if(lastestValue>Constant.microcirculationLow){
+		if(lastestValue>=Constant.microcirculationLow){
 			type=0;
 		}
 		DataRow map=healthyData(name,desc,category,unit,lastestValue,type);

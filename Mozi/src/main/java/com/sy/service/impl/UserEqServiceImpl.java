@@ -455,6 +455,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				System.out.println("a5"+a5);
 				int a6 =sensorstatusMapper.deleteSensorstatusInfo(imei);
 				System.out.println("a5"+a6);
+				jMapperNew.deletejfhealth("mozistar"+userId);
 				eq=eqMapper.queryUserEqLimit(mid);
 				if(eq!=null){
 					eq.setFollow(1);
@@ -476,6 +477,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				System.out.println("a5"+a5);
 				int a6 = sensorstatusMapper.deleteSensorstatusInfo(imei);
 				System.out.println("a6"+a6);
+				jMapperNew.deletejfhealth("mozistar"+userId);
 			}
 			return true;
 		} catch (Exception e) {

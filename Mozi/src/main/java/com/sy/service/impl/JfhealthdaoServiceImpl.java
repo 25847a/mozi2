@@ -1,20 +1,15 @@
 package com.sy.service.impl;
 
 import java.util.Date;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.common.ResultBase;
 import com.sy.mapper.JfhealthdaoMapper;
-import com.sy.mapper.PushMapper;
 import com.sy.pojo.Jfhealthdao;
-import com.sy.pojo.Push;
 import com.sy.pojo.User;
 import com.sy.service.JfhealthdaoService;
 import com.sy.service.UserEqService;
@@ -28,7 +23,7 @@ public class JfhealthdaoServiceImpl extends ServiceImpl<JfhealthdaoMapper, Jfhea
 
 	@Override
 	public boolean addJfhealthdao(Jfhealthdao j) {
-		Integer num = jfhealthdaoMapper.insertSelective(j);
+		Integer num = jfhealthdaoMapper.insert(j);
 		if (num != 0) {
 			return true;
 		} else {
@@ -61,7 +56,7 @@ public class JfhealthdaoServiceImpl extends ServiceImpl<JfhealthdaoMapper, Jfhea
 			health.setDbpAve(76);
 			health.setCreatetime(new Date());
 			health.setHeartrate(70);
-			health.setHRV(59);
+			health.setHrv(59);
 			health.setMicrocirculation(60);
 			health.setRespirationrate(70);
 			health.setPhone(account);

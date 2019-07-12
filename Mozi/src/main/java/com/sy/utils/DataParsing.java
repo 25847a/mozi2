@@ -170,7 +170,7 @@ public class DataParsing {
 	 */
 	public static Jfhealth DataHrv(Jfhealth health,Jfhealthdao jfdao,String hrv){
 		int hrvcon =  Integer.parseInt(hrv);//hrv监测值
-		int hrvcorrect= jfdao.getHRV();//hrv校准值
+		int hrvcorrect= jfdao.getHrv();//hrv校准值
 		if(hrvcon==0){//45-60
 			if(hrvcorrect<45){
 				hrvcon=(int)(45+Math.random()*(60-45+1));
@@ -287,9 +287,9 @@ public class DataParsing {
 		jfdao.setDbpAve(Integer.valueOf(bloodxygen1)<60?((int) (60+Math.random()*(85-60+1))):Integer.valueOf(bloodxygen1));//低压值(int) (75+Math.random()*(88-75+1))
 		jfdao.setCreatetime(new Date());
 		if(Integer.valueOf(hrv)<40){
-			jfdao.setHRV((int)(40+Math.random()*(50-40+1)));// 呼吸频率
+			jfdao.setHrv((int)(40+Math.random()*(50-40+1)));// 呼吸频率
 		}else{
-			jfdao.setHRV(Integer.valueOf(hrv));//HRV
+			jfdao.setHrv(Integer.valueOf(hrv));//HRV
 		}
 		if(Integer.valueOf(microcir)<80){
 			jfdao.setMicrocirculation((int)(80+Math.random()*(90-80+1)));// 微循环   >80
