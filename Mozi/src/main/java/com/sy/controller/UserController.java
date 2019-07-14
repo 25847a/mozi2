@@ -390,7 +390,7 @@ public class UserController {
 			String jfdataUpdateTime = (String) user.getJfdataUpdateTime();
 			SocketChannel c = (SocketChannel) NettyChannelMap.get(imei);
 			if(c!=null){
-				c.writeAndFlush("$R27|" + 2 + "\r\n");
+				c.writeAndFlush("$R27|" + jfdataUpdateTime + "\r\n");
 			int i = 0;
 			while (true) {
 				i++;
