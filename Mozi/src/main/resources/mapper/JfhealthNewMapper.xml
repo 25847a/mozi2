@@ -191,8 +191,4 @@
   	SELECT *FROM jfhealth_new WHERE phone =#{alias} ORDER BY updatetime LIMIT 0,1
   </select>
   
-  <delete id="deletejfhealth" parameterType="java.lang.String" >
-  	delete from jfhealth where phone = #{phone}
-  </delete>
-  
 </mapper>

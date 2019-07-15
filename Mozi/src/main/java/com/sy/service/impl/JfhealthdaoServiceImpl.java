@@ -109,14 +109,6 @@ public class JfhealthdaoServiceImpl extends ServiceImpl<JfhealthdaoMapper, Jfhea
 		jfhealthdaoMapper.updateByPrimaryKey(bean);
 		
 	}
-
-	@Override
-	public void delectjfhealthdao(String phone) {
-		EntityWrapper<Jfhealthdao> ew = new EntityWrapper<Jfhealthdao>();
-		ew.eq("phone", phone);
-		int aa = jfhealthdaoMapper.delete(ew);
-			System.out.println("aa"+aa);
-	}
 	/**
 	 * 修改人工学习
 	 * @return

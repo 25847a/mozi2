@@ -20,7 +20,6 @@ import com.sy.mapper.SensorstatusMapper;
 import com.sy.mapper.WaveformMapper;
 import com.sy.nettyulit.BluetoothMap;
 import com.sy.nettyulit.NettyChannelMap;
-import com.sy.pojo.Bluetooth;
 import com.sy.pojo.Equipment;
 import com.sy.pojo.EquipmentData;
 import com.sy.pojo.JfhealthNew;
@@ -29,14 +28,12 @@ import com.sy.pojo.Sensorstatus;
 import com.sy.pojo.Uploaddownload;
 import com.sy.pojo.User;
 import com.sy.pojo.Waveform;
-import com.sy.service.BluetoothService;
 import com.sy.service.EquipmentDataService;
 import com.sy.service.EquipmentService;
 import com.sy.service.PositionigService;
 import com.sy.service.UploaddownloadService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
-import com.sy.service.impl.BluetoothServiceImpl;
 import com.sy.service.impl.EquipmentDataServiceImpl;
 import com.sy.service.impl.EquipmentServiceImpl;
 import com.sy.service.impl.HealthtoolServiceImpl;
@@ -176,26 +173,7 @@ public class TcpController {
 							
 						} else if (instruction.equals("T06")) {
 						} else if (instruction.equals("T07")) {
-							BluetoothService bluetoothservice = new BluetoothServiceImpl();
-							Bluetooth b = bluetoothservice.getBluetoothid(imei);
-							if (b != null) {
-								b.setBluetoothnd(texts[2]);
-								b.setRecentime(new Date());
-								b.setImei(imei);
-								if (bluetoothservice.updateBluetooth(b)) {
-
-									channelHandlerContext.writeAndFlush("T07|OK\r\n");
-								} else {
-									channelHandlerContext.writeAndFlush("T07|ERR\r\n");
-								}
-							} else {
-								b = new Bluetooth();
-								b.setBluetoothnd(texts[2]);
-								b.setRecentime(new Date());
-								b.setCratetime(new Date());
-								b.setImei(imei);
-								bluetoothservice.addBluetooth(b);
-							}
+						
 						} else if (instruction.equals("T08")) {
 							Equipment e = equipmentMapper.getequipment(imei);
 							try {

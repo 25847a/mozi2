@@ -26,6 +26,6 @@ public interface JfhealthdaoService extends IService<Jfhealthdao>{
 	 */
 	public ResultBase updateJfhealthdao(Jfhealthdao jfhealthdao,ResultBase re)throws Exception;
 	
-	public void  delectjfhealthdao(String phone);
+//	public void  delectjfhealthdao(String phone);
 	
 }

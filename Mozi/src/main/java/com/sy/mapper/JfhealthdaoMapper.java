@@ -1,16 +1,14 @@
 package com.sy.mapper;
 
 import java.util.Map;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sy.pojo.Jfhealthdao;
 public interface JfhealthdaoMapper extends BaseMapper<Jfhealthdao>{
     int deleteByPrimaryKey(Integer id);
     //根据imei和phone删除校准值
-    int deleteJfhealthdaoInfo(@Param(value = "imei")String imei,@Param(value = "phone")String phone);
+    int deleteJfhealthdaoInfo(String phone);
   
-  //  int insertSelective(Jfhealthdao record);
 
     Jfhealthdao selectByPrimaryKey(Integer id);
 
@@ -42,6 +40,6 @@ public interface JfhealthdaoMapper extends BaseMapper<Jfhealthdao>{
      */
     public Jfhealthdao JfhealthdaoInfo(@Param("imei")String imei,@Param("account")String account);
     public Jfhealthdao getjfhealthdao(String phone);
-	@Delete("delete from jfhealthdao where phone = #{phone}")
-    public void delectjfhealthdao(String phone);
+	//@Delete("delete from jfhealthdao where phone = #{phone}")
+ //   public void delectjfhealthdao(String phone);
 }

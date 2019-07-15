@@ -19,6 +19,7 @@ import com.sy.pojo.Push;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.service.EquipmentService;
+import com.sy.service.MigratingDataService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.utils.DataRow;
@@ -35,7 +36,9 @@ public class UserEqController {
 	private UserEqService usereqservice;
 	@Autowired
 	private PushMapper pushMapper;
-
+	@Autowired
+	MigratingDataService migratingDataService;
+	
 	private final static Logger logger = LoggerFactory.getLogger(UserEqController.class);
 	/**
 	 * 关注列表
@@ -79,12 +82,15 @@ public class UserEqController {
 	 */
 	@RequestMapping(value = "deleteequse")
 	@ResponseBody
-	public ResultBase deleteguardian(@RequestBody DataRow map) {
+	public ResultBase deleteUsersObserver(@RequestBody DataRow map) {
 		ResultBase re = new ResultBase();
 		try {
-		re = usereqservice.deleteguardian111111(map,re);
+			//迁移数据
+		//	boolean result = migratingDataService.migratingData(map);
+		//	System.out.println(result);
+			re = usereqservice.deleteUsersObserver(map,re);
 		} catch (Exception e) {
-			logger.error("UserEqController>>>>>>>>>>>>>>>>>>>>deleteguardian",e);
+			logger.error("UserEqController>>>>>>>>>>>>>>>>>>>>deleteUsersObserver",e);
 		}
 		return re;
 	}

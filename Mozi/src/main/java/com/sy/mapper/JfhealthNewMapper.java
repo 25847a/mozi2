@@ -10,14 +10,10 @@ public interface JfhealthNewMapper extends BaseMapper<JfhealthNew>{
 
     int deleteByPrimaryKey(Integer id);
 
-  //  int insertSelective(JfhealthNew record);
-
 
     Jfhealth selectByPrimaryKey(Integer id);
 
-
     int updateByPrimaryKeySelective(JfhealthNew record);
-
 
     int updateByPrimaryKey(JfhealthNew record);
     
@@ -34,7 +30,4 @@ public interface JfhealthNewMapper extends BaseMapper<JfhealthNew>{
    	
    	@Select("select * from jfhealth_new where phone=#{phone}")
    	public JfhealthNew selectJfhealthNew(String phone);
-
-	void deletejfhealth(String string);
-   	
 }

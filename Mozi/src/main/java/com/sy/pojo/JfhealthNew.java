@@ -68,7 +68,7 @@ public class JfhealthNew extends Model<JfhealthNew>{
     /**
    	 * 数据更新时间
    	 */
-    @TableField(value = "updatetime",fill = FieldFill.UPDATE )
+    @TableField(value = "updatetime",fill = FieldFill.INSERT_UPDATE )
     private Date updatetime;
     /**
 	 * 体检报告

@@ -94,9 +94,9 @@
     delete from jfhealthdao
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <!-- 根据imei和phone删除校准值 -->
+  <!-- 根据phone删除校准值 -->
   <delete id="deleteJfhealthdaoInfo" parameterType="java.lang.String" >
-   DELETE FROM jfhealthdao where imei= #{imei,jdbcType=VARCHAR} and phone=#{phone,jdbcType=VARCHAR}
+   DELETE FROM jfhealthdao where phone=#{phone,jdbcType=VARCHAR}
   </delete>
   <insert id="insertSelective" parameterType="com.sy.pojo.Jfhealthdao" >
     insert into jfhealthdao

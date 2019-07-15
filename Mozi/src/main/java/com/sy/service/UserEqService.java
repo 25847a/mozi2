@@ -112,7 +112,7 @@ public interface UserEqService extends IService<UserEq>{
 	 * @param map
 	 * @return
 	 */
-	public ResultBase deleteguardian111111(DataRow map,ResultBase re)throws Exception;
+	public ResultBase deleteUsersObserver(DataRow map,ResultBase re)throws Exception;
 	
 	public boolean deleteequsetype(Integer eqId, Integer userId,Integer typeof)throws Exception;
 	

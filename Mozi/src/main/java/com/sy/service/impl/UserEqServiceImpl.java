@@ -31,14 +31,10 @@ import com.sy.nettyulit.NettyChannelMap;
 import com.sy.pojo.Equipment;
 import com.sy.pojo.EquipmentRecord;
 import com.sy.pojo.JfhealthNew;
-import com.sy.pojo.Message;
-import com.sy.pojo.Push;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.pojo.Waveform;
 import com.sy.service.EquipmentService;
-import com.sy.service.JfhealthdaoService;
-import com.sy.service.MessageService;
 import com.sy.service.UserEqService;
 import com.sy.service.UserService;
 import com.sy.service.UseravatarService;
@@ -54,8 +50,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	private UseravatarService useravatarservice;
 	@Autowired
 	private JfhealthNewMapper jMapperNew;
-	@Autowired
-	private JfhealthdaoService jfhealthFdaoservice;
 	@Autowired
 	private UserEqMapper eqMapper;
 	@Autowired
@@ -295,10 +289,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 */
 	@Override
 	public ResultData<List<Userdata>> selectuserdata(DataRow map,ResultData<List<Userdata>> re) throws Exception {
-	//	User user = userservice.selectById(map.getInt("userId"));
 		DataRow detail = new DataRow();
-		
-		//if(user.getRole().equals("使用者")){
 		if(map.containsKey("eqId")){
 			Equipment equipment= equipmentMapper.selectById(map.getInt("eqId"));
 			User user =usermapper.getUser(equipment.getImei());
@@ -313,11 +304,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 			}else{
 				detail.put("type_of", eq.getTypeof());
 			}
-		//	UserEq  userEq =eqMapper.queryUserEqAlias(user.getId());
-			/*EntityWrapper<Message> ew = new EntityWrapper<Message>();
-			ew.eq("alias", map.getInt("alias"));
-			ew.eq("`read`", 0);
-			ew.eq("DATE_FORMAT(createtime,'%Y-%m-%d')", "DATE_FORMAT(NOW(),'%Y-%m-%d')");*/
 			int messageCount =messageMapper.queryMessageCount(map.getInt("alias"));
 			System.out.println(messageCount);
 			detail.put("messageCount", messageCount);
@@ -326,7 +312,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 			 if(detail!=null){
 				 String positioning_data=positionigMapper.selectimeiPositionig(detail.getString("imei"));
 				 if(positioning_data==null){
-					 detail.put("positioning_data", "0,0");
+					 detail.put("positioning_data", "39.9036342978:116.3977262459");
 				 }else{
 					 detail.put("positioning_data", positioning_data);
 				 }
@@ -366,7 +352,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				//步数
 				map=DataUtil.stepWhenData("Step_when","计步",5, "步",equipmentData==null?0: equipmentData.getInt("stepWhen"));
 				list.add(map);
-				
 				//血压
 				map=DataUtil.bloodData("pressure","血压",6, "mmHg",jfhealth.getSbpAve(),jfhealth.getDbpAve());
 				list.add(map);
@@ -385,7 +370,6 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				//卡路里
 				map=DataUtil.carrieroadData("carrieroad","卡路里",11, "焦耳/天",equipmentData==null?0:equipmentData.getInt("carrieroad"));
 				list.add(map);
-				
 				detail.put("detail", list);
 				Waveform waveform =waveformMapper.queryWaveformInfo(Integer.valueOf(String.valueOf(detail.get("userId"))));
 				detail.put("waveform", waveform==null?"0":waveform.getData());
@@ -437,6 +421,8 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 */
 	public boolean deleteguardian(String imei,Integer eqId, Integer userId,Integer mid){
 			try {
+				EntityWrapper<JfhealthNew> ew = new EntityWrapper<JfhealthNew>();
+				ew.eq("phone", "mozistar"+userId);
 			//判断是否删除默认者
 			UserEq eq =eqMapper.ifguardianship(eqId);
 			if(eq.getFollow()==1){//  是默认者
@@ -448,36 +434,38 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				System.out.println("a2"+a2);
 				int a3 =userservice.deleteUser(userId);    //更改用户OK
 				System.out.println("a3"+a3);
-				jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
 				int a4 =chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
 				System.out.println("a4"+a4);
-				int a5 =jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
+				int a5 =jfhealthdaoMapper.deleteJfhealthdaoInfo("mozistar" + userId);
 				System.out.println("a5"+a5);
 				int a6 =sensorstatusMapper.deleteSensorstatusInfo(imei);
 				System.out.println("a5"+a6);
-				jMapperNew.deletejfhealth("mozistar"+userId);
+				jMapperNew.delete(ew);
 				eq=eqMapper.queryUserEqLimit(mid);
 				if(eq!=null){
 					eq.setFollow(1);
 					eqMapper.updateById(eq);	
 				}
 			}else{
-				int a = positionigMapper.deletePositionigInfo(imei);
+				int a = positionigMapper.deletePositionigInfo(imei);//删除定位
 				System.out.println("不默认者a"+a);
-				int a1 = pushMapper.deletePushInfo(userId);//执行这个,删除所有的预警关联
+				int a1 = pushMapper.deletePushInfo(userId);//删除所有的预警关联
 				System.out.println("a1"+a1);
-				int a2 = eqMapper.deleteguardian(eqId); //OK	//删除关系表数据
+				int a2 = eqMapper.deleteguardian(eqId); //删除关系表数据
 				System.out.println("a2"+a2);
-				int a3 = userservice.deleteUser(userId);    //更改用户OK
+				int a3 = userservice.deleteUser(userId);//更改用户OK==删除用户
 				System.out.println("a3"+a3);
-				jfhealthFdaoservice.delectjfhealthdao("mozistar" + userId);//OK// 删除校准数据
 				int a4 = chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
 				System.out.println("a4"+a4);
-				int a5 = jfhealthdaoMapper.deleteJfhealthdaoInfo(imei, "mozistar" + userId);
+				int a5 = jfhealthdaoMapper.deleteJfhealthdaoInfo( "mozistar" + userId);//删除校准数据
 				System.out.println("a5"+a5);
-				int a6 = sensorstatusMapper.deleteSensorstatusInfo(imei);
+				int a6 = sensorstatusMapper.deleteSensorstatusInfo(imei);//设备的返回数据保存的表
 				System.out.println("a6"+a6);
-				jMapperNew.deletejfhealth("mozistar"+userId);
+				jMapperNew.delete(ew);
+				
+				//chat(APP发文本信息到设备)、comment(评论表)、equipment_data、equipment_record、group(朋友圈群组)
+				//group_relation(朋友圈群组关联)、jfhealth、member(会员制度)、pushrecord(预警历史记录表)、realhealth(有效真实数据)
+				//user、usercode、waveform
 			}
 			return true;
 		} catch (Exception e) {
@@ -526,7 +514,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 * @return
 	 */
 	@Override
-	public ResultBase deleteguardian111111(DataRow map, ResultBase re) throws Exception {
+	public ResultBase deleteUsersObserver(DataRow map, ResultBase re) throws Exception {
 		Integer typeof = map.getInt("type_of");
 		Integer mid = map.getInt("mid");		
 		Equipment e = equipmentService.selectquipmentimei(map.getString("imei"));
