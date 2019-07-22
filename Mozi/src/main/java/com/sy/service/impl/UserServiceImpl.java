@@ -132,13 +132,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 					}
 					Usercode uservode = new Usercode();
 					uservode.setCode(u.getCode());
-					uservode.setPhoen(u.getPhone());
+					uservode.setPhoen(u.getAccount());
 					if (usercodeservic.ifusercode(uservode)) {
 						u.setPassword(MD5Util.MD5(u.getPassword()));
 						boolean status = userService.insert(u);
 						if (status) {
 							EntityWrapper<User> ew = new EntityWrapper<User>();
-							ew.eq("password", MD5Util.MD5(u.getPassword()));
+						//	ew.eq("password", MD5Util.MD5(u.getPassword()));
+							ew.eq("password", u.getPassword());
 							ew.eq("account", u.getAccount());
 							ew.eq("isDelete", 0);
 							User ulog = userService.selectOne(ew);
@@ -359,9 +360,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 		}
 		
 	}
-	/*private final String url = "http://gw.api.taobao.com/router/rest";
-	private final String appkey = "23573164";
-	private final String secret = "a81e2de9bc2ed29d394e212314a37226";*/
 	@Override
 	public  Integer sendSMS(String phone) {
 
