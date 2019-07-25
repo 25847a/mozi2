@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.common.ResultData;
 import com.sy.mapper.PushRecordMapper;
 import com.sy.pojo.PushRecord;
@@ -15,7 +15,7 @@ import com.sy.service.PushRecordService;
 import com.sy.utils.DataRow;
 
 @Service
-public class PushRecordServiceImpl implements PushRecordService {
+public class PushRecordServiceImpl extends ServiceImpl<PushRecordMapper, PushRecord> implements PushRecordService {
 
 
 	@Autowired
@@ -60,19 +60,19 @@ public class PushRecordServiceImpl implements PushRecordService {
 						if(time.equals(list.get(o).getString("time"))){
 							if(list.get(o).getInt("heartUnusual")!=0){
 								dataRow = new DataRow();
-								dataRow.put("heartUnusual", "心率: "+list.get(o).getInt("heartUnusual")+"次/分");
+								dataRow.put("unusual", "心率: "+list.get(o).getInt("heartUnusual")+"次/分");
 								dataRow.put("createtime", list.get(o).getString("createtime"));
 								listRow.add(dataRow);
 							}
 							if(list.get(o).getInt("highBloodUnusual")!=0){
 								dataRow = new DataRow();
-								dataRow.put("highBloodUnusual", "舒张压: "+list.get(o).getInt("highBloodUnusual")+"mmHg");
+								dataRow.put("unusual", "舒张压: "+list.get(o).getInt("highBloodUnusual")+"mmHg");
 								dataRow.put("createtime", list.get(o).getString("createtime"));
 								listRow.add(dataRow);
 							}
 							if(list.get(o).getInt("lowBloodUnusual")!=0){
 								dataRow = new DataRow();
-								dataRow.put("lowBloodUnusual", "收缩压: "+list.get(o).getInt("lowBloodUnusual")+"mmHg");
+								dataRow.put("unusual", "收缩压: "+list.get(o).getInt("lowBloodUnusual")+"mmHg");
 								dataRow.put("createtime", list.get(o).getString("createtime"));
 								listRow.add(dataRow);
 							}

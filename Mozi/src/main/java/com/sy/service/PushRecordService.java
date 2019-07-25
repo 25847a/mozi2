@@ -1,6 +1,8 @@
 package com.sy.service;
 
 import java.sql.SQLException;
+
+import com.baomidou.mybatisplus.service.IService;
 import com.sy.common.ResultData;
 import com.sy.pojo.PushRecord;
 import com.sy.utils.DataRow;
@@ -10,7 +12,7 @@ import com.sy.utils.DataRow;
  * @author Administrator
  *
  */
-public interface PushRecordService {
+public interface PushRecordService extends IService<PushRecord>{
 	
 	/**
 	 * 插入预警历史记录

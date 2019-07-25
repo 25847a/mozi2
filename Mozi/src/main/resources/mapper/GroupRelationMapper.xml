@@ -42,6 +42,10 @@
  	<delete id="deletegroupRelation" parameterType="java.util.HashMap">
  		delete from group_relation where groupId=#{groupId}
  	</delete>
+ 	<!--删除朋友圈群组关联Id -->
+ 	<delete id="deletegroupRelationId" parameterType="java.lang.Long">
+ 		delete from group_relation where groupId=#{groupId}
+ 	</delete>
  	<!--删除个人朋友圈群组关联 -->
  	<delete id="deletegroupRelationInfo" parameterType="com.sy.pojo.GroupRelation">
  		delete from group_relation where groupId=#{groupId} and relationUserId=#{relationUserId}

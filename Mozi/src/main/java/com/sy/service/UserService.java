@@ -109,7 +109,11 @@ public interface UserService  extends IService<User>{
 	public User selectaccount(String account);
 
 	User getUser(String imei);
-
+	/**
+	 * 更改用户状态
+	 * @param userId
+	 * @return
+	 */
 	public Integer deleteUser(Integer userId);
 	
 	public Integer selectId(String imei);

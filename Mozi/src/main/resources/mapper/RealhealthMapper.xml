@@ -16,150 +16,16 @@
     <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
      <result column="Amedicalreport" property="amedicalreport" jdbcType="LONGVARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
    <sql id="Base_Column_List" >
     id, HRV, sbp_ave, dbp_ave, Heartrate, Bloodoxygen, microcirculation, respirationrate,mood
     phone, imei, createtime
   </sql>
-  <sql id="Blob_Column_List" >
-    Amedicalreport
-  </sql>
-  <!-- 有效真实数据该表只为内部看，未修改的天津真实数据 -->
-  <insert id="insertRealhealth" parameterType="com.sy.pojo.Realhealth" >
-    insert into realhealth
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="HRV != null" >
-        HRV,
-      </if>
-      <if test="sbpAve != null" >
-        sbp_ave,
-      </if>
-      <if test="dbpAve != null" >
-        dbp_ave,
-      </if>
-      <if test="heartrate != null" >
-        Heartrate,
-      </if>
-      <if test="bloodoxygen != null" >
-        Bloodoxygen,
-      </if>
-      <if test="microcirculation != null" >
-        microcirculation,
-      </if>
-      <if test="respirationrate != null" >
-        respirationrate,
-      </if>
-      <if test="phone != null" >
-        phone,
-      </if>
-      <if test="imei != null" >
-        imei,
-      </if>
-      <if test="createtime != null" >
-        createtime,
-      </if>
-      <if test="amedicalreport != null" >
-        Amedicalreport,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="HRV != null" >
-        #{HRV,jdbcType=INTEGER},
-      </if>
-      <if test="sbpAve != null" >
-        #{sbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="dbpAve != null" >
-        #{dbpAve,jdbcType=INTEGER},
-      </if>
-      <if test="heartrate != null" >
-        #{heartrate,jdbcType=INTEGER},
-      </if>
-      <if test="bloodoxygen != null" >
-        #{bloodoxygen,jdbcType=INTEGER},
-      </if>
-      <if test="microcirculation != null" >
-        #{microcirculation,jdbcType=INTEGER},
-      </if>
-      <if test="respirationrate != null" >
-        #{respirationrate,jdbcType=INTEGER},
-      </if>
-      <if test="phone != null" >
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="imei != null" >
-        #{imei,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null" >
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="amedicalreport != null" >
-        #{amedicalreport,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  
+	<!-- 查询真实数据集合 -->
+	<select id="queryRealhealthList" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from realhealth where phone = #{phone}
+	</select>
+   <!-- 删除有效真实数据 -->
+  <delete id="deleteRealhealth" parameterType="java.lang.String" >
+  	delete from realhealth where phone = #{phone}
+  </delete>
 </mapper>

@@ -59,7 +59,7 @@
   </select>
   <!-- 查询预警记录的记录数 -->
    <select id="queryPushRecordList" parameterType="com.sy.utils.DataRow" resultType="com.sy.utils.DataRow">
-  		SELECT heartUnusual,highBloodUnusual,lowBloodUnusual,DATE_FORMAT(createtime,'%H:%d') as createtime,DATE_FORMAT(createTime,'%Y-%m-%d') as time FROM pushrecord
+  		SELECT heartUnusual,highBloodUnusual,lowBloodUnusual,DATE_FORMAT(createtime,'%H:%i') as createtime,DATE_FORMAT(createTime,'%Y-%m-%d') as time FROM pushrecord
   		WHERE userId =#{userId}
   		<choose>
   			<when test="createtime!=null and createtime!=''">
@@ -71,4 +71,12 @@
   		</choose>
   		 ORDER BY time DESC
   </select>
+  <!-- 查询预警记录的list集合 -->
+   <select id="queryPushRecordInfoList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  		SELECT * FROM pushrecord WHERE userId =#{userId}
+  </select>
+  <!-- 删除预警记录 -->
+  <delete id="deletePushrecord" parameterType="java.lang.Integer" >
+  	delete from pushrecord where userId = #{userId}
+  </delete>
 </mapper>

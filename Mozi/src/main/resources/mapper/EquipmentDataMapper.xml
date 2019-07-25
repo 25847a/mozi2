@@ -68,4 +68,8 @@
   		   CASE WHEN SUM(carrieroad) IS NULL THEN 0 ELSE SUM(carrieroad) END as carrieroad
   	FROM equipment_data WHERE user_id=#{userId} AND createtime BETWEEN CONCAT(DATE_FORMAT(NOW(),'%Y-%m-%d'),' 00:00:00') AND CONCAT(DATE_FORMAT(NOW(),'%Y-%m-%d'),' 59:59:59')
   </select>
+   <!-- 获取当天步数和卡里路list集合-->
+  <select id="queryEquipmentDataList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM equipment_data  WHERE user_id=#{userId}
+  </select>
 </mapper>

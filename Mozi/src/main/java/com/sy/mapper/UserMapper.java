@@ -31,8 +31,12 @@ public interface UserMapper extends BaseMapper<User>{
 	public User ifUser(String account);
 
 	public User landingUser(User u);
-
-	public User getpassword(Map m);
+	/**
+	 * 查询密码
+	 * @param m
+	 * @return
+	 */
+	public User getpassword(Map<String,Object> m);
 
 
 	public List<User> phoenselectuser(String phone);

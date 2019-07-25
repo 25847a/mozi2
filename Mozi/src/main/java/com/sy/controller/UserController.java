@@ -117,7 +117,7 @@ public class UserController {
 	
 	
 	/**
-	 * 注册用户1111
+	 * 注册用户1111测试事务没用的接口
 	 * @param u
 	 * @return
 	 */
@@ -402,13 +402,13 @@ public class UserController {
 					}
 				}
 				if(i==40){
-					re.setMessage("设置失败");
+					re.setMessage("无法连接设备,待设备网络通畅再试");
 					re.setCode(400);
 					break;
 				}
 			}
 			}else{
-				re.setMessage("设置失败");
+				re.setMessage("无法连接设备,请检测设备网络是否在线");
 				re.setCode(400);
 			}
 		}catch (Exception e) {

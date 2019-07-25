@@ -56,5 +56,8 @@
   <select id="queryWaveformInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
   	select * from waveform where userId = #{userId}
   </select>
-  
+  <!-- 删除波形图数据 -->
+  <delete id="deleteWaveform" parameterType="java.lang.Integer" >
+  	delete from waveform where userId = #{userId}
+  </delete>
 </mapper>

@@ -1,16 +1,11 @@
 package com.sy.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
+import java.sql.SQLException;
 
 import com.sy.pojo.Usercode;
-import com.sy.pojo.UsercodeExample;
 
 public interface UsercodeMapper {
-	int countByExample(UsercodeExample example);
 
-	int deleteByExample(UsercodeExample example);
 
 	int deleteByPrimaryKey(Integer id);
 
@@ -18,15 +13,7 @@ public interface UsercodeMapper {
 
 	int insertSelective(Usercode record);
 
-	List<Usercode> selectByExample(UsercodeExample example);
-
 	Usercode selectByPrimaryKey(Integer id);
-
-	int updateByExampleSelective(@Param("record") Usercode record,
-			@Param("example") UsercodeExample example);
-
-	int updateByExample(@Param("record") Usercode record,
-			@Param("example") UsercodeExample example);
 
 	int updateByPrimaryKeySelective(Usercode record);
 
@@ -35,4 +22,11 @@ public interface UsercodeMapper {
 	public Usercode ifusercodeczai(Usercode c);
 
 	public Usercode ifusercode(Usercode code);
+	/**
+	 *  删除获取验证码
+	 * @param phoen
+	 * @return
+	 * @throws SQLException
+	 */
+	public int deleteUsercode(int phoen)throws SQLException;
 }

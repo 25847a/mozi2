@@ -85,10 +85,6 @@
 	    SELECT id,alias,allNotifyOn,heartNotifyOn,boolPreNotifyOn,fallNotifyOn,
 		heartLowThd,heartHigThd,boolLowThd,boolHigThd,createtime,updatetime FROM push WHERE alias= # {alias} and userId = #{userId}
   	</select>
-  	<!-- 插入推送表 -->
-  	<insert id="insertPush" parameterType="java.util.Map">
-  		INSERT INTO push (alias,createtime,updatetime) VALUES (#{userId},NOW(),NOW())
-  	</insert>
   
   <insert id="addPushMap" parameterType="java.util.Map" >
     insert into push

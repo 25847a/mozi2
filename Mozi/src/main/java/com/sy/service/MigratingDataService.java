@@ -1,7 +1,6 @@
 package com.sy.service;
 
 import java.sql.SQLException;
-
 import com.sy.utils.DataRow;
 
 /**
@@ -16,5 +15,5 @@ public interface MigratingDataService {
 	 * @return
 	 * @throws SQLException
 	 */
-	public boolean migratingData(DataRow map)throws SQLException;
+	public boolean migratingData(DataRow dataRow)throws SQLException;
 }

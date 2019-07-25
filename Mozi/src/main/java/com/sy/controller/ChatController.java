@@ -79,7 +79,9 @@ public class ChatController {
 	@ResponseBody
 	public ResultData<T> selectchat(@RequestBody Map m ){
 		ResultData<T> re =new ResultData<T>();
-		List<Chat> cs =chatservice.selectChat((String)m.get("imei"));
+		List<Chat> cs;
+		try {
+			cs = chatservice.selectChat((String)m.get("imei"));
 		if(cs !=null && cs.size()>0 ) {
 			re.setCode(200);
 			re.setMessage("获取最新数据成功！！！");
@@ -87,6 +89,9 @@ public class ChatController {
 		}else {
 			re.setCode(200);
 			re.setMessage("当前设备未有通讯记录！！！");
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return re;
 	}

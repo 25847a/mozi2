@@ -11,7 +11,14 @@
 	
   </resultMap>
   <sql id="Base_Column_List" >
-    id, userId, "charges", integral, member,endTime
+    id, userId, charges, integral, member,endTime
   </sql>
-  
+  <!-- 获取会员制度信息 -->
+  <select id="queryMemberInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select * from member where userId=#{userId}
+  </select>
+  <!-- 删除会员制度信息 -->
+  <delete id="deleteMember" parameterType="java.lang.Integer" >
+  	delete from member where userId = #{userId}
+  </delete>
 </mapper>

@@ -59,9 +59,15 @@ public interface JfhealthMapper extends BaseMapper<Jfhealth>{
     
     
     public Integer getcount(String keyWord);
+    
     public Integer getcount2(Map map);
-
-   	public List<Jfhealth> list(Map map);
+    /**
+     * 获取健康数据集合
+     * @param phone
+     * @return
+     * @throws SQLException
+     */
+   	public List<Jfhealth> queryJfhealthlist(String phone)throws SQLException;
    	
    	public Jfhealth newjfhealth(String imei);
    	/**
@@ -70,5 +76,6 @@ public interface JfhealthMapper extends BaseMapper<Jfhealth>{
    	 * @return
    	 */
    	public Jfhealth pushJfhealth(String alias)throws SQLException;
+   	
    	public void deletejfhealth(String phone);
 }

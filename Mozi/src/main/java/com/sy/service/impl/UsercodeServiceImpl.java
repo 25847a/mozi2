@@ -16,7 +16,7 @@ public class UsercodeServiceImpl implements UsercodeService{
 	public boolean addUsercode(Usercode code) {
 		Usercode olcode =usercodeMapper.ifusercodeczai(code);
 		if(olcode ==null){
-			usercodeMapper.insertSelective(code);
+			usercodeMapper.insert(code);
 		}else{
 			olcode.setCode(code.getCode());
 			

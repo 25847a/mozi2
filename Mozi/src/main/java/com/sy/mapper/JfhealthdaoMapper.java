@@ -39,7 +39,10 @@ public interface JfhealthdaoMapper extends BaseMapper<Jfhealthdao>{
      * @return
      */
     public Jfhealthdao JfhealthdaoInfo(@Param("imei")String imei,@Param("account")String account);
+    /**
+     * 通过用户ID查询
+     * @param phone
+     * @return
+     */
     public Jfhealthdao getjfhealthdao(String phone);
-	//@Delete("delete from jfhealthdao where phone = #{phone}")
- //   public void delectjfhealthdao(String phone);
 }

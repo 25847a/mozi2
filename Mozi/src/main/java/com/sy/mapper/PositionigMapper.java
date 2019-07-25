@@ -1,5 +1,6 @@
 package com.sy.mapper;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -32,5 +33,13 @@ public interface PositionigMapper extends BaseMapper<Positionig>{
     int updateByPrimaryKey(Positionig record);
     
     public String selectimeiPositionig(String imei) ;
+    
     public String Positionigstate(String imei);
+    /**
+     * 通过imei查询所有数据
+     * @param imei
+     * @return
+     * @throws SQLException
+     */
+    public List<Positionig> queryPositionigList(String imei)throws SQLException;
 }

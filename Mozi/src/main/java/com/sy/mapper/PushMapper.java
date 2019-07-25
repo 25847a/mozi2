@@ -35,11 +35,13 @@ public interface PushMapper extends BaseMapper<Push>{
 	 * @throws SQLException
 	 */
 	public int deletePushInfo(Integer userId)throws SQLException;
-	public int insertPush(Map<String,Object> map)throws SQLException;
+	
+	
 	public int addPushMap(Map<String,Object> map)throws SQLException;
 	
 	@Select("select * from push where userId = #{userId}")
 	public List<Push> selectPushList(Integer userId);
+	
 	@Delete("delete from push where userId = #{userId} and alias = #{alias}")
 	public Integer removePush(@Param("userId")Integer userId,@Param("alias")Integer alias);
 	

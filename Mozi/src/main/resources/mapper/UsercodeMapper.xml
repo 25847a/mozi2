@@ -67,20 +67,6 @@
   <sql id="Base_Column_List" >
     id, phoen, code
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.UsercodeExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from usercode
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -90,12 +76,6 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from usercode
     where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.sy.pojo.UsercodeExample" >
-    delete from usercode
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
   </delete>
   <insert id="insert" parameterType="com.sy.pojo.Usercode" >
     insert into usercode (id, phoen, code
@@ -128,38 +108,6 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.sy.pojo.UsercodeExample" resultType="java.lang.Integer" >
-    select count(*) from usercode
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update usercode
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.phoen != null" >
-        phoen = #{record.phoen,jdbcType=VARCHAR},
-      </if>
-      <if test="record.code != null" >
-        code = #{record.code,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update usercode
-    set id = #{record.id,jdbcType=INTEGER},
-      phoen = #{record.phoen,jdbcType=VARCHAR},
-      code = #{record.code,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Usercode" >
     update usercode
     <set >
@@ -185,4 +133,8 @@
   <select id="ifusercode" parameterType="com.sy.pojo.Usercode" resultType="com.sy.pojo.Usercode" >
   	select * from  usercode   where  phoen= #{phoen} and  code = #{code}
   </select>
+  <!-- 删除获取验证码 -->
+  <delete id="deleteUsercode" parameterType="java.lang.Integer" >
+  	delete from usercode where phoen = #{phoen}
+  </delete>
 </mapper>

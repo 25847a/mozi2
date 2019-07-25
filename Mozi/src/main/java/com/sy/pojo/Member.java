@@ -31,7 +31,7 @@ public class Member extends Model<Member>{
     /**
      * 会员等级(0.普通会员  1.高级会员 2.黄金会员 3.VIP会员)
      */
-    private Date member;
+    private Integer member;
     /**
      * 用户到期时间
      */
@@ -87,13 +87,13 @@ public class Member extends Model<Member>{
 
 
 
-	public Date getMember() {
+	public Integer getMember() {
 		return member;
 	}
 
 
 
-	public void setMember(Date member) {
+	public void setMember(Integer member) {
 		this.member = member;
 	}
 

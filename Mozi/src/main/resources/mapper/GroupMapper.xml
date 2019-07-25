@@ -75,8 +75,16 @@
  	<select id="queryGroupInfo" parameterType="java.lang.Long" resultType="com.sy.pojo.Group">
  		select * from `group` where id=#{groupId}
  	</select>
+ 	<!-- 通过使用者ID查询群信息 -->
+ 	<select id="queryGroupList" parameterType="java.lang.Integer" resultType="com.sy.pojo.Group">
+ 		select * from `group` where userId=#{userId}
+ 	</select>
  	<!--删除群 -->
  	<delete id="deleteGroup" parameterType="java.util.HashMap">
  		delete from `group` where id=#{groupId}
+ 	</delete>
+ 	<!--删除群 -->
+ 	<delete id="deleteGroupInfo" parameterType="java.lang.Integer">
+ 		delete from `group` where userId=#{userId}
  	</delete>
 </mapper>

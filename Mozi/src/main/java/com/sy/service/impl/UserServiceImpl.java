@@ -172,7 +172,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 				re.setCode(405);
 			}
 		} else {
-			re.setMessage("账号格式有错误！！！");
+			re.setMessage("账号格式有错误！！！");	
 			re.setCode(350);
 		}
 		return re;

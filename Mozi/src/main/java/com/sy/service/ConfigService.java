@@ -5,7 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.service.IService;
 import com.sy.pojo.Config;
 
-public interface ConfigService  extends IService<Config>{
+public interface ConfigService extends IService<Config>{
 	/**
 	 * 通过ID查询
 	 * @param id

@@ -1,8 +1,18 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Chat {
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+@TableName("chat")
+public class Chat extends Model<Chat>{
+	
+	private static final long serialVersionUID = 1L;
+	
+	@TableId(value="id", type= IdType.AUTO)
     private Integer id;
 
     private String imei;
@@ -42,4 +52,10 @@ public class Chat {
     public void setText(String text) {
         this.text = text == null ? null : text.trim();
     }
+
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
+	}
 }

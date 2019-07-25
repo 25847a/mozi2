@@ -113,6 +113,13 @@ public interface UserEqService extends IService<UserEq>{
 	 * @return
 	 */
 	public ResultBase deleteUsersObserver(DataRow map,ResultBase re)throws Exception;
+	/**
+	 * 获取即将被删除的用户一切信息
+	 * @param map
+	 * @return
+	 */
+	public DataRow queryUsersObserverInfo(DataRow map)throws Exception;
+	
 	
 	public boolean deleteequsetype(Integer eqId, Integer userId,Integer typeof)throws Exception;
 	

@@ -18,4 +18,13 @@
 	ORDER BY createtime DESC LIMIT 0,1
   </select>
   
+   <!-- 查询湿度,体温集合 -->
+  <select id="queryEquipmentRecordList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM equipment_record WHERE userId=#{userId}
+  </select>
+  
+  
+  <delete id="deleteEquipmentRecord" parameterType="java.lang.Integer" >
+     delete from equipment_record  where userId =#{userId}
+  </delete>
 </mapper>

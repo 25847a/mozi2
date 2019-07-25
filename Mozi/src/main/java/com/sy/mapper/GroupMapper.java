@@ -47,6 +47,13 @@ public interface GroupMapper {
 	 */
 	public int updateCountGroup(Long groupId)throws SQLException;
 	/**
+	 * 通过使用者ID查询群信息
+	 * @param groupId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Group> queryGroupList(int userId)throws SQLException;
+	/**
 	 * 通过ID查询群信息
 	 * @param groupId
 	 * @return
@@ -60,4 +67,11 @@ public interface GroupMapper {
 	 * @throws SQLException
 	 */
 	public int deleteGroup(Map<String, Object> map)throws SQLException;
+	/**
+	 * 删除群
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
+	public int deleteGroupInfo(int userId)throws SQLException;
 }

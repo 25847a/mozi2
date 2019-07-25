@@ -14,23 +14,40 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.sy.common.ResultBase;
 import com.sy.common.ResultData;
 import com.sy.mapper.ChatMapper;
+import com.sy.mapper.CommentMapper;
 import com.sy.mapper.EquipmentDataMapper;
 import com.sy.mapper.EquipmentMapper;
 import com.sy.mapper.EquipmentRecordMapper;
+import com.sy.mapper.GroupMapper;
+import com.sy.mapper.GroupRelationMapper;
+import com.sy.mapper.JfhealthMapper;
 import com.sy.mapper.JfhealthNewMapper;
 import com.sy.mapper.JfhealthdaoMapper;
+import com.sy.mapper.MemberMapper;
 import com.sy.mapper.MessageMapper;
 import com.sy.mapper.PositionigMapper;
 import com.sy.mapper.PushMapper;
+import com.sy.mapper.PushRecordMapper;
+import com.sy.mapper.RealhealthMapper;
 import com.sy.mapper.SensorstatusMapper;
 import com.sy.mapper.UserEqMapper;
 import com.sy.mapper.UserMapper;
 import com.sy.mapper.UsercodeMapper;
 import com.sy.mapper.WaveformMapper;
 import com.sy.nettyulit.NettyChannelMap;
+import com.sy.pojo.Chat;
 import com.sy.pojo.Equipment;
+import com.sy.pojo.EquipmentData;
 import com.sy.pojo.EquipmentRecord;
+import com.sy.pojo.Jfhealth;
 import com.sy.pojo.JfhealthNew;
+import com.sy.pojo.Jfhealthdao;
+import com.sy.pojo.Member;
+import com.sy.pojo.Positionig;
+import com.sy.pojo.Push;
+import com.sy.pojo.PushRecord;
+import com.sy.pojo.Realhealth;
+import com.sy.pojo.Sensorstatus;
 import com.sy.pojo.User;
 import com.sy.pojo.UserEq;
 import com.sy.pojo.Waveform;
@@ -61,7 +78,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	@Autowired
 	private EquipmentService equipmentService;
 	@Autowired
-	private UserMapper usermapper;
+	private UserMapper userMapper;
 	@Autowired
 	private PushMapper pushMapper;
 	@Autowired
@@ -86,6 +103,20 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	MessageMapper messageMapper;
 	@Autowired
 	EquipmentRecordMapper equipmentRecordMapper;
+	@Autowired
+	JfhealthMapper jfhealthMapper;
+	@Autowired
+	MemberMapper memberMapper;
+	@Autowired 
+	RealhealthMapper realhealthMapper;
+	@Autowired
+	PushRecordMapper pushRecordMapper;
+	@Autowired
+	CommentMapper commentMapper;
+	@Autowired
+	GroupMapper groupMapper;
+	@Autowired
+	GroupRelationMapper groupRelationMapper;
 	/**
 	 * 关注列表
 	 * @param u
@@ -125,7 +156,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 	 */
 	@Override
 	public ResultBase updateUserFollow(DataRow map, ResultBase re) throws Exception {
-		User user =userservice.selectById(map.getInt("userId"));
+		User user =userMapper.selectById(map.getInt("userId"));
 		if(user!=null){
 			EntityWrapper<Equipment> ew = new EntityWrapper<Equipment>();
 			ew.eq("imei", user.getImei());
@@ -159,12 +190,12 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		if (eqMapper == null) {
 			eqMapper = (UserEqMapper) webApplicationContext.getBean("userEqMapper");
 		}
-		if (usermapper == null) {
-			usermapper = (UserMapper) webApplicationContext.getBean("userMapper");
+		if (userMapper == null) {
+			userMapper = (UserMapper) webApplicationContext.getBean("userMapper");
 		}
 		try {
 			UserEq ue = eqMapper.ifguardianship(eqId);
-			return usermapper.selectByPrimaryKey(ue.getUserId());
+			return userMapper.selectByPrimaryKey(ue.getUserId());
 		} catch (Exception e) {
 			return null;
 		}
@@ -265,7 +296,7 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 			Equipment eq = equipmentMapper.selectById(eqId);
 			if (eq != null) {
 				String imei = eq.getImei();
-				User user = usermapper.getUser(imei);
+				User user = userMapper.getUser(imei);
 				if (user != null) {
 					user.setRole("使用者");
 					lu.add(user);
@@ -292,9 +323,9 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 		DataRow detail = new DataRow();
 		if(map.containsKey("eqId")){
 			Equipment equipment= equipmentMapper.selectById(map.getInt("eqId"));
-			User user =usermapper.getUser(equipment.getImei());
+			User user =userMapper.getUser(equipment.getImei());
 			map.put("userId", user.getId());
-			detail=usermapper.queryUsersInfo(map);
+			detail=userMapper.queryUsersInfo(map);
 			EntityWrapper<UserEq> ewq = new EntityWrapper<UserEq>();
 			ewq.eq("user_id", map.getInt("alias"));
 			ewq.eq("eq_id", map.getInt("eqId"));
@@ -440,7 +471,8 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				System.out.println("a5"+a5);
 				int a6 =sensorstatusMapper.deleteSensorstatusInfo(imei);
 				System.out.println("a5"+a6);
-				jMapperNew.delete(ew);
+				int a7 =jMapperNew.delete(ew);
+				System.out.println("a7"+a7);
 				eq=eqMapper.queryUserEqLimit(mid);
 				if(eq!=null){
 					eq.setFollow(1);
@@ -453,19 +485,33 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 				System.out.println("a1"+a1);
 				int a2 = eqMapper.deleteguardian(eqId); //删除关系表数据
 				System.out.println("a2"+a2);
-				int a3 = userservice.deleteUser(userId);//更改用户OK==删除用户
+				boolean a3 = userservice.deleteById(userId);//直接删除
 				System.out.println("a3"+a3);
 				int a4 = chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
 				System.out.println("a4"+a4);
-				int a5 = jfhealthdaoMapper.deleteJfhealthdaoInfo( "mozistar" + userId);//删除校准数据
+				int a5 = jfhealthdaoMapper.deleteJfhealthdaoInfo("mozistar" + userId);//删除校准数据
 				System.out.println("a5"+a5);
 				int a6 = sensorstatusMapper.deleteSensorstatusInfo(imei);//设备的返回数据保存的表
 				System.out.println("a6"+a6);
-				jMapperNew.delete(ew);
-				
+				int a7 =jMapperNew.delete(ew);
+				System.out.println("a7"+a7);
+				int a8 =chatMapper.deleteCharInfo(imei);
+				System.out.println("a8"+a8);
+				commentMapper.deleteComment(userId);
+				equipmentDataMapper.deletedata(userId);
+				equipmentRecordMapper.deleteEquipmentRecord(userId);
+				jfhealthMapper.deletejfhealth("mozistar" + userId);
+				memberMapper.deleteMember(userId);
+				pushRecordMapper.deletePushrecord(userId);
+				realhealthMapper.deleteRealhealth("mozistar" + userId);
+				waveformMapper.deleteWaveform(userId);
+				groupMapper.deleteGroupInfo(userId);
+			//	groupRelationMapper.deletegroupRelationId(groupId);
+			//	List<Group> groupMapper.queryGroupList(userId);
 				//chat(APP发文本信息到设备)、comment(评论表)、equipment_data、equipment_record、group(朋友圈群组)
 				//group_relation(朋友圈群组关联)、jfhealth、member(会员制度)、pushrecord(预警历史记录表)、realhealth(有效真实数据)
-				//user、usercode、waveform
+				//user、usercode(不需要删除)、waveform
+			//	哒哒哒哒哒哒多多
 			}
 			return true;
 		} catch (Exception e) {
@@ -473,7 +519,54 @@ public class UserEqServiceImpl extends ServiceImpl<UserEqMapper, UserEq> impleme
 			return false;
 		}
 	}
-
+	/**
+	 * 获取即将被删除的用户一切信息
+	 * @param map
+	 * @return
+	 */
+	public DataRow queryUsersObserverInfo(DataRow map)throws Exception{
+		int userId=map.getInt("userId");
+		DataRow dataRow = new DataRow();
+		List<Positionig> positionig = positionigMapper.queryPositionigList(map.getString("imei"));
+		dataRow.put("positionig", positionig);
+		List<Push> push = pushMapper.selectPushList(userId);
+		dataRow.put("push", push);
+		User user = userMapper.selectById(userId);
+		dataRow.put("user", user);
+		List<Chat> chat = chatMapper.selectChat(map.getString("imei"));
+		dataRow.put("chat", chat);
+		Jfhealthdao dao = jfhealthdaoMapper.getjfhealthdao("mozistar"+userId);
+		dataRow.put("dao", dao);
+		Sensorstatus sensor =sensorstatusMapper.selecttimesensorstatus(map.getString("imei"));
+		dataRow.put("sensor", sensor);
+		List<EquipmentData> equipmentData = equipmentDataMapper.queryEquipmentDataList(userId);
+		dataRow.put("equipmentData", equipmentData);
+		List<EquipmentRecord> equipmentRecord = equipmentRecordMapper.queryEquipmentRecordList(userId);
+		dataRow.put("equipmentRecord", equipmentRecord);
+		List<Jfhealth> jfhealth =jfhealthMapper.queryJfhealthlist("mozistar"+userId);
+		dataRow.put("jfhealth", jfhealth);
+		Member member =memberMapper.queryMemberInfo(userId);
+		dataRow.put("member", member);
+		List<PushRecord> pushRecord =pushRecordMapper.queryPushRecordInfoList(userId);
+		dataRow.put("pushRecord", pushRecord);
+		List<Realhealth> realhealth =realhealthMapper.queryRealhealthList("mozistar"+userId);
+		dataRow.put("realhealth", realhealth);
+		Waveform waveform = waveformMapper.queryWaveformInfo(userId);
+		dataRow.put("waveform", waveform);
+		JfhealthNew jfhealthNew = jMapperNew.selectJfhealthNew("mozistar"+userId);
+		dataRow.put("jfhealthNew", jfhealthNew);
+		return dataRow;
+		
+	}
+	
+	public static void main(String[] args) {
+		JfhealthNew j = 	new JfhealthNew();
+		j.setHRV(444);
+		Object o =j;
+		JfhealthNew jj = (JfhealthNew) o;
+		System.out.println(jj.getHRV());
+	}
+	
 	/**
 	 * 取消与这个设备的关联关系
 	 */

@@ -1,12 +1,17 @@
 package com.sy.pojo;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-public class PushRecord {
+@TableName("pushrecord")
+public class PushRecord extends Model<PushRecord>{
+	
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 主键ID
 	 */
@@ -68,6 +73,11 @@ public class PushRecord {
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+	@Override
+	protected Serializable pkVal() {
+		// TODO Auto-generated method stub
+		return this.id;
 	}
 		
 }

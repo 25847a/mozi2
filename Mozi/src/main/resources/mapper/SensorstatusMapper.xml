@@ -69,136 +69,11 @@
   <sql id="Base_Column_List" >
     id, imei, h, g, adddate
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.sy.pojo.SensorstatusExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from sensorstatus
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from sensorstatus
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from sensorstatus
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
   <!-- 取消关注删除用户的相关信息 -->
   <delete id="deleteSensorstatusInfo" parameterType="java.lang.String" >
    DELETE FROM sensorstatus WHERE imei=#{imei}
   </delete>
   
-  <delete id="deleteByExample" parameterType="com.sy.pojo.SensorstatusExample" >
-    delete from sensorstatus
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insertSelective" parameterType="com.sy.pojo.Sensorstatus" >
-    insert into sensorstatus
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="imei != null" >
-        imei,
-      </if>
-      <if test="h != null" >
-        h,
-      </if>
-      <if test="g != null" >
-        g,
-      </if>
-      <if test="adddate != null" >
-        adddate,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="imei != null" >
-        #{imei,jdbcType=VARCHAR},
-      </if>
-      <if test="h != null" >
-        #{h,jdbcType=VARCHAR},
-      </if>
-      <if test="g != null" >
-        #{g,jdbcType=VARCHAR},
-      </if>
-      <if test="adddate != null" >
-        #{adddate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.sy.pojo.SensorstatusExample" resultType="java.lang.Integer" >
-    select count(*) from sensorstatus
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update sensorstatus
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.imei != null" >
-        imei = #{record.imei,jdbcType=VARCHAR},
-      </if>
-      <if test="record.h != null" >
-        h = #{record.h,jdbcType=VARCHAR},
-      </if>
-      <if test="record.g != null" >
-        g = #{record.g,jdbcType=VARCHAR},
-      </if>
-      <if test="record.adddate != null" >
-        adddate = #{record.adddate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update sensorstatus
-    set id = #{record.id,jdbcType=INTEGER},
-      imei = #{record.imei,jdbcType=VARCHAR},
-      h = #{record.h,jdbcType=VARCHAR},
-      g = #{record.g,jdbcType=VARCHAR},
-      adddate = #{record.adddate,jdbcType=TIMESTAMP}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sy.pojo.Sensorstatus" >
-    update sensorstatus
-    <set >
-      <if test="imei != null" >
-        imei = #{imei,jdbcType=VARCHAR},
-      </if>
-      <if test="h != null" >
-        h = #{h,jdbcType=VARCHAR},
-      </if>
-      <if test="g != null" >
-        g = #{g,jdbcType=VARCHAR},
-      </if>
-      <if test="adddate != null" >
-        adddate = #{adddate,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
   <update id="updateByPrimaryKey" parameterType="com.sy.pojo.Sensorstatus" >
     update sensorstatus
     set imei = #{imei,jdbcType=VARCHAR},
@@ -208,11 +83,8 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selecttimesensorstatus" parameterType="java.lang.String"  resultType="com.sy.pojo.Sensorstatus" >
-     SELECT *  
-		FROM sensorstatus where imei=#{imei}
+     SELECT * FROM sensorstatus where imei=#{imei}
 		ORDER BY adddate desc 
-		LIMIT 0, 1
-  
   </select>
   
 </mapper>

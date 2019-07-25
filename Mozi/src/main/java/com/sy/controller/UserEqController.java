@@ -38,7 +38,6 @@ public class UserEqController {
 	private PushMapper pushMapper;
 	@Autowired
 	MigratingDataService migratingDataService;
-	
 	private final static Logger logger = LoggerFactory.getLogger(UserEqController.class);
 	/**
 	 * 关注列表
@@ -85,10 +84,10 @@ public class UserEqController {
 	public ResultBase deleteUsersObserver(@RequestBody DataRow map) {
 		ResultBase re = new ResultBase();
 		try {
-			//迁移数据
-		//	boolean result = migratingDataService.migratingData(map);
-		//	System.out.println(result);
+			//先把数据查询出来
+		//	DataRow dataRow =usereqservice.queryUsersObserverInfo(map);
 			re = usereqservice.deleteUsersObserver(map,re);
+		//	migratingDataService.migratingData(dataRow);
 		} catch (Exception e) {
 			logger.error("UserEqController>>>>>>>>>>>>>>>>>>>>deleteUsersObserver",e);
 		}

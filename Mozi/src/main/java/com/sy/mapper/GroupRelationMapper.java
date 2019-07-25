@@ -43,6 +43,13 @@ public interface GroupRelationMapper {
 	 * @return
 	 * @throws SQLException
 	 */
+	public int deletegroupRelationId(long groupId)throws SQLException;
+	/**
+	 * 删除朋友圈群组关联
+	 * @param map
+	 * @return
+	 * @throws SQLException
+	 */
 	public int deletegroupRelation(Map<String, Object> map)throws SQLException;
 	/**
 	 * 删除朋友圈群组关联

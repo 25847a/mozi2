@@ -468,29 +468,9 @@
                  </foreach>
   		</if> 
   </select>
-  <!-- 获取想要的页面数据 -->
-  <select id="list" parameterType="java.util.Map" resultMap="BaseResultMap">
-   select id,HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,microcirculation,respirationrate,imei,Amedicalreport,
-    createtime,substring(phone,9,10) as phone FROM jfhealth where 1 =1
-    
-   		<if test="keyWord != null and keyWord != '' ">
-   			 and  CONCAT(imei)  LIKE concat(concat('%',#{keyWord}),'%')
-  		</if> 
-   		<if test="time != null and time != '' ">
-   			 and  createtime  LIKE concat(concat('%',#{time}),'%')
-  		</if> 
-   		<if test="phone != null and phone != '' ">
-   			 and  phone  LIKE concat(concat('%',#{phone}),'%')
-  		</if> 
-   		<if test="list != null" >
-   			 and  imei in
-                  <foreach item="item" index="index" collection="list" 
-                         open="(" separator="," close=")">
-                        #{item}
-                 </foreach>
-  		</if> 
-  		 order by id desc
-   limit #{pageNo},#{pageSize} 
+  <!-- 获取健康数据集合 -->
+  <select id="queryJfhealthlist" parameterType="java.lang.String" resultMap="BaseResultMap">
+   SELECT * FROM jfhealth where phone=#{phone}
   </select>
   <select id="newjfhealth" parameterType="java.lang.String"  resultMap="BaseResultMap">
 	 SELECT *  

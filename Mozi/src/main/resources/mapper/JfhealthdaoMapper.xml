@@ -282,11 +282,9 @@
    <select id="JfhealthdaoInfo" parameterType="java.lang.String"  resultMap="BaseResultMap">
   	 SELECT * FROM jfhealthdao where imei=#{imei} and phone=#{account}
 		ORDER BY createtime desc 
-		LIMIT 0, 1
   </select>
    <select id="getjfhealthdao" parameterType="java.lang.String"  resultMap="BaseResultMap">
    SELECT * FROM jfhealthdao where  phone=#{phone}
 		ORDER BY createtime desc 
-		LIMIT 0, 1
   </select>
 </mapper>

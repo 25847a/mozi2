@@ -1,15 +1,44 @@
 package com.sy.service.impl;
 
 import java.sql.SQLException;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.sy.date.converter.DataSourceType;
 import com.sy.date.converter.DynamicDataSourceHolder;
+import com.sy.mapper.ChatMapper;
 import com.sy.mapper.JfhealthNewMapper;
+import com.sy.mapper.JfhealthdaoMapper;
+import com.sy.mapper.MemberMapper;
+import com.sy.mapper.MessageMapper;
+import com.sy.mapper.SensorstatusMapper;
+import com.sy.mapper.UserMapper;
+import com.sy.mapper.UsercodeMapper;
+import com.sy.mapper.WaveformMapper;
+import com.sy.pojo.Chat;
+import com.sy.pojo.EquipmentData;
+import com.sy.pojo.EquipmentRecord;
+import com.sy.pojo.Jfhealth;
 import com.sy.pojo.JfhealthNew;
+import com.sy.pojo.Jfhealthdao;
+import com.sy.pojo.Member;
+import com.sy.pojo.Positionig;
+import com.sy.pojo.Push;
+import com.sy.pojo.PushRecord;
+import com.sy.pojo.Realhealth;
+import com.sy.pojo.Sensorstatus;
+import com.sy.pojo.User;
+import com.sy.pojo.Waveform;
+import com.sy.service.ChatService;
+import com.sy.service.EquipmentDataService;
+import com.sy.service.EquipmentRecordService;
+import com.sy.service.JfhealthService;
 import com.sy.service.MigratingDataService;
+import com.sy.service.PositionigService;
+import com.sy.service.PushRecordService;
+import com.sy.service.PushService;
+import com.sy.service.RealhealthService;
+import com.sy.service.UseravatarService;
 import com.sy.utils.DataRow;
 
 /**
@@ -18,10 +47,42 @@ import com.sy.utils.DataRow;
  */
 @Service
 public class MigratingDataServiceImpl implements MigratingDataService{
-
 	@Autowired
 	private JfhealthNewMapper jfNewMapper;
-	
+	@Autowired
+	private EquipmentDataService equipmentDataService;
+	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private PushService pushService;
+	@Autowired
+	ChatMapper chatMapper;
+	@Autowired
+	JfhealthdaoMapper jfhealthdaoMapper;
+	@Autowired
+	SensorstatusMapper sensorstatusMapper;
+	@Autowired
+	UsercodeMapper usercodeMapper;
+	@Autowired
+	PositionigService positionigService;
+	@Autowired
+	WaveformMapper waveformMapper;
+	@Autowired
+	UseravatarService useravatarService;
+	@Autowired
+	MessageMapper messageMapper;
+	@Autowired
+	EquipmentRecordService equipmentRecordService;
+	@Autowired
+	JfhealthService jfhealthService;
+	@Autowired
+	MemberMapper memberMapper;
+	@Autowired 
+	RealhealthService realhealthService;
+	@Autowired
+	PushRecordService pushRecordService;
+	@Autowired
+	ChatService chatService;
 	/**
 	 * 迁移数据
 	 * @param map
@@ -29,38 +90,74 @@ public class MigratingDataServiceImpl implements MigratingDataService{
 	 * @throws SQLException
 	 */
 	@Override
-	public boolean migratingData(DataRow map) throws SQLException {
-		//
-	//	JfhealthNew j =jfNewMapper.selectJfhealthNew("mozistar"+userId);
-		JfhealthNew j = new JfhealthNew();
-		j.setPhone("mozistar28971");
-		j.setImei("518110320191461");	
-		DynamicDataSourceHolder.setDbType(DataSourceType.SLAVE);
-		int a111 = jfNewMapper.insert(j);
-		System.out.println(a111);
-		DynamicDataSourceHolder.clearDataSource();
-		
-		/*int a = positionigMapper.deletePositionigInfo(imei);//删除定位
-		System.out.println("不默认者a"+a);
-		int a1 = pushMapper.deletePushInfo(userId);//删除所有的预警关联
-		System.out.println("a1"+a1);
-		int a2 = eqMapper.deleteguardian(eqId); //删除关系表数据
-		System.out.println("a2"+a2);
-		int a3 = userservice.deleteUser(userId);//更改用户OK==删除用户
-		System.out.println("a3"+a3);
-		int a4 = chatMapper.deleteCharInfo(imei);//APP发文本信息到设备的表
-		System.out.println("a4"+a4);
-		int a5 = jfhealthdaoMapper.deleteJfhealthdaoInfo( "mozistar" + userId);//删除校准数据
-		System.out.println("a5"+a5);
-		int a6 = sensorstatusMapper.deleteSensorstatusInfo(imei);//设备的返回数据保存的表
-		System.out.println("a6"+a6);
-		jMapperNew.delete(ew);*/
-	//	jMapperNew.deletejfhealth("mozistar"+userId);//删除最新的健康数据
-		
-		//chat(APP发文本信息到设备)、comment(评论表)、equipment_data、equipment_record、group(朋友圈群组)
-		//group_relation(朋友圈群组关联)、jfhealth、member(会员制度)、pushrecord(预警历史记录表)、realhealth(有效真实数据)
-		//user、usercode、waveform
-		return false;
+	public boolean migratingData(DataRow dataRow) throws SQLException {
+		DynamicDataSourceHolder.setDbType(DataSourceType.SLAVE);//切换从数据库
+		JfhealthNew j =(JfhealthNew) dataRow.get("jfhealthNew");
+		if(j!=null){
+			jfNewMapper.insert(j);
+		}
+		User user = (User) dataRow.get("user");
+		if(user!=null){
+			userMapper.insert(user);
+		}
+		Jfhealthdao dao = (Jfhealthdao) dataRow.get("dao");
+		if(dao!=null){
+			jfhealthdaoMapper.insert(dao);
+		}
+		Sensorstatus sensor= (Sensorstatus) dataRow.get("sensor");
+		if(sensor!=null){
+			sensorstatusMapper.insert(sensor);
+		}
+		Member member= (Member) dataRow.get("member");
+		if(member!=null){
+			memberMapper.insert(member);
+		}
+		Waveform waveform = (Waveform) dataRow.get("waveform");
+		if(waveform!=null){
+			waveformMapper.insert(waveform);
+		}
+		List<Chat> chat = (List<Chat>) dataRow.get("chat");
+		if(!chat.isEmpty()){
+			boolean as =chatService.insertBatch(chat);
+			System.out.println(as);
+		}
+		List<Positionig> p = (List<Positionig>) dataRow.get("positionig");
+		if(!p.isEmpty()){
+			boolean as =positionigService.insertBatch(p);
+			System.out.println(as);
+		}
+		List<Push> push  = (List<Push>) dataRow.get("push");
+		if(!push.isEmpty()){
+			boolean as =pushService.insertBatch(push);
+			System.out.println(as);
+		}
+		List<EquipmentData> equipmentData= (List<EquipmentData>) dataRow.get("equipmentData");
+		if(!equipmentData.isEmpty()){
+			boolean as =equipmentDataService.insertBatch(equipmentData);
+			System.out.println(as);
+		}
+		List<EquipmentRecord> equipmentRecord = (List<EquipmentRecord>) dataRow.get("equipmentRecord");
+		if(!equipmentRecord.isEmpty()){
+			boolean as =equipmentRecordService.insertBatch(equipmentRecord);
+			System.out.println(as);
+		}
+		List<Jfhealth> jfhealth = (List<Jfhealth>) dataRow.get("jfhealth");
+		if(!jfhealth.isEmpty()){
+			boolean as =jfhealthService.insertBatch(jfhealth);
+			System.out.println(as);
+		}
+		List<PushRecord> pushRecord= (List<PushRecord>) dataRow.get("pushRecord");
+		if(!pushRecord.isEmpty()){
+			boolean as =pushRecordService.insertBatch(pushRecord);
+			System.out.println(as);
+		}
+		List<Realhealth> realhealth= (List<Realhealth>) dataRow.get("realhealth");
+		if(!realhealth.isEmpty()){
+			boolean as =realhealthService.insertBatch(realhealth);
+			System.out.println(as);
+		}
+		DynamicDataSourceHolder.clearDataSource();//切换回主数据库
+		return true;
 	}
 
 	

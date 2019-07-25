@@ -29,10 +29,10 @@ public class Ceshi {
 			//更新数据
 		//	update(MZ, list);
 			//插入数据
-		//	insert(MZ);//惊凡数据表
+			insert(MZ);//惊凡数据表
 		//	insetequipmentRecord(MZ);
 	//		insetequipmentdata(MZ);
-		  insetequipmentdata(MZ);//步数、卡里路
+	//	  insetequipmentdata(MZ);//步数、卡里路
 		//	insertMember(list,MZ);
 		//	updateInsertUserEq(list,MZ);
 			System.out.println("加载成功");
@@ -188,7 +188,7 @@ public class Ceshi {
 		*/
 		public static void 	insert(Connection ZX){
 			boolean fag = true;
-			String date = "2019-07-01 00:00:00";
+			String date = "2019-06-01 00:00:00";
 			try {
 				SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				System.out.println(sf.parse(date));
@@ -198,7 +198,7 @@ public class Ceshi {
 					 cd.add(Calendar.MINUTE, 5);
 				String sql = "INSERT INTO jfhealth(HRV,sbp_ave,dbp_ave,Heartrate,Bloodoxygen,"
 						+ "microcirculation,Amedicalreport,respirationrate,phone,imei,createtime)"
-						+ "VALUES(?,?,?,?,?,?,?,?,?,862237045561003,?)";
+						+ "VALUES(?,?,?,?,?,?,?,?,?,862237045519076,?)";
 				PreparedStatement ten = ZX.prepareStatement(sql);
 				ten.setString(1,String.valueOf((int)(100+Math.random()*(140-100+1))));
 				ten.setString(2,String.valueOf((int)(100+Math.random()*(180-100+1))));
@@ -214,11 +214,11 @@ public class Ceshi {
 						"5、如有病理性的低血压，请到正规医院就诊。");
 				ten.setString(8,String.valueOf((int)(70+Math.random()*(85-70+1))));
 				String time = sf.format(cd.getTime());
-				ten.setString(9,"mozistar28920");
+				ten.setString(9,"mozistar28979");
 				ten.setString(10,time);
 				ten.executeUpdate();
 				System.out.println("插入成功");
-				if(time.equals("2019-08-30 23:55:00")) {
+				if(time.equals("2019-07-23 15:00:00")) {
 					 fag=false;
 					 System.out.println("OK");
 				 }
@@ -330,9 +330,9 @@ public class Ceshi {
 	 */
 	public static Connection Mozi() {
 		String Driver = "com.mysql.jdbc.Driver";
-		String url = "jdbc:mysql://192.168.1.147:3306/mozi?useUnicode=true&characterEncoding=utf8";
+		String url = "jdbc:mysql://120.76.201.150:3306/mozi?useUnicode=true&characterEncoding=utf8";
 		String UserName = "root";
-		String Password = "123456";
+		String Password = "root";
 		try {
 			Class.forName(Driver);
 			con = DriverManager.getConnection(url, UserName, Password);
