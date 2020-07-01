@@ -48,7 +48,7 @@
 		<!-- POI -->
 		<org.apache.poi.version>3.9</org.apache.poi.version>
 		<!-- 任务调度 -->
-		<org.quartz-scheduler.version>2.2.1</org.quartz-scheduler.version>
+		<org.quartz-scheduler.version>2.3.2</org.quartz-scheduler.version>
 		<!-- Http -->
 		<org.apache.httpcomponents.core.version>4.4.4</org.apache.httpcomponents.core.version>
 		<org.apache.httpcomponents.client.version>4.5.2</org.apache.httpcomponents.client.version>
