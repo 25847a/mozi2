@@ -34,7 +34,7 @@
 		<!-- json -->
 		<com.alibaba.fastjson.version>1.1.38</com.alibaba.fastjson.version>
 		<!-- Spring 升级4+ 依赖的JSON包 start -->
-		<com.fasterxml.jackson.core.version>2.7.1</com.fasterxml.jackson.core.version>
+		<com.fasterxml.jackson.core.version>2.12.1</com.fasterxml.jackson.core.version>
 		<org.codehaus.jackson.version>1.9.13</org.codehaus.jackson.version>
 		<!-- Spring 升级4+ 依赖的JSON包 end -->
 		<!-- 文件上传 -->
