@@ -51,7 +51,7 @@
 		<org.quartz-scheduler.version>2.2.1</org.quartz-scheduler.version>
 		<!-- Http -->
 		<org.apache.httpcomponents.core.version>4.4.4</org.apache.httpcomponents.core.version>
-		<org.apache.httpcomponents.client.version>4.5.2</org.apache.httpcomponents.client.version>
+		<org.apache.httpcomponents.client.version>4.5.13</org.apache.httpcomponents.client.version>
 		<!-- redis -->
 		<org.springframework.data.redis.version>1.6.0.RELEASE</org.springframework.data.redis.version>
 		<redis.clients.jedis.version>2.7.3</redis.clients.jedis.version>
@@ -420,7 +420,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.3</version>
+			<version>4.5.13</version>
 				<scope>${dependency.provided}</scope>
 		</dependency>
 		<!-- http -->
